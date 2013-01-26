@@ -28,7 +28,10 @@ void EventLoop::run(){
 				Log::info("Processing an event");
 				source->process(_application, source);
 			}
-
+			if(_application->destroyRequested){
+				Log::info("Exiting event loop");
+				return;
+			}
 		}
 	}
 }
