@@ -27,6 +27,8 @@ void EventLoop::run( ActivityHandler& activityHandler ){
 
 	app_dummy();
 
+	_activityHandler = &activityHandler;
+
 	Log::info("Starting event loop");
 
 	while( true ){
@@ -34,6 +36,7 @@ void EventLoop::run( ActivityHandler& activityHandler ){
 			if(source != NULL){
 				Log::info("Processing an event");
 				source->process(_application, source);
+				Log::info("Processing an event end");
 			}
 			if(_application->destroyRequested){
 				Log::info("Exiting event loop");
@@ -111,11 +114,14 @@ void EventLoop::processActivityEvent( int32_t command ){
 }
 
 void EventLoop::activityCallback( android_app* application, int32_t command ){
+	Log::info("activityCallback	begin");
 	EventLoop& eventLoop = *(EventLoop*)application->userData;
 	eventLoop.processActivityEvent(command);
+	Log::info("activityCallback	end");
 }
 
 void EventLoop::activate(){
+	Log::info("activate begin");
 	if( !_enabled && _application->window != NULL ){
 		_quit = false;
 		_enabled = true;
@@ -125,13 +131,16 @@ void EventLoop::activate(){
 			ANativeActivity_finish(_application->activity);
 		}
 	}
+	Log::info("activate end");
 }
 
 void EventLoop::deactivate(){
+	Log::info("deactivate begin");
 	if(_enabled){
 		_activityHandler->onDeactivate();
 		_enabled = false;
 	}
+	Log::info("deactivate end");
 }
 
 }
