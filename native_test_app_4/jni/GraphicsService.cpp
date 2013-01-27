@@ -98,11 +98,14 @@ status GraphicsService::update(){
 
 	static float clearColor = 0.0f;
 	static bool  dir = true;
+	const float dSC = 0.25f;
+
 	float dC = 0.0f;
+
 	if(dir){
-		dC = 0.1f;
+		dC = dSC;
 	}else{
-		dC = -0.1f;
+		dC = -dSC;
 	}
 	clearColor += timeStep * dC;
 
@@ -117,7 +120,7 @@ status GraphicsService::update(){
 		dir = true;
 	}
 
-	glClearColor(clearColor, clearColor, clearColor, 1.0f);
+	glClearColor(0.3f, clearColor, 0.15f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	if(eglSwapBuffers(_display, _surface) != EGL_TRUE ){
