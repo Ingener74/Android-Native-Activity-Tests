@@ -7,14 +7,20 @@
 
 #include "EventLoop.h"
 #include "DroidBlaster.h"
+#include "TimeService.h"
+#include "Context.h"
 #include "Log.h"
 
-void android_main( android_app* _application ){
+void android_main( android_app* application ){
 
-	smallarsdk::EventLoop eventLoop(_application);
-	smallarsdk::Log::info("android main 1");
-	smallarsdk::DroidBlaster droidBlaster;
-	smallarsdk::Log::info("android main 2");
+	smallarsdk::TimeService timeService;
+	smallarsdk::Context context = {
+			&timeService
+	};
+
+	smallarsdk::EventLoop eventLoop(application);
+
+	smallarsdk::DroidBlaster droidBlaster(context, application);
+
 	eventLoop.run(droidBlaster);
-	smallarsdk::Log::info("android main 3");
 }

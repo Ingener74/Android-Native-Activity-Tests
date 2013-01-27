@@ -8,17 +8,20 @@
 #ifndef DROIDBLASTER_H_
 #define DROIDBLASTER_H_
 
+#include <unistd.h>
+#include <android_native_app_glue.h>
+
 #include "ActivityHandler.h"
 #include "Types.hpp"
-
-#include <unistd.h>
+#include "Context.h"
+#include "TimeService.h"
 
 namespace smallarsdk {
 
 class DroidBlaster: public ActivityHandler {
 
 public:
-	DroidBlaster();
+	DroidBlaster( Context& context, android_app* application );
 	virtual ~DroidBlaster();
 
 protected:
@@ -40,6 +43,22 @@ protected:
 	void   onDestroyWindow(){}
 	void   onGainFocus(){}
 	void   onLostFocus(){}
+
+private:
+	void clear();
+	void drawCursor( int size, int pX, int pY );
+
+private:
+	android_app*          _application;
+	ANativeWindow_Buffer  _windowBuffer;
+	TimeService*          _timeService;
+
+	bool _initialized;
+
+	float _posX;
+	float _posY;
+	const int32_t _size;
+	const float   _speed;
 };
 
 } /* namespace handtracker */
