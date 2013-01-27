@@ -13,6 +13,7 @@ namespace smallarsdk {
 DroidBlaster::DroidBlaster( Context& context, android_app* application ):
 	_application(application),
 	_timeService(context.timeService),
+	_graphicsService(context.graphicsService),
 	_initialized(false),
 	_posX(0), _posY(0), _size(24), _speed(100.f){
 	Log::info("Creating DroidBlaster");
@@ -27,26 +28,32 @@ status DroidBlaster::onActivate(){
 
 	_timeService->reset();
 
-	ANativeWindow* window = _application->window;
-	if(ANativeWindow_setBuffersGeometry(window, 0, 0,
-			WINDOW_FORMAT_RGBX_8888) < 0){
+//	ANativeWindow* window = _application->window;
+//	if(ANativeWindow_setBuffersGeometry(window, 0, 0,
+//			WINDOW_FORMAT_RGBX_8888) < 0){
+//		return STATUS_KO;
+//	}
+//	if(ANativeWindow_lock(window, &_windowBuffer, NULL) >= 0){
+//		ANativeWindow_unlockAndPost(window);
+//	}else{
+//		return STATUS_KO;
+//	}
+//	if(!_initialized){
+//		_posX = _windowBuffer.width  / 2;
+//		_posY = _windowBuffer.height / 2;
+//		_initialized = true;
+//	}
+
+	if(_graphicsService->start() != STATUS_OK){
 		return STATUS_KO;
 	}
-	if(ANativeWindow_lock(window, &_windowBuffer, NULL) >= 0){
-		ANativeWindow_unlockAndPost(window);
-	}else{
-		return STATUS_KO;
-	}
-	if(!_initialized){
-		_posX = _windowBuffer.width  / 2;
-		_posY = _windowBuffer.height / 2;
-		_initialized = true;
-	}
+
 	return STATUS_OK;
 }
 
 void DroidBlaster::onDeactivate(){
 	Log::info("Deactivating DroidBlaster");
+	_graphicsService->stop();
 }
 
 status DroidBlaster::onStep(){
@@ -56,17 +63,19 @@ status DroidBlaster::onStep(){
 
 	_timeService->update();
 
-	_posX = int(_posX + _speed*_timeService->elapsed()) % int(_windowBuffer.width);
+//	_posX = int(_posX + _speed*_timeService->elapsed()) % int(_windowBuffer.width);
+//
+//	ANativeWindow* window = _application->window;
+//	if(ANativeWindow_lock(window, &_windowBuffer, NULL) >= 0){
+//		clear();
+//		drawCursor(_size, _posX, _posY);
+//		ANativeWindow_unlockAndPost(window);
+//		return STATUS_OK;
+//	}else{
+//		return STATUS_KO;
+//	}
 
-	ANativeWindow* window = _application->window;
-	if(ANativeWindow_lock(window, &_windowBuffer, NULL) >= 0){
-		clear();
-		drawCursor(_size, _posX, _posY);
-		ANativeWindow_unlockAndPost(window);
-		return STATUS_OK;
-	}else{
-		return STATUS_KO;
-	}
+	_graphicsService->update();
 
 	Log::info("Stepping done");
 	return STATUS_OK;

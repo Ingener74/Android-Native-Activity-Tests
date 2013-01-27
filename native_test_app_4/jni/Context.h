@@ -12,10 +12,12 @@
 
 namespace smallarsdk {
 
+class GraphicsService;
 class TimeService;
 
 struct Context {
-	TimeService* timeService;
+	GraphicsService* graphicsService;
+	TimeService*     timeService;
 };
 
 } /* namespace smallarsdk */

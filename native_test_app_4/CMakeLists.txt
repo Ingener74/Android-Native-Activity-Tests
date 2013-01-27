@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME native3)
+set(PROJECT_NAME native4)
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
     /home/pavel/android-ndk-r8/sources/android/native_app_glue
@@ -14,8 +14,7 @@ include_directories(
 link_directories(
     /home/pavel/android-ndk-r8/platforms/android-14/arch-arm/usr/lib
     )
-    
-set(ANDROID_LIBS log android)
+set(ANDROID_LIBS log android EGL GLESv1_CM)
 
 set(SOURCES
     jni/main.cpp
@@ -25,6 +24,7 @@ set(SOURCES
     jni/DroidBlaster.cpp
     jni/TimeService.cpp
     jni/Context.cpp
+    jni/GraphicsService.cpp
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     )
 

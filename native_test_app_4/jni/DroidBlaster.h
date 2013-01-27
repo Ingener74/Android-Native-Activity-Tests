@@ -15,6 +15,7 @@
 #include "Types.hpp"
 #include "Context.h"
 #include "TimeService.h"
+#include "GraphicsService.h"
 
 namespace smallarsdk {
 
@@ -52,6 +53,7 @@ private:
 	android_app*          _application;
 	ANativeWindow_Buffer  _windowBuffer;
 	TimeService*          _timeService;
+	GraphicsService*      _graphicsService;
 
 	bool _initialized;
 

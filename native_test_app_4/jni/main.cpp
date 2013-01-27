@@ -14,7 +14,9 @@
 void android_main( android_app* application ){
 
 	smallarsdk::TimeService timeService;
+	smallarsdk::GraphicsService graphicsService(application, &timeService);
 	smallarsdk::Context context = {
+			&graphicsService,
 			&timeService
 	};
 
