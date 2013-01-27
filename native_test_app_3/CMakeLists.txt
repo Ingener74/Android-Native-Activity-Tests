@@ -23,6 +23,7 @@ set(SOURCES
     jni/EventLoop.cpp
     jni/ActivityHandler.cpp
     jni/DroidBlaster.cpp
+    jni/TimeService.cpp
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     )
 
