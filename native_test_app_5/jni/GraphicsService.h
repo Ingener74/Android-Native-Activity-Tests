@@ -13,12 +13,14 @@
 
 #include "TimeService.h"
 #include "Types.hpp"
+#include "GraphicsTexture.h"
 
 namespace smallarsdk {
 
 class GraphicsService {
 public:
 	GraphicsService( android_app* application, TimeService* timeService );
+	virtual ~GraphicsService();
 
 	const char* getPath();
 	const int32_t& getWidth() const ;
@@ -28,6 +30,12 @@ public:
 	void   stop();
 	status update();
 
+	GraphicsTexture* registerTexture( const char* path );
+
+protected:
+	status loadResources();
+	status unloadResources();
+
 private:
 	android_app* _application;
 	TimeService* _timeService;
@@ -36,6 +44,9 @@ private:
 	EGLDisplay _display;
 	EGLSurface _surface;
 	EGLContext _context;
+
+	GraphicsTexture*  _textures[32];
+	int32_t           _textureCount;
 
 };
 

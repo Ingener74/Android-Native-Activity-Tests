@@ -21,7 +21,16 @@ GraphicsService::GraphicsService(
 			_width(0), _height(0),
 			_display(EGL_NO_DISPLAY),
 			_surface(EGL_NO_SURFACE),
-			_context(EGL_NO_CONTEXT){
+			_context(EGL_NO_CONTEXT),
+			_textures(), _textureCount(0){
+}
+
+GraphicsService::~GraphicsService(){
+	if( int32_t i = 0; i < _textureCount; ++i ){
+		delete _textures[i];
+		_textures[i] = NULL;
+	}
+	_textureCount = 0;
 }
 
 const char* GraphicsService::getPath(){
@@ -70,6 +79,8 @@ status GraphicsService::start(){
 			!eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height) ||
 			(_width <= 0) || (_height <= 0)) goto ERROR;
 
+	if(loadResources() != STATUS_OK ) goto ERROR;
+
 	return STATUS_OK;
 
 	ERROR:
@@ -79,6 +90,9 @@ status GraphicsService::start(){
 }
 
 void GraphicsService::stop(){
+
+	unloadResources();
+
 	if(_display != EGL_NO_DISPLAY){
 		eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 		if(_context != EGL_NO_CONTEXT){
@@ -128,6 +142,33 @@ status GraphicsService::update(){
 		return STATUS_KO;
 	}
 	return STATUS_OK;
+}
+
+status GraphicsService::loadResources(){
+	for( int32_t i = 0; i < _textureCount; ++i ){
+		if(_textures[i]->load() != STATUS_OK){
+			return STATUS_KO;
+		}
+	}
+	return STATUS_OK;
+}
+
+status GraphicsService::unloadResources(){
+	for( int32_t i = 0; i < _textureCount; ++i ){
+		_textures[i]->unload();
+	}
+	return STATUS_OK;
+}
+
+GraphicsTexture* GraphicsService::registerTexture( const char* path ){
+	for( int32_t i = 0; i < _textureCount; ++i ){
+		if( !strcmp(path, _textures[i]->getPath()) ){
+			return _textures[i];
+		}
+	}
+	GraphicsTexture* texture = new GraphicsTexture(_application, path);
+	_textures[_textureCount++] = texture;
+	return texture;
 }
 
 
