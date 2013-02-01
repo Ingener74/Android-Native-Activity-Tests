@@ -3,16 +3,16 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME native3)
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
-    /home/pavel/android-ndk-r8/sources/android/native_app_glue
+    ${ANDROID_NDK}/sources/android/native_app_glue
     )
 
 include_directories(
-    /home/pavel/android-ndk-r8/platforms/android-14/arch-arm/usr/include
+    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
     ${ANDROID_NATIVE_APP_GLUE_DIR}
-    /home/pavel/android-ndk-r8/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/lib/gcc/arm-linux-androideabi/4.4.3/include
+    ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/lib/gcc/arm-linux-androideabi/4.4.3/include
     )
 link_directories(
-    /home/pavel/android-ndk-r8/platforms/android-14/arch-arm/usr/lib
+    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
     )
     
 set(ANDROID_LIBS log android)
