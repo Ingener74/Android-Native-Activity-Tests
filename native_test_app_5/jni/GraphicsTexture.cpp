@@ -6,17 +6,23 @@
  */
 
 #include "GraphicsTexture.h"
+#include "Log.h"
 
 namespace smallarsdk {
 
 GraphicsTexture::GraphicsTexture(android_app* application, const char* path):
 	_resource(application, path),
 	_textureID(0),
-	_width(0), _height(0){
+	_width(0), _height(0),
+	_format(0){
 }
 
+GraphicsTexture::~GraphicsTexture(){
+}
+
+const char* GraphicsTexture::getPath(){ return _resource.getPath(); }
 int32_t GraphicsTexture::getWidth() const { return _width; }
-int32_t GraphicsTexture::getHeight() const { return _height }
+int32_t GraphicsTexture::getHeight() const { return _height; }
 
 uint8_t* GraphicsTexture::loadImage(){
 	png_byte     header[8];
@@ -31,7 +37,7 @@ uint8_t* GraphicsTexture::loadImage(){
 	if(_resource.read(header, sizeof(header)) != STATUS_OK) goto ERROR;
 	if(png_sig_cmp(header, 0, 8) != 0) goto ERROR;
 
-	pngPtr = png_create_read_struct(PNG_LIGPNG_VER_STRING, NULL, NULL, NULL);
+	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
 	if(!pngPtr) goto ERROR;
 
@@ -39,10 +45,12 @@ uint8_t* GraphicsTexture::loadImage(){
 	if(!infoPtr) goto ERROR;
 
 	png_set_read_fn(pngPtr, &_resource, callback_read);
-	if(setjmp(png_jmpbuf(pngPtr))) goto ERROR;
+	if( setjmp(png_jmpbuf(pngPtr))) goto ERROR;
 
 	png_set_sig_bytes(pngPtr, 8);
+
 	png_read_info(pngPtr, infoPtr);
+//	png_read_update_info(pngPtr, infoPtr);
 
 	png_int_32 depth, colorType;
 	png_uint_32 width, height;
@@ -109,7 +117,7 @@ uint8_t* GraphicsTexture::loadImage(){
 	png_read_image(pngPtr, rowPtr);
 
 	_resource.close();
-	png_destroy_read_struct( pngPtr, infoPtr, NULL );
+	png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 	delete [] rowPtr;
 	return imageBuffer;
 
@@ -118,13 +126,13 @@ uint8_t* GraphicsTexture::loadImage(){
 	_resource.close();
 	delete [] rowPtr; delete [] imageBuffer;
 	if(pngPtr != NULL){
-		png_infop* infoPtrP = infoPtr != NULL ? infoPtr : NULL;
+		png_infop* infoPtrP = infoPtr != NULL ? &infoPtr : NULL;
 		png_destroy_read_struct(&pngPtr, infoPtrP, NULL);
 	}
 	return NULL;
 }
 
-void png_read_callback( png_structp png, png_bytep data, png_size_t size ){
+void GraphicsTexture::callback_read( png_structp png, png_bytep data, png_size_t size ){
 	Resources& reader = *((Resources*)png_get_io_ptr(png));
 	if(reader.read(data, size) != STATUS_OK){
 		reader.close();
@@ -133,14 +141,14 @@ void png_read_callback( png_structp png, png_bytep data, png_size_t size ){
 }
 
 status GraphicsTexture::load(){
-	uint8_t imageBuffer = loadImage();
+	uint8_t* imageBuffer = loadImage();
 
 	if(imageBuffer == NULL){
 		return STATUS_KO;
 	}
 
 	GLenum errorResult;
-	glGetTextures(1, &_textureID);
+	glGenTextures(1, &_textureID);
 	glBindTexture(GL_TEXTURE_2D, _textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -148,7 +156,12 @@ status GraphicsTexture::load(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, _format, _width, _height, 0, _format,
+	glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			_format,
+			_width, _height,
+			0, _format,
 			GL_UNSIGNED_BYTE, imageBuffer);
 
 	delete [] imageBuffer;

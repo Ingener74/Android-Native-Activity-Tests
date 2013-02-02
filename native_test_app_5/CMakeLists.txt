@@ -10,11 +10,14 @@ include_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
     ${ANDROID_NATIVE_APP_GLUE_DIR}
     ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/lib/gcc/arm-linux-androideabi/4.4.3/include
+    ../3rdparty/libpng-1.5.14
+    ../3rdparty/libpng-1.5.14/build
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
+    ../../3rdparty/libpng-1.5.14/libs/armeabi-v7a
     )
-set(ANDROID_LIBS log android EGL GLESv1_CM png15)
+set(ANDROID_LIBS log android EGL GLESv1_CM png15 z)
 
 set(SOURCES
     jni/main.cpp
@@ -25,6 +28,8 @@ set(SOURCES
     jni/TimeService.cpp
     jni/Context.cpp
     jni/GraphicsService.cpp
+    jni/GraphicsTexture.cpp
+    jni/Resources.cpp
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     )
 

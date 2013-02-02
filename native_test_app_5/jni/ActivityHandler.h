@@ -14,6 +14,7 @@ namespace smallarsdk {
 
 class ActivityHandler {
 public:
+	virtual ~ActivityHandler(){}
 	virtual status onActivate() = 0;
 	virtual void onDeactivate() = 0;
 	virtual status onStep() = 0;

@@ -26,10 +26,12 @@ GraphicsService::GraphicsService(
 }
 
 GraphicsService::~GraphicsService(){
-	if( int32_t i = 0; i < _textureCount; ++i ){
+
+	for( int32_t i = 0; i < _textureCount; ++i ){
 		delete _textures[i];
 		_textures[i] = NULL;
 	}
+
 	_textureCount = 0;
 }
 
@@ -59,6 +61,7 @@ status GraphicsService::start(){
 	};
 
 	_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
 	if(_display == EGL_NO_DISPLAY) goto ERROR;
 	if(!eglInitialize(_display, NULL, NULL)) goto ERROR;
 

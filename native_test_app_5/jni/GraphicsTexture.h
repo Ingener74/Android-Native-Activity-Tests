@@ -23,6 +23,7 @@ public:
 	GraphicsTexture(android_app* application, const char* path);
 	virtual ~GraphicsTexture();
 
+	const char* getPath();
 	int32_t getHeight() const ;
 	int32_t getWidth() const ;
 
@@ -34,7 +35,8 @@ protected:
 	uint8_t* loadImage();
 
 private:
-	static void callback_read( png_structp struct_, png_bytep data, png_size_t size );
+	static void callback_read( png_structp struct_, png_bytep data,
+			png_size_t size );
 
 private:
 	Resources _resource;

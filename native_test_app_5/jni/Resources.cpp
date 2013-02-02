@@ -31,7 +31,7 @@ void Resources::close(){
 	}
 }
 
-status Resources::read( void** buffer, size_t count ){
+status Resources::read( void* buffer, size_t count ){
 	int32_t readCount = AAsset_read(_asset, buffer, count );
 	return (readCount == count) ? STATUS_OK : STATUS_KO;
 }
