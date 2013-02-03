@@ -16,7 +16,7 @@
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 
-const char app_name[] = "native_test_app_6";
+const char app_name[] = "native_test_app_7";
 #define LOGI(...)(__android_log_print(ANDROID_LOG_INFO,  app_name, __VA_ARGS__))
 #define LOGE(...)(__android_log_print(ANDROID_LOG_ERROR, app_name, __VA_ARGS__))
 #define LOGD(...)(__android_log_print(ANDROID_LOG_DEBUG, app_name, __VA_ARGS__))
