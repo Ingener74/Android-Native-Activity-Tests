@@ -9,6 +9,7 @@
 #define GRAPHICSSERVICE_H_
 
 #include <GLES/gl.h>
+#include <GLES/glext.h>
 #include <EGL/egl.h>
 #include <android_native_app_glue.h>
 

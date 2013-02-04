@@ -3,6 +3,7 @@
  */
 #include <jni.h>
 #include <errno.h>
+#include <math.h>
 
 #include <android/log.h>
 #include <android/looper.h>
@@ -22,6 +23,38 @@ struct saved_state{
 	float _accZ;
 };
 
+class Point3D{
+public:
+	union{
+		double _v[3];
+		struct{
+			double _x;
+			double _y;
+			double _z;
+		};
+	};
+	Point3D( double x = 0.0, double y = 0.0, double z = 0.0 ):
+		_x(x), _y(y), _z(z){
+	}
+};
+class Line3D{
+	Point3D _start, _end;
+public:
+	Line3D( const Point3D& start = Point3D(), const Point3D end = Point3D()):
+		_start(start), _end(end){
+	}
+	void draw(){
+		GLfloat line[] = {
+				_start._x, _start._y, _start._z,
+				_end._x,   _end._y,   _end._z
+		};
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, line);
+		glDrawArrays(GL_LINES, 0, 2);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+};
+
 class NativeTest7GS: public GraphicsService{
 	saved_state* _saved_state;
 public:
@@ -33,21 +66,24 @@ public:
 
 	void draw(){
 		if(_display != EGL_NO_DISPLAY && _saved_state != NULL ){
-			float mag =
-					_saved_state->_accX +
-					_saved_state->_accY +
-					_saved_state->_accZ;
-
-			float r = _saved_state->_accX / mag,
-					g = _saved_state->_accY / mag,
-					b = _saved_state->_accZ / mag;
-
-			glClearColor(r, g, b, 1.f);
+			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			GLfloat mag = sqrt(
+					_saved_state->_accX*_saved_state->_accX +
+					_saved_state->_accY*_saved_state->_accY +
+					_saved_state->_accZ*_saved_state->_accZ);
 			/*
 			 * out green display
 			 */
+			Line3D(Point3D(), Point3D(1, 0, 0)).draw();
+			Line3D(Point3D(), Point3D(0, 1, 0)).draw();
+			Line3D(Point3D(), Point3D(0, 0, 1)).draw();
+
+			Line3D(Point3D(),
+					Point3D(_saved_state->_accX / mag,
+							_saved_state->_accY / mag ,
+							_saved_state->_accZ / mag)).draw();
 
 			eglSwapBuffers(_display, _surface);
 		}

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME native7)
+set(PROJECT_NAME native8)
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
     ${ANDROID_NDK}/sources/android/native_app_glue
