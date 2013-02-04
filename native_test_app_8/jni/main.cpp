@@ -17,6 +17,10 @@
 
 using namespace native_test_app_7;
 
+const char* caption =
+		"native_test_app_7"
+		;
+
 struct saved_state{
 	float _accX;
 	float _accY;
@@ -55,14 +59,14 @@ public:
 	}
 };
 
-class NativeTest7GS: public GraphicsService{
+class NativeTest8GS: public GraphicsService{
 	saved_state* _saved_state;
 public:
-	NativeTest7GS( android_app* application ,saved_state* saved_state_ ):
+	NativeTest8GS( android_app* application ,saved_state* saved_state_ ):
 		GraphicsService(application),
 		_saved_state(saved_state_){
 	}
-	virtual ~NativeTest7GS(){}
+	virtual ~NativeTest8GS(){}
 
 	void draw(){
 		if(_display != EGL_NO_DISPLAY && _saved_state != NULL ){
@@ -96,9 +100,10 @@ struct engine{
 	const ASensor*     _accelerometer;
 	ASensorEventQueue* _sensorEventQueue;
 
-	NativeTest7GS*     _gs;
+	NativeTest8GS*     _gs;
 
 	saved_state        _state;
+	bool               _animate;
 };
 
 static int32_t engineHandleInput( struct android_app* app, AInputEvent* event ){
@@ -120,7 +125,8 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 	case APP_CMD_INIT_WINDOW:{
 		if( engine_->_app->window != NULL ){
 			LOGI("init window", "init window");
-			engine_->_gs = new NativeTest7GS(engine_->_app, &engine_->_state);
+			engine_->_gs = new NativeTest8GS(engine_->_app, &engine_->_state);
+			engine_->_animate = true;
 			LOGI("init window", "end init window");
 		}
 		break;
@@ -128,6 +134,7 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 	case APP_CMD_TERM_WINDOW:{
 		LOGI("native_test_app_7", "terminate window");
 		delete engine_->_gs; engine_->_gs = NULL;
+		engine_->_animate = false;
 		break;
 	}
 	case APP_CMD_GAINED_FOCUS:{
@@ -143,8 +150,10 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 		if(engine_->_accelerometer != NULL){
 			ASensorEventQueue_disableSensor(engine_->_sensorEventQueue, engine_->_accelerometer);
 		}
+
 		if(engine_->_gs)
 			engine_->_gs->draw();
+		engine_->_animate = false;
 		break;
 	}
 	}
@@ -156,7 +165,7 @@ void android_main( struct android_app* application ){
 
 	app_dummy();
 
-	LOGI("native_test_app_7", "Android NDK test application ");
+	LOGI(caption, "Android NDK test application ");
 
 	memset(&engine, 0, sizeof(engine));
 	application->userData = &engine;
@@ -176,7 +185,7 @@ void android_main( struct android_app* application ){
 		engine._state = *(saved_state*)application->savedState;
 	}
 
-	LOGI("native_test_app_7", "start main loop");
+	LOGI(caption, "start main loop");
 
 	while(1){
 
@@ -184,8 +193,8 @@ void android_main( struct android_app* application ){
 		int event;
 		android_poll_source* source;
 
-		while( (ident = ALooper_pollAll(0, NULL, &event, (void**)&source)) >= 0 ){
-			LOGI("native_test_app_7", "event");
+		while( (ident = ALooper_pollAll( engine._animate ? 0 : -1, NULL, &event, (void**)&source)) >= 0 ){
+			LOGI(caption, "event");
 			if(source != NULL){
 				source->process(application, source);
 			}
@@ -193,7 +202,7 @@ void android_main( struct android_app* application ){
 				if(engine._accelerometer != NULL){
 					ASensorEvent event;
 					while(ASensorEventQueue_getEvents(engine._sensorEventQueue, & event, 1) > 0){
-						LOGI("native_test_app_7", "accelerometer: x = %f, y = %f, z = %f",
+						LOGI(caption, "accelerometer: x = %f, y = %f, z = %f",
 								event.acceleration.x,
 								event.acceleration.y,
 								event.acceleration.z);
@@ -211,9 +220,11 @@ void android_main( struct android_app* application ){
 				return;
 			}
 		}
-		LOGI("native_test_app_7", "draw");
-		if(engine._gs)
+		if( engine._animate && engine._gs){
+			LOGI(caption, "draw in main loop");
 			engine._gs->draw();
+		}
+		LOGI(caption, "main loop");
 	}
 }
 
