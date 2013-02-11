@@ -80,11 +80,16 @@ public:
 			/*
 			 * out green display
 			 */
-			const double len = 4;
+			const double len = 8;
+			const double axisLen = 5;
+			glColor4f(1.f, 0.f, 0.f, 1.f);
 			Line3D(Point3D(), Point3D(3, 0, 0)).draw();
+			glColor4f(0.f, 1.f, 0.f, 1.f);
 			Line3D(Point3D(), Point3D(0, 3, 0)).draw();
+			glColor4f(0.f, 0.f, 1.f, 1.f);
 			Line3D(Point3D(), Point3D(0, 0, 3)).draw();
 
+			glColor4f(1.f, 1.f, 0.f, 1.f);
 			Line3D(Point3D(),
 					Point3D(- len * _saved_state->_accX / mag,
 							- len * _saved_state->_accY / mag ,
