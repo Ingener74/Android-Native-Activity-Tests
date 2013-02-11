@@ -15,7 +15,7 @@
 
 #include "GraphicsService.h"
 
-using namespace native_test_app_7;
+using namespace native_test_app_8;
 
 const char* caption =
 		"native_test_app_7"
@@ -80,14 +80,15 @@ public:
 			/*
 			 * out green display
 			 */
-			Line3D(Point3D(), Point3D(1, 0, 0)).draw();
-			Line3D(Point3D(), Point3D(0, 1, 0)).draw();
-			Line3D(Point3D(), Point3D(0, 0, 1)).draw();
+			const double len = 4;
+			Line3D(Point3D(), Point3D(3, 0, 0)).draw();
+			Line3D(Point3D(), Point3D(0, 3, 0)).draw();
+			Line3D(Point3D(), Point3D(0, 0, 3)).draw();
 
 			Line3D(Point3D(),
-					Point3D(_saved_state->_accX / mag,
-							_saved_state->_accY / mag ,
-							_saved_state->_accZ / mag)).draw();
+					Point3D(- len * _saved_state->_accX / mag,
+							- len * _saved_state->_accY / mag ,
+							- len * _saved_state->_accZ / mag)).draw();
 
 			eglSwapBuffers(_display, _surface);
 		}

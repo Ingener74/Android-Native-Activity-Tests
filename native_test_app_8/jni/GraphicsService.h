@@ -15,7 +15,7 @@
 
 #include "tools.h"
 
-namespace native_test_app_7 {
+namespace native_test_app_8 {
 
 class GraphicsService {
 public:

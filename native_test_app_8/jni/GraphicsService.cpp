@@ -7,7 +7,7 @@
 
 #include "GraphicsService.h"
 
-namespace native_test_app_7 {
+namespace native_test_app_8 {
 
 GraphicsService::GraphicsService( android_app* application ):
 	_display(EGL_NO_DISPLAY),
@@ -55,6 +55,11 @@ void GraphicsService::init( android_app* application ){
 	}
 	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
 	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
+
+	const double dim = 10.0;
+	const double aspect = _height / double(_width);
+	glViewport(0, 0, _width, _height);
+	glOrthof(-dim, dim, -aspect*dim, aspect*dim, -dim, dim);
 
 	LOGI("GraphicsService", "init end");
 }
