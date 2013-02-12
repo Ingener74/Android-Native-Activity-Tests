@@ -1,6 +1,9 @@
 /*
  * Test application for OpenGL
  */
+
+#include <fstream>
+
 #include <jni.h>
 #include <errno.h>
 #include <math.h>
@@ -13,9 +16,14 @@
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 #include "GraphicsService.h"
 
 using namespace native_test_app_8;
+using namespace cv;
+using namespace std;
 
 const char* caption =
 		"native_test_app_7"
@@ -170,6 +178,22 @@ void android_main( struct android_app* application ){
 	engine engine;
 
 	app_dummy();
+
+
+	const int32_t n = 500;
+	Mat im_test(n, n, CV_8UC3, Scalar(0));
+
+	circle(im_test, Point(n/2, n/2), n * 2 / double(2), CV_RGB(0, 255, 0));
+
+	/*
+	 * file stream
+	 */
+	ofstream file;
+	file.open("/sdcard/test.txt");
+	if(file.is_open()){
+		file << "test string" << endl;
+	}
+
 
 	LOGI(caption, "Android NDK test application ");
 
