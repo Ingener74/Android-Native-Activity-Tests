@@ -28,11 +28,18 @@ set(OPENCV_LIBS
     opencv_core
     opencv_highgui
     tbb
+    libpng
+    libjpeg
+    libtiff
+    libjasper
+    IlmImf
     )
 
 set(SOURCES
     jni/main.cpp
     jni/GraphicsService.cpp
+    jni/IGraphicsObject.cpp
+    jni/Point.cpp
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     )
 

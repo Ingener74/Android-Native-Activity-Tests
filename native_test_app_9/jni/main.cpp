@@ -20,6 +20,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "GraphicsService.h"
+#include "Point.h"
 
 using namespace native_test_app_8;
 using namespace cv;
@@ -103,6 +104,13 @@ public:
 							- len * _saved_state->_accY / mag ,
 							- len * _saved_state->_accZ / mag)).draw();
 
+			glColor4f(1.f, 1.f, 0.f, 1.f);
+			go::Point(4, 4, 4).draw();
+			go::Point(5, 5, 4).draw();
+			go::Point(6, 6, 4).draw();
+			go::Point(7, 7, 4).draw();
+			go::Point(8, 8, 4).draw();
+
 			eglSwapBuffers(_display, _surface);
 		}
 	}
@@ -181,9 +189,12 @@ void android_main( struct android_app* application ){
 
 
 	const int32_t n = 500;
-	Mat im_test(n, n, CV_8UC3, Scalar(0));
+	Mat im_test(n, n, CV_8UC3, CV_RGB(0, 255, 0));
 
-	circle(im_test, Point(n/2, n/2), n * 2 / double(2), CV_RGB(0, 255, 0));
+	const double rad = n * 2 / double(5);
+	const cv::Point cen = cv::Point(n/2, n/2);
+	circle(im_test, cen, rad, CV_RGB(255, 0, 0), 3);
+	imwrite("/sdcard/test.png", im_test);
 
 	/*
 	 * file stream
@@ -191,7 +202,8 @@ void android_main( struct android_app* application ){
 	ofstream file;
 	file.open("/sdcard/test.txt");
 	if(file.is_open()){
-		file << "test string" << endl;
+		file << "center of circle = " << cen << endl;
+		file << "radius of circle = " << rad << endl;
 	}
 
 
