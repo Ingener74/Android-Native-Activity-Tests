@@ -21,6 +21,7 @@
 
 #include "GraphicsService.h"
 #include "Point.h"
+#include "Triangle.h"
 
 using namespace native_test_app_8;
 using namespace cv;
@@ -31,41 +32,6 @@ const char* caption =
 		;
 
 struct saved_state{
-	float _accX;
-	float _accY;
-	float _accZ;
-};
-
-class Point3D{
-public:
-	union{
-		double _v[3];
-		struct{
-			double _x;
-			double _y;
-			double _z;
-		};
-	};
-	Point3D( double x = 0.0, double y = 0.0, double z = 0.0 ):
-		_x(x), _y(y), _z(z){
-	}
-};
-class Line3D{
-	Point3D _start, _end;
-public:
-	Line3D( const Point3D& start = Point3D(), const Point3D end = Point3D()):
-		_start(start), _end(end){
-	}
-	void draw(){
-		GLfloat line[] = {
-				_start._x, _start._y, _start._z,
-				_end._x,   _end._y,   _end._z
-		};
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, line);
-		glDrawArrays(GL_LINES, 0, 2);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
 };
 
 class NativeTest8GS: public GraphicsService{
@@ -79,37 +45,22 @@ public:
 
 	void draw(){
 		if(_display != EGL_NO_DISPLAY && _saved_state != NULL ){
-			glClearColor(0, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClearColor(0.f, 0.f, 0.f, 1);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-			GLfloat mag = sqrt(
-					_saved_state->_accX*_saved_state->_accX +
-					_saved_state->_accY*_saved_state->_accY +
-					_saved_state->_accZ*_saved_state->_accZ);
+			LOGI("cam test", "main draw");
+
 			/*
 			 * out green display
 			 */
-			const double len = 8;
-			const double axisLen = 5;
-			glColor4f(1.f, 0.f, 0.f, 1.f);
-			Line3D(Point3D(), Point3D(3, 0, 0)).draw();
-			glColor4f(0.f, 1.f, 0.f, 1.f);
-			Line3D(Point3D(), Point3D(0, 3, 0)).draw();
-			glColor4f(0.f, 0.f, 1.f, 1.f);
-			Line3D(Point3D(), Point3D(0, 0, 3)).draw();
+			go::Point(0.3f, 0.3f, 0.3f).draw();
+			go::Point(0, 0, 0).draw();
+			go::Point(1, 1, 0).draw();
+			go::Point(2, 2, 0).draw();
+			go::Point(3, 3, 0).draw();
 
 			glColor4f(1.f, 1.f, 0.f, 1.f);
-			Line3D(Point3D(),
-					Point3D(- len * _saved_state->_accX / mag,
-							- len * _saved_state->_accY / mag ,
-							- len * _saved_state->_accZ / mag)).draw();
-
-			glColor4f(1.f, 1.f, 0.f, 1.f);
-			go::Point(4, 4, 4).draw();
-			go::Point(5, 5, 4).draw();
-			go::Point(6, 6, 4).draw();
-			go::Point(7, 7, 4).draw();
-			go::Point(8, 8, 4).draw();
+			go::Triangle(go::Point(0,0,0), go::Point(3, 0, 0), go::Point(0, 3, 0)).draw();
 
 			eglSwapBuffers(_display, _surface);
 		}
@@ -126,6 +77,8 @@ struct engine{
 
 	saved_state        _state;
 	bool               _animate;
+
+	VideoCapture*      _cap;
 };
 
 static int32_t engineHandleInput( struct android_app* app, AInputEvent* event ){
@@ -187,25 +140,8 @@ void android_main( struct android_app* application ){
 
 	app_dummy();
 
-
-	const int32_t n = 500;
-	Mat im_test(n, n, CV_8UC3, CV_RGB(0, 255, 0));
-
-	const double rad = n * 2 / double(5);
-	const cv::Point cen = cv::Point(n/2, n/2);
-	circle(im_test, cen, rad, CV_RGB(255, 0, 0), 3);
-	imwrite("/sdcard/test.png", im_test);
-
-	/*
-	 * file stream
-	 */
-	ofstream file;
-	file.open("/sdcard/test.txt");
-	if(file.is_open()){
-		file << "center of circle = " << cen << endl;
-		file << "radius of circle = " << rad << endl;
-	}
-
+	const int32_t n = 400;
+	Mat im(n, n, CV_8UC3, Scalar(0));
 
 	LOGI(caption, "Android NDK test application ");
 
@@ -215,13 +151,14 @@ void android_main( struct android_app* application ){
 	application->onInputEvent = engineHandleInput;
 	engine._app = application;
 
-	engine._sensorMgr = ASensorManager_getInstance();
-	engine._accelerometer = ASensorManager_getDefaultSensor(engine._sensorMgr,
-			ASENSOR_TYPE_ACCELEROMETER);
-	engine._sensorEventQueue = ASensorManager_createEventQueue(
-			engine._sensorMgr, application->looper, LOOPER_ID_USER, NULL, NULL);
+	cv::VideoCapture cap(CV_CAP_ANDROID + 0);
+	if(cap.isOpened()){
 
-//	LOGI("accel = %d", engine._accelerometer);
+		cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+		cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+
+		engine._cap = &cap;
+	}
 
 	if(application->savedState != NULL){
 		engine._state = *(saved_state*)application->savedState;
@@ -240,21 +177,6 @@ void android_main( struct android_app* application ){
 			if(source != NULL){
 				source->process(application, source);
 			}
-			if( ident == LOOPER_ID_USER ){
-				if(engine._accelerometer != NULL){
-					ASensorEvent event;
-					while(ASensorEventQueue_getEvents(engine._sensorEventQueue, & event, 1) > 0){
-						LOGI(caption, "accelerometer: x = %f, y = %f, z = %f",
-								event.acceleration.x,
-								event.acceleration.y,
-								event.acceleration.z);
-						engine._state._accX = event.acceleration.x;
-						engine._state._accY = event.acceleration.y;
-						engine._state._accZ = event.acceleration.z;
-					}
-				}
-			}
-
 			if(application->destroyRequested != 0){
 				if(engine._gs){
 					delete engine._gs; engine._gs = NULL;

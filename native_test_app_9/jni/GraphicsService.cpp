@@ -59,7 +59,10 @@ void GraphicsService::init( android_app* application ){
 	const double dim = 10.0;
 	const double aspect = _height / double(_width);
 	glViewport(0, 0, _width, _height);
+	LOGI("GraphicsService", "h = %d, w = %d", _height, _width);
+
 	glOrthof(-dim, dim, -aspect*dim, aspect*dim, -dim, dim);
+	LOGI("GraphicsService", "left = %f, right = %f, bottom = %f, top = %f, zNear = %f, zFar = %fh = %d, w = %d", -dim, dim, -aspect*dim, aspect*dim, -dim, dim);
 
 	LOGI("GraphicsService", "init end");
 }

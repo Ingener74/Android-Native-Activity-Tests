@@ -10,6 +10,7 @@
 
 #include "GLES/gl.h"
 #include "IGraphicsObject.h"
+#include "tools.h"
 
 namespace go {
 
@@ -19,6 +20,10 @@ public:
 	virtual ~Point();
 
 	virtual void draw();
+
+	GLfloat getX() const { return _x; }
+	GLfloat getY() const { return _y; }
+	GLfloat getZ() const { return _x; }
 
 protected:
 	union{

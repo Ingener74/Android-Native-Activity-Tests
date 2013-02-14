@@ -18,6 +18,7 @@ Point::~Point() {
 }
 
 void Point::draw(){
+	LOGI("Point draw", "x = %f, y = %f, z = %f", _x, _y, _z);
 	glEnableClientState(GL_ARRAY_BUFFER);
 	glVertexPointer(3, GL_FLOAT, 0, _v);
 	glDrawArrays(GL_POINTS, 0, 1);
