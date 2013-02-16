@@ -20,47 +20,40 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "GraphicsService.h"
-#include "Point.h"
-#include "Triangle.h"
+
+#include "GLTriangle.h"
+#include "RGBTexture.h"
 
 using namespace native_test_app_8;
 using namespace cv;
 using namespace std;
 
 const char* caption =
-		"native_test_app_7"
+		"native_test_app_9"
 		;
+
+
 
 struct saved_state{
 };
 
-class NativeTest8GS: public GraphicsService{
+class NativeTest9GS: public GraphicsService{
 	saved_state* _saved_state;
 public:
-	NativeTest8GS( android_app* application ,saved_state* saved_state_ ):
+	NativeTest9GS( android_app* application ,saved_state* saved_state_ ):
 		GraphicsService(application),
 		_saved_state(saved_state_){
 	}
-	virtual ~NativeTest8GS(){}
+	virtual ~NativeTest9GS(){}
 
 	void draw(){
 		if(_display != EGL_NO_DISPLAY && _saved_state != NULL ){
 			glClearColor(0.f, 0.f, 0.f, 1);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-			LOGI("cam test", "main draw");
-
 			/*
-			 * out green display
+			 * draw custom scene
 			 */
-			go::Point(0.3f, 0.3f, 0.3f).draw();
-			go::Point(0, 0, 0).draw();
-			go::Point(1, 1, 0).draw();
-			go::Point(2, 2, 0).draw();
-			go::Point(3, 3, 0).draw();
-
-			glColor4f(1.f, 1.f, 0.f, 1.f);
-			go::Triangle(go::Point(0,0,0), go::Point(3, 0, 0), go::Point(0, 3, 0)).draw();
 
 			eglSwapBuffers(_display, _surface);
 		}
@@ -73,7 +66,7 @@ struct engine{
 	const ASensor*     _accelerometer;
 	ASensorEventQueue* _sensorEventQueue;
 
-	NativeTest8GS*     _gs;
+	NativeTest9GS*     _gs;
 
 	saved_state        _state;
 	bool               _animate;
@@ -100,7 +93,7 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 	case APP_CMD_INIT_WINDOW:{
 		if( engine_->_app->window != NULL ){
 			LOGI("init window", "init window");
-			engine_->_gs = new NativeTest8GS(engine_->_app, &engine_->_state);
+			engine_->_gs = new NativeTest9GS(engine_->_app, &engine_->_state);
 			engine_->_animate = true;
 			LOGI("init window", "end init window");
 		}
@@ -150,15 +143,6 @@ void android_main( struct android_app* application ){
 	application->onAppCmd = engineHandleCmd;
 	application->onInputEvent = engineHandleInput;
 	engine._app = application;
-
-	cv::VideoCapture cap(CV_CAP_ANDROID + 0);
-	if(cap.isOpened()){
-
-		cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
-		cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-
-		engine._cap = &cap;
-	}
 
 	if(application->savedState != NULL){
 		engine._state = *(saved_state*)application->savedState;
