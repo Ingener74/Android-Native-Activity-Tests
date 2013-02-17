@@ -57,12 +57,12 @@ void GraphicsService::init( android_app* application ){
 	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
 	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
 
-	const double dim = 100.0;
+	const double dim = 200.0;
 	const double aspect = _height / double(_width);
 	glViewport(0, 0, _width, _height);
 	LOGI("GraphicsService", "h = %d, w = %d", _height, _width);
 
-	glOrthof(-dim, dim, -aspect*dim, aspect*dim, -10000.f, 10000.f);
+	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
 	LOGI("GraphicsService", "left = %f, right = %f, bottom = %f, top = %f, zNear = %f, zFar = %fh = %d, w = %d", -dim, dim, -aspect*dim, aspect*dim, -dim, dim);
 
 //	glEnable(GL_TEXTURE_2D);

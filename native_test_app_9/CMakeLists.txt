@@ -8,7 +8,7 @@ set(ANDROID_NATIVE_APP_GLUE_DIR
     
 set(ANDROID_OPENCV_DIR 
     #../3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
-    /home/ingener/prj/android_tut/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+    /home/pavel/prj/android_tut/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
     )
 
 include_directories(
@@ -46,7 +46,7 @@ set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     jni/main.cpp    
     jni/GraphicsService.cpp
-    jni/IObject.cpp    
+    jni/IObject.cpp
     jni/GLTriangle.cpp
     jni/RGBTexture.cpp    
     jni/ITexture.cpp
