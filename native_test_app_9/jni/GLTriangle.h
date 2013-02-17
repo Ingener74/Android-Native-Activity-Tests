@@ -10,11 +10,11 @@
 
 #include <GLES/gl.h>
 
-#include "GLObject.h"
+#include "IObject.h"
 #include "ITexture.h"
-#include "HTATools.h"
+#include "tools.h"
 
-class GLTriangle: public GLObject {
+class GLTriangle: public IObject {
 public:
 	virtual ~GLTriangle();
 	GLTriangle(ITexture* tex, GLfloat* vertexes, GLfloat* texcoords,

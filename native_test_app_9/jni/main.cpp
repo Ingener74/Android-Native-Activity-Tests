@@ -3,6 +3,7 @@
  */
 
 #include <fstream>
+#include <string>
 
 #include <jni.h>
 #include <errno.h>
@@ -18,6 +19,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "GraphicsService.h"
 
@@ -32,7 +34,71 @@ const char* caption =
 		"native_test_app_9"
 		;
 
+const string tex_file = "/mnt/sdcard/textures/brickwall.png";
 
+const GLfloat s = 50.f;
+GLfloat cube1[] = {
+		s, -s, s,
+		s, s, s,
+		s, s, -s,
+		s, -s, -s
+};
+GLfloat cube2[] = {
+		-s, -s, s,
+		s, -s, s,
+		s, -s, -s,
+		-s, -s, -s
+};
+GLfloat cube3[] = {
+		s, s, s,
+		-s, s, s,
+		-s, s, -s,
+		s, s, -s
+};
+GLfloat cube4[] = {
+		-s, s, s,
+		-s, -s, s,
+		-s, -s, -s,
+		-s, s, -s
+};
+GLfloat cube5[] = {
+		-s, -s, s,
+		-s, s, s,
+		s, s, s,
+		s, -s, s,
+};
+GLfloat cube6[] = {
+		s, -s, -s,
+		s, s, -s,
+		-s, s, -s,
+		-s, -s, -s
+};
+
+GLfloat texcoords[] = {
+		0.f, 0.f,
+		1.f, 0.f,
+		1.f, 1.f,
+		0.f, 1.f
+};
+GLfloat colors[] = {
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+};
+GLushort indexes[] = {
+		0, 1, 2,
+		2, 3, 0
+};
+
+Mat texim;
+ITexture* mt = 0;
+IObject*  tr[6] = {0, 0, 0, 0, 0, 0};
+
+/*
+ * fps
+ */
+const int fps30_delay = 1000 / 60;
 
 struct saved_state{
 };
@@ -54,6 +120,29 @@ public:
 			/*
 			 * draw custom scene
 			 */
+
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+
+			static bool b = false;
+			if(!b){
+				glTranslatef(0, 0, -70);
+				b = true;
+			}
+
+			glRotatef(0.3f, 1.f, 0.f, 0.f);
+			glRotatef(0.15f, 0.f, 1.f, 0.f);
+
+			glEnable(GL_TEXTURE_2D);
+
+			for(int32_t i = 0; i < 6; ++i )
+				if(tr[i])
+					tr[i]->draw();
+
+			glDisable(GL_TEXTURE_2D);
+
+//			glMatrixMode(GL_MODELVIEW);
+//			glLoadIdentity();
 
 			eglSwapBuffers(_display, _surface);
 		}
@@ -88,6 +177,8 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 		engine_->_app->savedState = malloc(sizeof(saved_state));
 		*((saved_state*)engine_->_app->savedState) = engine_->_state;
 		engine_->_app->savedStateSize = sizeof(saved_state);
+
+
 		break;
 	}
 	case APP_CMD_INIT_WINDOW:{
@@ -96,6 +187,29 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 			engine_->_gs = new NativeTest9GS(engine_->_app, &engine_->_state);
 			engine_->_animate = true;
 			LOGI("init window", "end init window");
+
+
+			LOGI("init window", "create objects begin");
+			texim = imread(tex_file);
+//			texim = Mat(512, 512, CV_8UC3, Scalar(0, 80, 30));
+			if(!texim.rows && !texim.cols){
+				LOGE("init window", "texture image not loaded");
+			}else{
+				LOGI("init window", "tex image: %d x %d", texim.rows, texim.cols);
+				cvtColor(texim, texim, CV_RGB2BGR);
+			}
+			mt = new RGBTexture(texim);
+			if(!mt){
+				LOGE("init window", "rgb texture not created");
+			}
+			tr[0] = new GLTriangle(mt, cube1, texcoords, colors, indexes, 6);
+			tr[1] = new GLTriangle(mt, cube2, texcoords, colors, indexes, 6);
+			tr[2] = new GLTriangle(mt, cube3, texcoords, colors, indexes, 6);
+			tr[3] = new GLTriangle(mt, cube4, texcoords, colors, indexes, 6);
+			tr[4] = new GLTriangle(mt, cube5, texcoords, colors, indexes, 6);
+			tr[5] = new GLTriangle(mt, cube6, texcoords, colors, indexes, 6);
+
+			LOGI("init window", "create objects end");
 		}
 		break;
 	}
@@ -156,7 +270,7 @@ void android_main( struct android_app* application ){
 		int event;
 		android_poll_source* source;
 
-		while( (ident = ALooper_pollAll( engine._animate ? 0 : -1, NULL, &event, (void**)&source)) >= 0 ){
+		while( (ident = ALooper_pollAll( engine._animate ? fps30_delay : -1, NULL, &event, (void**)&source)) >= 0 ){
 			LOGI(caption, "event");
 			if(source != NULL){
 				source->process(application, source);

@@ -15,7 +15,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "ITexture.h"
-#include "HTATools.h"
+#include "tools.h"
 
 using namespace cv;
 
@@ -24,7 +24,8 @@ public:
 	virtual ~RGBTexture();
 	RGBTexture( const Mat& image );
 
-	void update( const Mat& );
+	void updateAll( const Mat& im );
+	void updatePart( const Mat& im );
 	void bind();
 
 private:

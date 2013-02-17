@@ -21,36 +21,38 @@ void GLTriangle::setTexture(ITexture* tex) {
 }
 
 void GLTriangle::draw() {
+	LOGI("GLTriangle", "GLTriangle draw begin");
+
 	if (_tex)
 		_tex->bind();
-
-	LOGI("GLTriangle draw begin");
+	else
+		LOGE("GLTriangle", "Texture is NULL");
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	GLERR
+	GLERR;
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	GLERR
+	GLERR;
 	glEnableClientState(GL_COLOR_ARRAY);
-	GLERR
+	GLERR;
 
 	glVertexPointer(3, GL_FLOAT, 0, _vertexs);
-	GLERR
+	GLERR;
 	glTexCoordPointer(2, GL_FLOAT, 0, _texcoords);
-	GLERR
+	GLERR;
 	glColorPointer(4, GL_FLOAT, 0, _colors);
-	GLERR
+	GLERR;
 
-	glFrontFace(GL_CCW);
+	glFrontFace(GL_CW);
 
 	glDrawElements(GL_TRIANGLES, _elements, GL_UNSIGNED_SHORT, _indexes);
-	GLERR
+	GLERR;
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	GLERR
+	GLERR;
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	GLERR
+	GLERR;
 	glDisableClientState(GL_COLOR_ARRAY);
-	GLERR
+	GLERR;
 
-	LOGI("GLTriangle draw end");
+	LOGI("GLTriangle", "GLTriangle draw end");
 }

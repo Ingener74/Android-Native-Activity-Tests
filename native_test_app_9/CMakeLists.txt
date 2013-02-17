@@ -5,17 +5,22 @@ set(PROJECT_NAME native9)
 set(ANDROID_NATIVE_APP_GLUE_DIR
     ${ANDROID_NDK}/sources/android/native_app_glue
     )
+    
+set(ANDROID_OPENCV_DIR 
+    #../3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+    /home/ingener/prj/android_tut/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+    )
 
 include_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
     ${ANDROID_NATIVE_APP_GLUE_DIR}
     ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
-    /home/pavel/prj/OpenCV-2.4.4-android-sdk/sdk/native/jni/include
+    ${ANDROID_OPENCV_DIR}/jni/include
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
-    /home/pavel/prj/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a
-    /home/pavel/prj/OpenCV-2.4.4-android-sdk/sdk/native/3rdparty/libs/armeabi-v7a
+    ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a
+    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a
     )
 set(ANDROID_LIBS 
     log 
@@ -39,11 +44,12 @@ set(OPENCV_LIBS
 
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
-    jni/main.cpp
+    jni/main.cpp    
     jni/GraphicsService.cpp
-    jni/IGraphicsObject.cpp
-    jni/Point.cpp
-    jni/Triangle.cpp
+    jni/IObject.cpp    
+    jni/GLTriangle.cpp
+    jni/RGBTexture.cpp    
+    jni/ITexture.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

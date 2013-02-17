@@ -29,6 +29,7 @@ void GraphicsService::init( android_app* application ){
 			EGL_BLUE_SIZE, 8,
 			EGL_GREEN_SIZE, 8,
 			EGL_RED_SIZE, 8,
+			EGL_DEPTH_SIZE, 8,
 			EGL_NONE
 	};
 
@@ -56,13 +57,17 @@ void GraphicsService::init( android_app* application ){
 	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
 	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
 
-	const double dim = 10.0;
+	const double dim = 100.0;
 	const double aspect = _height / double(_width);
 	glViewport(0, 0, _width, _height);
 	LOGI("GraphicsService", "h = %d, w = %d", _height, _width);
 
-	glOrthof(-dim, dim, -aspect*dim, aspect*dim, -dim, dim);
+	glOrthof(-dim, dim, -aspect*dim, aspect*dim, -10000.f, 10000.f);
 	LOGI("GraphicsService", "left = %f, right = %f, bottom = %f, top = %f, zNear = %f, zFar = %fh = %d, w = %d", -dim, dim, -aspect*dim, aspect*dim, -dim, dim);
+
+//	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	LOGI("GraphicsService", "init end");
 }
