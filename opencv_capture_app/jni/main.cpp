@@ -34,20 +34,24 @@ const char* caption =
 		"OpenCV VideoCapture native-activity application"
 		;
 
-const int32_t cam_w = 640, cam_h = 480;
+Mat texim;
+const int32_t tex_side = 1024; //512;
+
+//const int32_t cam_w = 640, cam_h = 480;
+const int32_t cam_w = 864, cam_h = 480;
 
 const GLfloat side = 500;
 GLfloat screenSqruare[] = {
-		0, 0, 0,
-		side, 0, 0,
-		side, -side, 0,
-		0, -side, 0
+		0,      0,      0,
+		cam_w,  0,      0,
+		cam_w, -cam_h,  0,
+		0,     -cam_h,  0
 };
 GLfloat texcoords[] = {
-		0.f, 0.f,
-		1.f, 0.f,
-		1.f, 1.f,
-		0.f, 1.f
+		0.f,                       0.f,
+		cam_w / GLfloat(tex_side), 0.f,
+		cam_w / GLfloat(tex_side), cam_h / GLfloat(tex_side),
+		0.f,                       cam_h / GLfloat(tex_side)
 };
 GLfloat colors[] = {
 		1.f, 1.f, 1.f, 1.f,
@@ -60,8 +64,6 @@ GLushort indexes[] = {
 		2, 0, 3
 };
 
-Mat texim;
-const int32_t tex_side = 1024; //512;
 
 RGBTexture* mt = 0;
 IObject*  tr = 0;
@@ -172,8 +174,8 @@ static void engineHandleCmd( struct android_app* app, int32_t cmd){
 //				delete vc; vc = 0;
 				LOGI("init window", "capture device is not opened");
 			}else{
-				vc.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-				vc.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+				vc.set(CV_CAP_PROP_FRAME_WIDTH, cam_w);
+				vc.set(CV_CAP_PROP_FRAME_HEIGHT, cam_h);
 
 //				vc.set(CV_CAP_PROP_FRAME_WIDTH, 320);
 //				vc.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
@@ -226,6 +228,7 @@ void android_main( struct android_app* application ){
 	application->userData = &engine;
 	application->onAppCmd = engineHandleCmd;
 	application->onInputEvent = engineHandleInput;
+
 	engine._app = application;
 
 	if(application->savedState != NULL){

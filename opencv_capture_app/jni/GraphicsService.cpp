@@ -57,13 +57,14 @@ void GraphicsService::init( android_app* application ){
 	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
 	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
 
-	const double dim = 1000.0;
+	const double dim_d = 1000.0; // depth dimension
+	const double dim_w = 864, dim_h = 480;
+
 	const double aspect = _height / double(_width);
 	glViewport(0, 0, _width, _height);
 	LOGI("GraphicsService", "h = %d, w = %d", _height, _width);
 
-	glOrthof(0.f, dim, -aspect * dim, 0, - dim * 100.f, dim * 100.f);
-	LOGI("GraphicsService", "left = %f, right = %f, bottom = %f, top = %f, zNear = %f, zFar = %fh = %d, w = %d", -dim, dim, -aspect*dim, aspect*dim, -dim, dim);
+	glOrthof(0.f, dim_w, -dim_h, 0, - dim_d * 100.f, dim_d * 100.f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
