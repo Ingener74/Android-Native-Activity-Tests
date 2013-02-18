@@ -21,8 +21,6 @@ namespace opengles_test {
 
 class OpenGLESTestEventEngine: public IEventEngine {
 public:
-	static const int32_t drawDelay = 1000 / 60;
-
 	OpenGLESTestEventEngine( android_app* application, IGraphicsService* graphicsService );
 	virtual ~OpenGLESTestEventEngine();
 

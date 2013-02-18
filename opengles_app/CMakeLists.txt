@@ -46,13 +46,17 @@ set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     jni/main.cpp
     jni/IEventEngine.cpp
+    jni/OpenGLESTestEventEngine.cpp
     jni/IGraphicsService.cpp
     jni/OpenGLES100GraphicsService.cpp
-    jni/OpenGLESTestEventEngine.cpp
+    jni/NativeWindowGraphicsService.cpp
     jni/IObject.cpp
     jni/GLTriangle.cpp
     jni/ITexture.cpp
     jni/RGBTexture.cpp
+    jni/ICaptureService.cpp
+    jni/NullCapture.cpp
+    jni/OpenCVCapture.cpp    
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

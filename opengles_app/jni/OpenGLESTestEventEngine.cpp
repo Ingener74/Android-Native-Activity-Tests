@@ -23,14 +23,12 @@ void OpenGLESTestEventEngine::run(){
 
 	int32_t num = 0;
 
-	int32_t fd = 0, event = 0;
+	int32_t event = 0;
 	android_poll_source* source;
 
 	while( true ){
-		while( (num = ALooper_pollAll(_animateGraphics ? drawDelay : -1, &fd, &event, (void**)&source)) >= 0 ){
-//			LOGI_OGLESEE("num = %d", num);
-//			LOGI_OGLESEE("fd = %d", fd);
-//			LOGI_OGLESEE("events = %d", event);
+		while( (num = ALooper_pollAll(_animateGraphics ? 0 : -1, 0, &event,
+				(void**)&source)) >= 0 ){
 
 			if(source)
 				source->process(_application, source);
@@ -40,6 +38,8 @@ void OpenGLESTestEventEngine::run(){
 				LOGI_OGLESEE("application destroyed");
 			}
 
+		}
+		if(_animateGraphics && _graphicsService){
 			_graphicsService->draw();
 		}
 	}
@@ -63,8 +63,8 @@ void OpenGLESTestEventEngine::onTermWindow(){
 	if(_graphicsService){
 		LOGI_OGLESEE("onTermWindow deinit");
 		_graphicsService->deinit();
-		delete _graphicsService;
-		_graphicsService = 0;
+//		delete _graphicsService;
+//		_graphicsService = 0;
 	}
 	LOGI_OGLESEE("onTermWindow end");
 }

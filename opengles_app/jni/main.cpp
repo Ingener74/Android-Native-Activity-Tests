@@ -2,27 +2,19 @@
  * Test application for OpenGL
  */
 
-#include <fstream>
-#include <string>
-
-#include <jni.h>
-#include <errno.h>
-#include <math.h>
 
 #include <android/log.h>
-#include <android/looper.h>
-#include <android/sensor.h>
 #include <android_native_app_glue.h>
 
-#include <GLES/gl.h>
-#include <EGL/egl.h>
+#include "NullCapture.h"
+#include "OpenCVCapture.h"
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+//#include "CircleProcessor.h"
+
+#include "OpenGLES100GraphicsService.h"
+//#include "NativeWindowGraphicsService.h"
 
 #include "OpenGLESTestEventEngine.h"
-#include "OpenGLES100GraphicsService.h"
 
 using namespace cv;
 using namespace std;
@@ -37,17 +29,39 @@ void android_main( struct android_app* application ){
 
 	LOGI("main", caption);
 
-	IGraphicsService* opengles100 = new OpenGLES100GraphicsService();
-	IEventEngine* sep = new OpenGLESTestEventEngine(application, opengles100);
+//	ICaptureService*  cs = 0;
+//	int j = 1;
+//	if(j == 0){
+//		cs = new NullCapture();
+//	}else{
+//		cs = new OpenCVCapture(0);
+//	}
+
+//	IProcessor* ps = 0;
+//	int32_t n = 0;
+//	if(n == 0){
+//		ps = new CircleProcessor(cs);
+//	}
+
+	IGraphicsService* gs = 0;
+//	int i = 1;
+//	if(i == 0){
+//		gs = new NativeWindowGraphicsService(cs);
+//	}else if(i == 1){
+		gs = new OpenGLES100GraphicsService();
+//	}else{
+//	}
+
+	IEventEngine* sep = new OpenGLESTestEventEngine(application, gs);
 
 	LOGI("main", "run");
 
-	if(sep)
-		sep->run();
+//	if(sep)
+//		sep->run();
 
 	LOGI("main", "release resources");
-	delete opengles100;
-	delete sep;
+//	delete opengles100;
+//	delete sep;
 }
 
 
