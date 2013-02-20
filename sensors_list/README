@@ -1,0 +1,2 @@
+Program that create list of available sensors on device and save it on 
+/sdcard/avail_sensors.txt
