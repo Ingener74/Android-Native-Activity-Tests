@@ -4,6 +4,8 @@ Requirements for build:
 1. Android NDK
 2. Android CMake - i recommend this: https://github.com/taka-no-me/android-cmake
 
+Instruction for install Android CMake view on my blog http://ingener74.blogspot.ru/ - the message about it not ready but i am write it in the close time
+
 3rdparty contained: 
 1. OpenCV 2.4.4-beta for Android
 
