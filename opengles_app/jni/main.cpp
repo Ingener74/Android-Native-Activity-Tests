@@ -56,12 +56,12 @@ void android_main( struct android_app* application ){
 
 	LOGI("main", "run");
 
-//	if(sep)
-//		sep->run();
+	if(sep)
+		sep->run();
 
 	LOGI("main", "release resources");
-//	delete opengles100;
-//	delete sep;
+	delete sep;
+	delete gs;
 }
 
 

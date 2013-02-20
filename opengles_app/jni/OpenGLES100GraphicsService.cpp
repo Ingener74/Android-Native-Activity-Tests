@@ -83,6 +83,9 @@ OpenGLES100GraphicsService::~OpenGLES100GraphicsService() {
 
 void OpenGLES100GraphicsService::draw(){
 
+	glClearColor(0.f, 0.3f, 0.1f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
 	glEnable(GL_TEXTURE_2D);
 
 	static bool trans = false;
@@ -100,6 +103,7 @@ void OpenGLES100GraphicsService::draw(){
 
 	glDisable(GL_TEXTURE_2D);
 
+	glFinish();
 	eglSwapBuffers(_display, _surface);
 }
 
@@ -147,7 +151,7 @@ IGraphicsService::STATUS OpenGLES100GraphicsService::init(
 
 	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
 	LOGI_OGLESS("left = %f, right = %f, bottom = %f, top = %f, zNear = %f, "
-			"zFar = %fh = %d, w = %d",
+			"zFar = %f",
 			-dim, dim, -aspect*dim, aspect*dim, -dim, dim);
 
 	glEnable(GL_DEPTH_TEST);
@@ -157,7 +161,11 @@ IGraphicsService::STATUS OpenGLES100GraphicsService::init(
 	 * create objects
 	 */
 
-	_mt = new RGBTexture(imread(tex_file));
+	Mat tex_im = imread(tex_file);
+	if(!tex_im.empty()){
+		cvtColor(tex_im, tex_im, CV_RGB2BGR);
+		_mt = new RGBTexture(tex_im);
+	}
 
 	_tri[0] = new GLTriangle(_mt, cube1, texcoords, colors, indexes, 6);
 	_tri[1] = new GLTriangle(_mt, cube2, texcoords, colors, indexes, 6);

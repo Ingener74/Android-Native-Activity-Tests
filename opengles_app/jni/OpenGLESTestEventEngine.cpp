@@ -21,8 +21,9 @@ void OpenGLESTestEventEngine::run(){
 
 	LOGI_OGLESEE("run begin");
 
-	int32_t num = 0;
+	app_dummy();
 
+	int32_t num = 0;
 	int32_t event = 0;
 	android_poll_source* source;
 
@@ -53,6 +54,7 @@ void OpenGLESTestEventEngine::onInitWindow(){
 	if(_graphicsService){
 		if(_graphicsService->init(_application)){
 			LOGI_OGLESEE("run end");
+			_animateGraphics = true;
 		}
 	}
 	LOGI_OGLESEE("onInitWindow end");
@@ -60,11 +62,10 @@ void OpenGLESTestEventEngine::onInitWindow(){
 
 void OpenGLESTestEventEngine::onTermWindow(){
 	LOGI_OGLESEE("onTermWindow begin");
+	_animateGraphics = false;
 	if(_graphicsService){
 		LOGI_OGLESEE("onTermWindow deinit");
 		_graphicsService->deinit();
-//		delete _graphicsService;
-//		_graphicsService = 0;
 	}
 	LOGI_OGLESEE("onTermWindow end");
 }
