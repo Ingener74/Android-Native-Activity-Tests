@@ -2,13 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME opencv_capture)
 
+set(REPO_ROOT 
+    /home/ingener/prj/android_tut
+    )
+
 set(ANDROID_NATIVE_APP_GLUE_DIR
     ${ANDROID_NDK}/sources/android/native_app_glue
     )
     
-set(ANDROID_OPENCV_DIR 
-    #../3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
-    /home/pavel/prj/android_tut/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+set(ANDROID_OPENCV_DIR
+    ${REPO_ROOT}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+    #/home/pavel/prj/android_tut/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
     )
 
 include_directories(
@@ -16,11 +20,13 @@ include_directories(
     ${ANDROID_NATIVE_APP_GLUE_DIR}
     ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
     ${ANDROID_OPENCV_DIR}/jni/include
+    ${REPO_ROOT}/modules/libtools/include    
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
     ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a
-    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a
+    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a    
+    ${REPO_ROOT}/libs/armeabi-v7a
     )
 set(ANDROID_LIBS 
     log 
@@ -41,16 +47,17 @@ set(OPENCV_LIBS
     libjasper
     IlmImf
     )
+    
+set(MY_LIBS
+    tools
+    )
 
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
-    jni/main.cpp    
-    jni/GraphicsService.cpp
-    jni/IObject.cpp
-    jni/GLTriangle.cpp
-    jni/RGBTexture.cpp    
-    jni/ITexture.cpp
+    jni/main.cpp
+    jni/OpenCVEvent.cpp
+    jni/OpenGLES100OpenCVVisualizer.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS})
+target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} ${MY_LIBS})

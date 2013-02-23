@@ -51,18 +51,6 @@ set(OPENCV_LIBS
 set(MY_LIBS
     tools
     )
-    
-#set(EXT_SOURCES
-#    ${REPO_ROOT}/modules/libtools/src/IEventEngine.cpp
-#    ${REPO_ROOT}/modules/libtools/src/IGraphicsService.cpp    
-#    ${REPO_ROOT}/modules/libtools/src/IObject.cpp
-#    ${REPO_ROOT}/modules/libtools/src/GLTriangle.cpp
-#    ${REPO_ROOT}/modules/libtools/src/ITexture.cpp
-#    ${REPO_ROOT}/modules/libtools/src/RGBTexture.cpp
-#    ${REPO_ROOT}/modules/libtools/src/ICaptureService.cpp
-#    ${REPO_ROOT}/modules/libtools/src/NullCapture.cpp
-#    ${REPO_ROOT}/modules/libtools/src/OpenCVCapture.cpp     
-#    )
 
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
