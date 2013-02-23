@@ -35,18 +35,22 @@ public:
 
 	void draw();
 
+	void setImage( const Mat& im );
+
 private:
-	android_app* _app;
+	android_app*   _app;
 
-	EGLDisplay  _display;
-	EGLContext  _context;
-	EGLSurface  _surface;
+	EGLDisplay     _display;
+	EGLContext     _context;
+	EGLSurface     _surface;
 
-	EGLint      _width;
-	EGLint      _height;
+	EGLint         _width;
+	EGLint         _height;
 
-	IObject*    _scr;
-	RGBTexture* _mt;
+	IObject*       _scr;
+	RGBTexture*    _mt;
+
+	Mat            _visim;
 
 	static int32_t _tex_size;
 	static int32_t _tex_im_h;

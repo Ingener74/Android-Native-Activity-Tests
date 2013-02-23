@@ -5,6 +5,9 @@
 #include "OpenCVEvent.h"
 #include "OpenGLES100OpenCVVisualizer.h"
 
+#include "OpenCVCapture.h"
+#include "NullCapture.h"
+
 #include "tools.h"
 
 const char* caption =
@@ -15,8 +18,9 @@ void android_main( struct android_app* application ){
 
 	LOGI("android main", "begin");
 
-	IGraphicsService* gs = new OpenGLES100_OpenCVVisualizer();
-	IEventEngine* ocve = new OpenCVEvent(application, gs);
+	ICaptureService*  cs   = new NullCapture();
+	IGraphicsService* gs   = new OpenGLES100_OpenCVVisualizer();
+	IEventEngine*     ocve = new OpenCVEvent(application, gs);
 
 	if(ocve)
 		ocve->run();

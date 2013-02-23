@@ -100,7 +100,7 @@ IGraphicsService::STATUS OpenGLES100_OpenCVVisualizer::init(
 	 */
 
 	_mt = new RGBTexture(Mat(_tex_size, _tex_size, CV_8UC3, Scalar(0, 120, 20)));
-	_scr = new GLTriangle(_mt, _scr_tex_coords, _scr_tex_coords, _scr_colors, _scr_indexes, 6);
+	_scr = new GLTriangle(_mt, _scr_vertex, _scr_tex_coords, _scr_colors, _scr_indexes, 6);
 
 	LOGI_OGLES("OpenGLES100_OpenCVVisualizer init end");
 	return IGraphicsService::STATUS_OK;
@@ -153,3 +153,6 @@ void OpenGLES100_OpenCVVisualizer::draw(){
 	LOGI_OGLES("OpenGLES100_OpenCVVisualizer draw end");
 }
 
+void OpenGLES100_OpenCVVisualizer::setImage( const Mat& im ){
+	im.copyTo(_visim);
+}
