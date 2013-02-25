@@ -2,11 +2,12 @@
  * Test application for OpenGL
  */
 
-#include "OpenCVEvent.h"
-#include "OpenGLES100OpenCVVisualizer.h"
-
 #include "OpenCVCapture.h"
 #include "NullCapture.h"
+
+#include "OpenGLES100OpenCVVisualizer.h"
+
+#include "OpenCVEvent.h"
 
 #include "tools.h"
 
@@ -20,7 +21,7 @@ void android_main( struct android_app* application ){
 
 	ICaptureService*  cs   = new NullCapture();
 	IGraphicsService* gs   = new OpenGLES100_OpenCVVisualizer();
-	IEventEngine*     ocve = new OpenCVEvent(application, gs);
+	IEventEngine*     ocve = new OpenCVEvent(application, gs, cs);
 
 	if(ocve)
 		ocve->run();

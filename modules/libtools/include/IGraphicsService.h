@@ -8,9 +8,12 @@
 #ifndef IGRAPHICSSERVICE_H_
 #define IGRAPHICSSERVICE_H_
 
+#include <opencv2/core/core.hpp>
 #include <android_native_app_glue.h>
 
 namespace opengles_test {
+
+using namespace cv;
 
 class IGraphicsService {
 public:
@@ -26,6 +29,8 @@ public:
 	virtual void deinit() = 0;
 
 	virtual void draw() = 0;
+
+	virtual void setImage( const Mat& image ) = 0;
 
 protected:
 	android_app* _application;

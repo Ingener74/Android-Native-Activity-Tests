@@ -22,5 +22,12 @@ set(SOURCES
 	src/ITexture.cpp
 	src/RGBTexture.cpp
 	)
+	
+set(OPENCV_LIBS
+    opencv_core
+    opencv_highgui
+    opencv_imgproc
+    )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
+target_link_libraries(${PROJECT_NAME} ${OPENCV_LIBS})

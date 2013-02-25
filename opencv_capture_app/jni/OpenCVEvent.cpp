@@ -8,8 +8,9 @@
 #include "OpenCVEvent.h"
 
 OpenCVEvent::OpenCVEvent( android_app* application,
-		IGraphicsService* graphicsService ): IEventEngine(application),
-		_gs(graphicsService), _app(application), _animate(false) {
+		IGraphicsService* graphicsService, ICaptureService* captureService ):
+		IEventEngine(application), _app(application), _gs(graphicsService),
+		_cs(captureService), _animate(false) {
 	LOGI_OCVE("OpenCVEvent constr");
 }
 
@@ -37,6 +38,14 @@ void OpenCVEvent::run(){
 			}
 
 		}
+
+		if(_cs){
+			_cs->grab();
+			if(_gs){
+				_gs->setImage(_cs->getImage());
+			}
+		}
+
 		if(_animate && _gs ){
 			LOGI_OCVE("OpenCVEvent animate true, gs->draw");
 			_gs->draw();

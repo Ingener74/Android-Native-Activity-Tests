@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME opengles_test)
 
 set(REPO_ROOT 
-    /home/ingener/prj/android_tut
+    /home/ingener/prj/Android-Native-Activity-Tests
     )
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
@@ -25,7 +25,7 @@ include_directories(
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
     ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a
-    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a    
+    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a
     ${REPO_ROOT}/libs/armeabi-v7a
     )
 set(ANDROID_LIBS 

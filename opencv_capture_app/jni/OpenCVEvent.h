@@ -10,6 +10,7 @@
 
 #include <IEventEngine.h>
 #include <IGraphicsService.h>
+#include <ICaptureService.h>
 
 #include <tools.h>
 
@@ -20,7 +21,8 @@ using namespace opengles_test;
 
 class OpenCVEvent: public IEventEngine {
 public:
-	OpenCVEvent( android_app* application, IGraphicsService* graphicsService );
+	OpenCVEvent( android_app* application, IGraphicsService* graphicsService,
+			ICaptureService* captureService );
 	virtual ~OpenCVEvent();
 
 	void run();
@@ -31,6 +33,7 @@ public:
 private:
 	android_app*      _app;
 	IGraphicsService* _gs;
+	ICaptureService*  _cs;
 	bool              _animate;
 };
 

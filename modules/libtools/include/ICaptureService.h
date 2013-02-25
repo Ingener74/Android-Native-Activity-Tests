@@ -16,6 +16,7 @@ class ICaptureService {
 public:
 	virtual ~ICaptureService(){}
 
+	virtual void grab() = 0;
 	virtual Mat& getImage() = 0;
 };
 

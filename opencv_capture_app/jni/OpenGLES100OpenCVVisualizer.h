@@ -38,26 +38,26 @@ public:
 	void setImage( const Mat& im );
 
 private:
-	android_app*   _app;
+	android_app*    _app;
 
-	EGLDisplay     _display;
-	EGLContext     _context;
-	EGLSurface     _surface;
+	EGLDisplay      _display;
+	EGLContext      _context;
+	EGLSurface      _surface;
 
-	EGLint         _width;
-	EGLint         _height;
+	EGLint          _width;
+	EGLint          _height;
 
-	IObject*       _scr;
-	RGBTexture*    _mt;
+	IObject*        _scr;
+	RGBTexture*     _mt;
 
-	Mat            _visim;
+	Mat             _visim;
 
-	static int32_t _tex_size;
-	static int32_t _tex_im_h;
-	static int32_t _tex_im_w;
-	static GLfloat _scr_vertex[];
-	static GLfloat _scr_tex_coords[];
-	static GLfloat _scr_colors[];
+	static int32_t  _tex_size;
+	static int32_t  _tex_im_h;
+	static int32_t  _tex_im_w;
+	static GLfloat  _scr_vertex[];
+	static GLfloat  _scr_tex_coords[];
+	static GLfloat  _scr_colors[];
 	static GLushort _scr_indexes[];
 };
 
