@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME empty_application)
+set(PROJECT_NAME opengles10_application)
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
     ${ANDROID_NDK}/sources/android/native_app_glue
@@ -14,6 +14,8 @@ include_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
     ${ANDROID_NATIVE_APP_GLUE_DIR}
     ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
+    ${ANDROID_OPENCV_DIR}/jni/include
+    
     ${REPO_HOME}/modules/libtools/include
     )
 link_directories(
@@ -25,16 +27,28 @@ link_directories(
 set(ANDROID_LIBS 
     log 
     android
+    z
+    
+    EGL
+    GLESv1_CM
     
     opencv_core
     opencv_highgui
     opencv_imgproc
+    
+    tbb
+    IlmImf
+    libjasper
+    libjpeg
+    libpng
+    libtiff
     )
 
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     src/main.cpp
-    src/EmptyAppEventHandler.cpp
+    src/OpenGLES10EventHandler.cpp
+    src/OpenGLES10GraphicsService.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

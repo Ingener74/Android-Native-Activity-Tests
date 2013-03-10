@@ -11,8 +11,6 @@
 #include <opencv2/core/core.hpp>
 #include <android_native_app_glue.h>
 
-namespace opengles_test {
-
 using namespace cv;
 
 class IGraphicsService {
@@ -26,6 +24,8 @@ public:
 	virtual ~IGraphicsService();
 
 	virtual STATUS init( android_app* application ) = 0;
+	virtual bool isInit() = 0;
+
 	virtual void deinit() = 0;
 
 	virtual void draw() = 0;
@@ -36,5 +36,4 @@ protected:
 	android_app* _application;
 };
 
-} /* namespace opengles_test */
 #endif /* IGRAPHICSSERVICE_H_ */
