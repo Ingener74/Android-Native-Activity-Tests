@@ -47,6 +47,8 @@ set(ANDROID_LIBS
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     src/main.cpp
+    src/OpenCVCaptureEventHandler.cpp
+    src/OpenCVCaptureGraphicsService.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

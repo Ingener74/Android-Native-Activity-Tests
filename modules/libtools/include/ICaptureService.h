@@ -10,14 +10,20 @@
 
 #include <opencv2/core/core.hpp>
 
+#include "IService.h"
+
 using namespace cv;
 
-class ICaptureService {
+class ICaptureService: public IService {
 public:
 	virtual ~ICaptureService(){}
 
 	virtual void grab() = 0;
-	virtual Mat& getImage() = 0;
+
+	virtual Mat getImage() = 0;
+	virtual void dataReaded() = 0;
+
+	virtual bool dataReady() = 0;
 };
 
 #endif /* ICAPTURESERVICE_H_ */

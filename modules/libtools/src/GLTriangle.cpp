@@ -21,7 +21,7 @@ void GLTriangle::setTexture(ITexture* tex) {
 }
 
 void GLTriangle::draw() {
-//	LOGI("GLTriangle", "GLTriangle draw begin");
+	LOGI("GLTriangle", "GLTriangle draw begin");
 
 	if (_tex)
 		_tex->bind();
@@ -54,5 +54,5 @@ void GLTriangle::draw() {
 	glDisableClientState(GL_COLOR_ARRAY);
 	GLERR;
 
-//	LOGI("GLTriangle", "GLTriangle draw end");
+	LOGI("GLTriangle", "GLTriangle draw end");
 }

@@ -26,10 +26,17 @@ public:
 
 	void updateAll( const Mat& im );
 	void updatePart( const Mat& im );
+	void updateAllLikePart( const Mat& im );
+
 	void bind();
+
+	bool isOtherSize();
+	void resizeTexture();
 
 private:
 	GLuint _id;
+
+	GLuint upperPowerOfTwo( GLuint v );
 };
 
 #endif /* RGBTEXTURE_H_ */

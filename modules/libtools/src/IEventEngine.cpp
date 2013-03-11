@@ -20,10 +20,11 @@ IEventEngine::IEventEngine( struct android_app* application ):
 	_application->onAppCmd = IEventEngine::applicationCommand;
 	_application->onInputEvent = IEventEngine::inputEvent;
 
-	LOGI_IEE("IEventEngine constructor end");
+	LOGI_IEE("IEventEngine constructor begin");
 }
 
 IEventEngine::~IEventEngine(){
+	LOGI_IEE("IEventEngine destructor");
 }
 
 void IEventEngine::applicationCommand( struct android_app* application,

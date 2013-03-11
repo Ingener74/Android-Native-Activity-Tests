@@ -7,7 +7,7 @@
 
 #include "OpenCVCapture.h"
 
-OpenCVCapture::OpenCVCapture( int32_t cam ) {
+OpenCVCapture::OpenCVCapture( int32_t cam, int32_t rows, int32_t cols ){
 	LOGI_OCV("OpenCVCapture constructor begin");
 
 	_cv = VideoCapture(CV_CAP_ANDROID + cam);
@@ -28,12 +28,26 @@ OpenCVCapture::~OpenCVCapture() {
 	LOGI_OCV("OpenCVCapture destructor end");
 }
 
-Mat& OpenCVCapture::getImage() {
-	LOGI_OCV("OpenCVCapture getImage begin");
+void OpenCVCapture::grab(){
 	if(_cv.isOpened()){
 		_cv >> _im;
 		cvtColor(_im, _im, CV_RGB2BGR);
 	}
-	LOGI_OCV("OpenCVCapture getImage end");
+}
+
+Mat OpenCVCapture::getImage() {
 	return _im;
+}
+
+void OpenCVCapture::stop(){
+	LOGI_OCV("stop begin");
+	_cv.release();
+	LOGI_OCV("stop end");
+}
+
+bool OpenCVCapture::dataReady(){
+	return false;
+}
+
+void OpenCVCapture::dataReaded(){
 }

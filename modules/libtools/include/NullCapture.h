@@ -8,23 +8,34 @@
 #ifndef NULLCAPTURE_H_
 #define NULLCAPTURE_H_
 
+#include <ctime>
+
 #include "ICaptureService.h"
+
+static const int32_t h = 480, w = 640;
 
 class NullCapture: public ICaptureService {
 public:
+	static const uchar r = 0, g = 90, b = 30;
+	static const int32_t simulatedDelay = 1000 /*ms in sec*/ / 60 /*fps*/;
 
 	NullCapture();
 	virtual ~NullCapture();
 
 	void grab();
-	Mat& getImage();
+	Mat getImage();
+
+	void stop();
+
+	bool isError() { return false; }
+
+	bool dataReady();
+	void dataReaded();
 
 protected:
-	Mat _outputImage;
 	double _angle;
-	static const int32_t rows = 480, cols = 640;
-	static const uchar r = 190, g = 100, b = 20;
-	static const int32_t simulatedDelay = 1000 * 16;
+	bool   _stop;
+	Mat    _im;
 };
 
 #endif /* NULLCAPTURE_H_ */

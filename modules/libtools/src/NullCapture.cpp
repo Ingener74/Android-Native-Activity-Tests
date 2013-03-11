@@ -7,32 +7,43 @@
 
 #include "NullCapture.h"
 
-NullCapture::NullCapture()
-	: _outputImage(Mat(rows, cols, CV_8UC3, Scalar(190, 80, 20))),
-	  _angle(0){
-//	_outputImage = Mat(rows, cols, CV_8UC3 );
+NullCapture::NullCapture(): _angle(0), _stop(false) {
+//	_im = Mat(h, w, CV_8UC4, Scalar(r, g, b, 255));
+	_im = Mat(h, w, CV_8UC3, Scalar(r, g, b));
 }
 
 NullCapture::~NullCapture() {
 }
 
 void NullCapture::grab(){
-	_outputImage = Mat(rows, cols, CV_8UC3, Scalar(r, b, g));
-	double rad = min(rows/2, cols/2) * 0.8;
-	circle( _outputImage,
-			Point(cols/2, rows/2) + Point(rad * cos(_angle), rad * sin(_angle)),
-			rad, Scalar(0, 190, 40), 6);
-	_angle += 0.1;
+
+	if(!_stop){
+//		_im = Mat(h, w, CV_8UC4, Scalar(0, 90, 30, 255));
+		_im = Mat(h, w, CV_8UC3, Scalar(0, 90, 30));
+
+		int32_t rad = int32_t( 0.8 * min(h, w) / 2.0 );
+
+		circle(_im,
+				Point(w/2, h/2) + Point(rad*cos(_angle), rad*sin(_angle)),
+				int32_t(rad * 0.1), Scalar(255, 0, 0), 6);
+
+		_angle += 0.1;
+
+		usleep(simulatedDelay * 1000);
+	}
 }
 
-Mat& NullCapture::getImage(){
+Mat NullCapture::getImage(){
+	return _im;
+}
 
-//	static uchar r = 0, g = 0, b = 0;
-//	if( ++r       >= 256 ) r = 0;
-//	if( (g += 10) >= 256 ) g = 0;
-//	if( (b *=  2) >= 256 ) b = 0;
-//	circle(_outputImage, Point(50, 50), 40,
-//			Scalar( (r+255)%255, (g+255)%255, (b+255)%255 ), 10);
+void NullCapture::stop(){
+	_stop = true;
+}
 
-	return _outputImage;
+bool NullCapture::dataReady(){
+	return false;
+}
+
+void NullCapture::dataReaded(){
 }

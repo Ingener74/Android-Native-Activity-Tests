@@ -12,17 +12,28 @@ include_directories(
 	)
 
 set(SOURCES 
-	src/IEventEngine.cpp
-	src/IGraphicsService.cpp
-	src/ICaptureService.cpp
-	src/NullCapture.cpp
-	src/OpenCVCapture.cpp
-	src/IObject.cpp
-	src/GLTriangle.cpp
-	src/ITexture.cpp
-	src/RGBTexture.cpp
+    src/AndroidGraphicBuffer.cpp
+    src/AssetFileResource.cpp
+    src/CircleProcessor.cpp
+    src/CopyProcessor.cpp
+    src/EGLDispatcher.cpp
+    src/FastEGLTexture.cpp
+    src/FPSCalculator.cpp
+    src/GLTriangle.cpp
+    src/ICaptureService.cpp
+    src/IEventEngine.cpp
+    src/IGraphicsService.cpp
+    src/IImageTexture.cpp
+    src/IObject.cpp
+    src/IProcessor.cpp
+    src/IService.cpp
+    src/ITexture.cpp
+    src/NullCapture.cpp
+    src/OpenCVCapture.cpp
+    src/RGB565Texture.cpp
+    src/RGBATexture.cpp
+    src/RGBTexture.cpp
 	)
-	
 set(OPENCV_LIBS
     opencv_core
     opencv_highgui

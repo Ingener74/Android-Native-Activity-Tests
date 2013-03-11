@@ -18,4 +18,17 @@
 
 #define GLERR {GLenum er = glGetError(); if(er) LOGE("glGetError", "glGetError = %d", er);}
 
+class Tools{
+public:
+	static void glCheck(const char* funcName ){
+		for( GLenum err = glGetError(); err; err = glGetError()){
+			LOGE("Tools::glCheck", "error after %s = %x", funcName, err);
+		}
+	}
+
+private:
+	Tools(){}
+	virtual ~Tools(){}
+};
+
 #endif /* TOOLS_H_ */
