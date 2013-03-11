@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME opengles10_application)
+set(PROJECT_NAME 02_opengles10_app)
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
     ${ANDROID_NDK}/sources/android/native_app_glue
