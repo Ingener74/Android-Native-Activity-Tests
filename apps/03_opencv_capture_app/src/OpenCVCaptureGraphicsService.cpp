@@ -86,7 +86,9 @@ OpenCVCaptureGraphicsService::STATUS OpenCVCaptureGraphicsService::init( android
 	glViewport(0, 0, _width, _height);
 	LOGE_OCVCGS("h = %d, w = %d", _height, _width);
 
-	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
+//	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
+	glOrthof(0, dim, dim, 0, - dim * 100.f, dim * 100.f);
+
 
 	Mat tex_im(texSize, texSize, CV_8UC3, Scalar(0, 255, 255));
 	_mt = new RGBTexture(tex_im);
@@ -136,8 +138,8 @@ void OpenCVCaptureGraphicsService::draw(){
 	if(_screen)
 		_screen->draw();
 
-	glRotatef(0.3f, 1.f, 0.f, 0.f);
-	glRotatef(0.13f, 0.f, 1.f, 0.f);
+//	glRotatef(0.3f, 1.f, 0.f, 0.f);
+//	glRotatef(0.13f, 0.f, 1.f, 0.f);
 
 	glDisable(GL_TEXTURE_2D);
 
