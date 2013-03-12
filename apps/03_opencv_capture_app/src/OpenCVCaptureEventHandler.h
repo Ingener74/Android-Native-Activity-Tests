@@ -10,6 +10,7 @@
 
 #include <IGraphicsService.h>
 #include <IEventEngine.h>
+#include <IProcessor.h>
 #include <tools.h>
 
 using namespace nae;

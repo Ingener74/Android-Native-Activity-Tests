@@ -19,13 +19,13 @@ void android_main( android_app* app ){
 
 	LOGI("android main", caption);
 
-	ICaptureService* cs = OpenCVCapture();
+	ICaptureService* cs = new OpenCVCapture();
 
 	OpenCVCaptureGraphicsService* gs = new OpenCVCaptureGraphicsService();
 
 	IProcessor* ps = new CopyProcessor(cs, gs);
 
-	OpenCVCaptureEventHandler* eh = new OpenCVCaptureEventHandler(app, gs);
+	OpenCVCaptureEventHandler* eh = new OpenCVCaptureEventHandler(app, gs, ps);
 
 	if(eh)
 		eh->run();

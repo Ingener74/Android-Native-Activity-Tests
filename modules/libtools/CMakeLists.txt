@@ -35,9 +35,16 @@ set(SOURCES
     src/RGBTexture.cpp
 	)
 set(OPENCV_LIBS
-    opencv_core
     opencv_highgui
+    opencv_androidcamera
     opencv_imgproc
+    opencv_core
+    tbb
+    libpng
+    libjpeg
+    libtiff
+    libjasper
+    IlmImf
     )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

@@ -51,7 +51,7 @@ private:
 	EGLint      _width;
 	EGLint      _height;
 
-	ITexture*   _mt;
+	RGBTexture* _mt;
 	IObject*    _screen;
 	bool        _isInit;
 };

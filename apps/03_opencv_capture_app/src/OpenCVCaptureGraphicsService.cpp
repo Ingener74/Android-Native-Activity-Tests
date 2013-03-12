@@ -33,6 +33,8 @@ GLushort indexes[] = {
 		2, 0, 3
 };
 
+const uint16_t texSize = 1024;
+
 OpenCVCaptureGraphicsService::OpenCVCaptureGraphicsService() :
 		_display(EGL_NO_DISPLAY), _context(EGL_NO_CONTEXT), _surface(
 				EGL_NO_SURFACE), _width(0), _height(0), _mt(NULL), _screen(NULL), _isInit(
@@ -86,7 +88,6 @@ OpenCVCaptureGraphicsService::STATUS OpenCVCaptureGraphicsService::init( android
 
 	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
 
-	const uint16_t texSize = 0;
 	Mat tex_im(texSize, texSize, CV_8UC3, Scalar(0, 255, 255));
 	_mt = new RGBTexture(tex_im);
 
@@ -129,6 +130,9 @@ void OpenCVCaptureGraphicsService::draw(){
 
 	glEnable(GL_TEXTURE_2D);
 
+	if(_mt)
+		_mt->bind();
+
 	if(_screen)
 		_screen->draw();
 
@@ -142,4 +146,12 @@ void OpenCVCaptureGraphicsService::draw(){
 }
 
 void OpenCVCaptureGraphicsService::setImage( const Mat& image ){
+	if(_mt)
+		_mt->updatePart(image);
+
+	texcoords[2] = image.cols / GLfloat(texSize);
+	texcoords[4] = image.cols / GLfloat(texSize);
+
+	texcoords[5] = image.rows / GLfloat(texSize);
+	texcoords[7] = image.rows / GLfloat(texSize);
 }

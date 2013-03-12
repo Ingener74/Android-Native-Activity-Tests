@@ -32,8 +32,10 @@ void OpenCVCaptureEventHandler::run(){
 				return;
 		}
 
-		if(_gs && _gs->isInit())
+		if(_gs && _gs->isInit() && _ps && !_ps->isError()){
+			_ps->process();
 			_gs->draw();
+		}
 	}
 }
 
