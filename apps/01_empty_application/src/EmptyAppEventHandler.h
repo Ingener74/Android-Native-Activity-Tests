@@ -13,8 +13,6 @@
 #include <IEventEngine.h>
 #include <tools.h>
 
-using namespace nae;
-
 #define LOGI_EAEH(...){ LOGI("EmptyAppEventHandler", __VA_ARGS__); }
 #define LOGE_EAEH(...){ LOGE("EmptyAppEventHandler", __VA_ARGS__); }
 #define LOGW_EAEH(...){ LOGW("EmptyAppEventHandler", __VA_ARGS__); }

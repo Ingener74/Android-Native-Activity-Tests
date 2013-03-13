@@ -13,8 +13,6 @@
 #include <android/looper.h>
 #include <android_native_app_glue.h>
 
-namespace nae {
-
 #define LOGI_IEE(...){ LOGI("IEventEngine", __VA_ARGS__)}
 
 class IEventEngine {
@@ -48,5 +46,4 @@ protected:
 	static int32_t inputEvent( struct android_app* application, AInputEvent* event );
 };
 
-} /* namespace nae */
 #endif /* IEVENTENGINE_H_ */

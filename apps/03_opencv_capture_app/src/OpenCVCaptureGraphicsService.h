@@ -17,6 +17,7 @@
 
 #include <IGraphicsService.h>
 #include <RGBTexture.h>
+#include <FastEGLTexture.h>
 #include <GLTriangle.h>
 #include <tools.h>
 
@@ -51,7 +52,10 @@ private:
 	EGLint      _width;
 	EGLint      _height;
 
-	RGBTexture* _mt;
+	const static bool _fast = true;
+	RGBTexture*       _mt;
+	FastEGLTexture*   _ft;
+
 	IObject*    _screen;
 	bool        _isInit;
 };

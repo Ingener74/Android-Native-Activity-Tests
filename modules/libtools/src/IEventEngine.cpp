@@ -7,8 +7,6 @@
 
 #include "IEventEngine.h"
 
-namespace nae {
-
 IEventEngine::IEventEngine( struct android_app* application ):
 		_application(application){
 
@@ -106,5 +104,3 @@ int32_t IEventEngine::inputEvent( struct android_app* application,
 		AInputEvent* event ){
 	return 0;
 }
-
-} /* namespace nae */

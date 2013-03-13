@@ -11,8 +11,6 @@
 #include <IEventEngine.h>
 #include <IGraphicsService.h>
 
-using namespace nae;
-
 #define LOGI_OGLES10EH(...){ LOGI("OpenGLES10EventHandler", __VA_ARGS__); }
 #define LOGE_OGLES10EH(...){ LOGE("OpenGLES10EventHandler", __VA_ARGS__); }
 #define LOGW_OGLES10EH(...){ LOGW("OpenGLES10EventHandler", __VA_ARGS__); }

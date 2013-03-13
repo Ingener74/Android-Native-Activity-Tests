@@ -37,8 +37,8 @@ const uint16_t texSize = 1024;
 
 OpenCVCaptureGraphicsService::OpenCVCaptureGraphicsService() :
 		_display(EGL_NO_DISPLAY), _context(EGL_NO_CONTEXT), _surface(
-				EGL_NO_SURFACE), _width(0), _height(0), _mt(NULL), _screen(NULL), _isInit(
-				false) {
+				EGL_NO_SURFACE), _width(0), _height(0), _mt(NULL), _ft(NULL),
+				_screen(NULL), _isInit(false) {
 }
 
 OpenCVCaptureGraphicsService::~OpenCVCaptureGraphicsService() {
@@ -88,14 +88,29 @@ OpenCVCaptureGraphicsService::STATUS OpenCVCaptureGraphicsService::init( android
 
 //	glOrthof(-dim, dim, -aspect*dim, aspect*dim, - dim * 100.f, dim * 100.f);
 	glOrthof(0, dim, dim, 0, - dim * 100.f, dim * 100.f);
+	vertex[3] = dim;
+	vertex[6] = dim;
 
+	vertex[7] = dim;
+	vertex[10] = dim;
 
 	Mat tex_im(texSize, texSize, CV_8UC3, Scalar(0, 255, 255));
-	_mt = new RGBTexture(tex_im);
+	if(_fast){
+
+		EGLDispatcher::init();
+		_ft = new FastEGLTexture(tex_im.data, tex_im.rows, tex_im.cols,
+				FastEGLTexture::IMAGE_FORMAT_RGB888, _application, _display,
+				FastEGLTexture::FEGL_TEXTURE_FORMAT_RGBA8888);
+		_screen = new GLTriangle(_ft, vertex, texcoords, colors, indexes, 6);
+	}
+	else{
+		_mt = new RGBTexture(tex_im);
+		_screen = new GLTriangle(_mt, vertex, texcoords, colors, indexes, 6);
+	}
 
 	glEnable(GL_DEPTH_TEST);
 
-	_screen = new GLTriangle(_mt, vertex, texcoords, colors, indexes, 6);
+
 
 	_isInit = true;
 
@@ -105,8 +120,9 @@ OpenCVCaptureGraphicsService::STATUS OpenCVCaptureGraphicsService::init( android
 void OpenCVCaptureGraphicsService::deinit(){
 	LOGI_OCVCGS("deinit begin");
 
-	delete _mt;
-	delete _screen;
+	if(_mt) delete _mt;
+	if(_ft) delete _ft;
+	if(_screen) delete _screen;
 
 	if(_display != EGL_NO_DISPLAY){
 		eglMakeCurrent(_display, _surface, _surface, _context);
@@ -132,8 +148,13 @@ void OpenCVCaptureGraphicsService::draw(){
 
 	glEnable(GL_TEXTURE_2D);
 
-	if(_mt)
-		_mt->bind();
+	if(_fast){
+		if(_ft)
+			_ft->bind();
+	}else{
+		if(_mt)
+			_mt->bind();
+	}
 
 	if(_screen)
 		_screen->draw();
@@ -148,8 +169,14 @@ void OpenCVCaptureGraphicsService::draw(){
 }
 
 void OpenCVCaptureGraphicsService::setImage( const Mat& image ){
-	if(_mt)
-		_mt->updatePart(image);
+
+	if(_fast && _ft){
+		_ft->updatePart(image.data, image.rows, image.cols,
+				FastEGLTexture::IMAGE_FORMAT_RGB888);
+	}else{
+		if(_mt)
+			_mt->updatePart(image);
+	}
 
 	texcoords[2] = image.cols / GLfloat(texSize);
 	texcoords[4] = image.cols / GLfloat(texSize);

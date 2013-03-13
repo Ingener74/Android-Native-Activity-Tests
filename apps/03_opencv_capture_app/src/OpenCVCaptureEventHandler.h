@@ -13,8 +13,6 @@
 #include <IProcessor.h>
 #include <tools.h>
 
-using namespace nae;
-
 #define LOGI_OCVCEH(...){ LOGI("OpenCVCaptureEventHandler", __VA_ARGS__); }
 #define LOGE_OCVCEH(...){ LOGE("OpenCVCaptureEventHandler", __VA_ARGS__); }
 #define LOGW_OCVCEH(...){ LOGW("OpenCVCaptureEventHandler", __VA_ARGS__); }
