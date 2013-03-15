@@ -7,6 +7,79 @@
 
 #include "OpenGLES20GraphicService.h"
 
+#include <RGBTexture.h>
+#include <GLTriangle.h>
+
+const char vertexSource[] =
+		"uniform   mat4 uortho;"
+		"attribute vec2 vpos;"
+		"attribute vec2 atex;"
+		"varying   vec2 vtex;"
+		"void main(){"
+		"    gl_Position = uortho * vec4(vpos, 0.0, 1.0);"
+		"    vtex = atex;"
+		"}"
+		;
+const char fragmentSource[] =
+		"precision mediump float;"
+		"varying vec2      vtex;"
+		"uniform sampler2D stex;"
+		"void main(){"
+		"    gl_FragColor = texture2D(stex, vtex);"
+		"}"
+		;
+
+const GLfloat side = 50.f;
+const GLfloat vertexScr[] = {
+		-side, -side,
+		 side, -side,
+		 side,  side,
+		-side,  side
+};
+GLfloat texScr[] = {
+		0.f, 0.f,
+		1.f, 0.f,
+		1.f, 1.f,
+		0.f, 1.f,
+};
+
+const GLfloat colorScr[] = {
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+};
+
+const GLushort indices[] = {
+		1, 0, 2,
+		3, 2, 0
+};
+
+const int32_t texSize = 1024;
+
+const GLfloat dim = side;
+
+const GLfloat
+		right_ = dim, left_ = -dim,
+		top = -dim, bottom = dim,
+		near = dim, far = -dim;
+
+const GLfloat
+		r_l = right_ - left_,
+		t_b = top - bottom,
+		f_n = far - near,
+
+		tx = -(right_ + left_) / (right_ - left_),
+		ty = -(top + bottom) / (top - bottom),
+		tz = -(far + near)   / (far - near);
+
+const GLfloat uOrhto[] = {
+		2.f / r_l,    0.f,       0.f,       0.f,
+		0.f,          2.f / t_b, 0.f,       0.f,
+		0.f,          0.f,       2.f / f_n, 0.f,
+		0.f,          0.f,       0.f,       1.f
+};
+
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
 
@@ -16,25 +89,126 @@ OpenGLES20GraphicService::~OpenGLES20GraphicService() {
 OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 		android_app* application ){
 
+	_application = application;
 
+	const EGLint attribs[] = {
+			EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+			EGL_RED_SIZE,   8,
+			EGL_GREEN_SIZE, 8,
+			EGL_BLUE_SIZE,  8,
+			EGL_DEPTH_SIZE, 8,
+			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+			EGL_NONE, EGL_NONE };
+
+	EGLint format, numConf;
+	EGLConfig config;
+
+	_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+	eglInitialize(_display, 0, 0);
+
+	eglChooseConfig(_display, attribs, &config, 1, &numConf);
+
+	eglGetConfigAttrib(_display, config, EGL_NATIVE_VISUAL_ID, &format);
+
+	ANativeWindow_setBuffersGeometry(application->window, 0, 0, format);
+
+	_surface = eglCreateWindowSurface(_display, config, application->window, NULL);
+
+	EGLint contextAttr[] = {
+			EGL_CONTEXT_CLIENT_VERSION, 2,
+			EGL_NONE
+	};
+	_context = eglCreateContext(_display, config, NULL, contextAttr);
+
+	if (eglMakeCurrent(_display, _surface, _surface, _context) == EGL_FALSE){
+		LOGE_OGLES20GS("Unable to eglMakeCurrent");
+		return IGraphicsService::STATUS_ERROR;
+	}
+	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
+	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
+
+	const double dim = 200.0;
+	const double aspect = _height / double(_width);
+	glViewport(0, 0, _width, _height);
+	LOGI_OGLES20GS("h = %d, w = %d", _height, _width);
+
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+
+	_program = createProgram(vertexSource, fragmentSource);
+	if(!_program){
+		LOGE_OGLES20GS("Creating program is failed!!!");
+	}else{
+		LOGI_OGLES20GS("vpos handle getting");
+		_vpos = glGetAttribLocation(_program, "vpos");  Tools::glCheck("glGetAttribLocation");
+		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
+		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
+		_uortho = glGetUniformLocation(_program, "uortho"); Tools::glCheck("glGetUniformLocation");
+	}
+
+	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
+	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
+
+	_tex1 = new RGBTexture(im);
+	_tr1  = new GLTriangle(_tex1, (GLfloat*)vertexScr, texScr, (GLfloat*)colorScr, (GLushort*)indices, 6);
 
 	_isInit = true;
 	return STATUS_OK;
 }
 bool OpenGLES20GraphicService::isInit(){
-	return false;
+	return _isInit;
 }
 
 void OpenGLES20GraphicService::deinit(){
+	delete _tex1;
+	delete _tr1;
 
+	if(_display != EGL_NO_DISPLAY){
+		eglMakeCurrent(_display, _surface, _surface, _context);
+		if(_context != EGL_NO_CONTEXT){
+			eglDestroyContext(_display, _context);
+		}
+		if(_surface != EGL_NO_SURFACE){
+			eglDestroySurface(_display, _surface);
+		}
+		eglTerminate(_display);
+	}
+	_display = EGL_NO_DISPLAY;
+	_context = EGL_NO_CONTEXT;
+	_surface = EGL_NO_SURFACE;
 }
 
 void OpenGLES20GraphicService::draw(){
+	glClearColor(0.5f, 0.3f, 0.1f, 1.f); Tools::glCheck("glClearColor");
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
+
+	glUseProgram(_program); Tools::glCheck("glUseProgram");
+
+	glActiveTexture(GL_TEXTURE0);
+
+	_tex1->bind();
+
+	glUniform1i(_stex, 0);
+
+	glEnableVertexAttribArray(_vpos); Tools::glCheck("glEnableVertexAttribArray 1");
+	glEnableVertexAttribArray(_atex); Tools::glCheck("glEnableVertexAttribArray 2");
+
+	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr); Tools::glCheck("glVertexAttribPointer");
+	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr); Tools::glCheck("glVertexAttribPointer");
+
+	glUniformMatrix4fv(_uortho, 1, false, uOrhto);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	glDisableVertexAttribArray(_vpos);
+	glDisableVertexAttribArray(_atex);
+
+	eglSwapBuffers(_display, _surface); Tools::glCheck("eglSwapBuffers");
 
 }
 
-void OpenGLES20GraphicService::setImage( const Mat& image ){
-
+void OpenGLES20GraphicService::setImage( Mat image ){
 }
 
 GLuint OpenGLES20GraphicService::loadShader( GLenum shaderType, const char* source ){

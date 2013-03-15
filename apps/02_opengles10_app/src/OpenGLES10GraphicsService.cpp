@@ -181,5 +181,5 @@ void OpenGLES10GraphicsService::draw(){
 	eglSwapBuffers(_display, _surface);
 }
 
-void OpenGLES10GraphicsService::setImage( const Mat& image ){
+void OpenGLES10GraphicsService::setImage( Mat image ){
 }

@@ -168,7 +168,7 @@ void OpenCVCaptureGraphicsService::draw(){
 	eglSwapBuffers(_display, _surface);
 }
 
-void OpenCVCaptureGraphicsService::setImage( const Mat& image ){
+void OpenCVCaptureGraphicsService::setImage( Mat image ){
 
 	if(_fast && _ft){
 		_ft->updatePart(image.data, image.rows, image.cols,

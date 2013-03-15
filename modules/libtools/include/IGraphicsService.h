@@ -30,7 +30,7 @@ public:
 
 	virtual void draw() = 0;
 
-	virtual void setImage( const Mat& image ) = 0;
+	virtual void setImage( Mat image ) = 0;
 
 protected:
 	android_app* _application;

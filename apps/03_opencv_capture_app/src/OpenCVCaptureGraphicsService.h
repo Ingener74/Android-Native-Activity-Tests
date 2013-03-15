@@ -42,7 +42,7 @@ public:
 
 	void draw();
 
-	void setImage( const Mat& image );
+	void setImage( Mat image );
 
 private:
 	EGLDisplay  _display;

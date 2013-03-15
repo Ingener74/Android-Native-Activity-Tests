@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME 03_opencv_capture_app)
+set(PROJECT_NAME 04_opengles20_app)
 project(${PROJECT_NAME})
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
@@ -52,8 +52,8 @@ set(OPENCV_LIBS
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     src/main.cpp
-    src/OpenCVCaptureEventHandler.cpp
-    src/OpenCVCaptureGraphicsService.cpp
+    src/OpenGLES20EventHandler.cpp
+    src/OpenGLES20GraphicService.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

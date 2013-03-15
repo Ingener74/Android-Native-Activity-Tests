@@ -9,9 +9,13 @@
 #define OPENGLES20GRAPHICSERVICE_H_
 
 #include <GLES2/gl2.h>
+#include <EGL/egl.h>
 
 #include <IGraphicsService.h>
 #include <tools.h>
+
+#include <ITexture.h>
+#include <IObject.h>
 
 #define LOGI_OGLES20GS(...){ LOGI("OpenGLES20GraphicService", __VA_ARGS__); }
 #define LOGE_OGLES20GS(...){ LOGE("OpenGLES20GraphicService", __VA_ARGS__); }
@@ -31,10 +35,26 @@ public:
 
 	void draw();
 
-	void setImage( const Mat& image );
+	void setImage( Mat image );
 
 private:
-	bool _isInit;
+	bool         _isInit;
+
+	EGLDisplay   _display;
+	EGLContext   _context;
+	EGLSurface   _surface;
+
+	EGLint       _width;
+	EGLint       _height;
+
+	GLuint       _program;
+	GLuint       _vpos;
+	GLuint       _atex;
+	GLint        _stex;
+	GLuint       _uortho;
+
+	ITexture*    _tex1;
+	IObject*     _tr1;
 
 	static GLuint loadShader( GLenum shaderType, const char* source );
 	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );
