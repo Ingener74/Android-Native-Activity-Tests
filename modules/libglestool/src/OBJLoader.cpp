@@ -13,31 +13,6 @@
 
 #include "../include/OBJLoader.h"
 
-struct vertex{
-	vertex( float x = 0, float y = 0, float z = 0 ): x(x), y(y), z(z){}
-	float x, y, z;
-};
-struct texture_coord{
-	texture_coord( float x = 0, float y = 0, float z = 0): x(x), y(y), z(z){}
-	float x, y, z;
-};
-struct normal{
-	normal( float x = 0, float y = 0, float z = 0 ): x(x), y(y), z(z){}
-	float x, y, z;
-};
-struct face{
-	face( uint16_t v = 0, uint16_t vt = 0, uint16_t vn = 0):
-		v(v), vt(vt), vn(vn){}
-	union{
-		uint16_t f[3];
-		struct{
-			uint16_t v;
-			uint16_t vt;
-			uint16_t vn;
-		};
-	};
-};
-
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
     std::stringstream ss(s);
     std::string item;
@@ -55,10 +30,12 @@ OBJLoader::OBJLoader( const char* filename ) {
 
 	if(filename){
 
-		vector<vertex>         vertexes;
-		vector<texture_coord>  texcoords;
-		vector<normal>         normals;
-		vector<vector<face> >  faces;
+//		vector<Vertex>         vertexes;
+//		vector<TextureCoordinate>  texcoords;
+//		vector<Normal>         normals;
+//		vector<vector<Face> >  faces;
+
+		LoadedObject lo;
 
 		ifstream file(filename);
 		if(file.is_open()){
@@ -69,33 +46,28 @@ OBJLoader::OBJLoader( const char* filename ) {
 				cout << t << endl;
 
 				if( !t.compare("v") ){
-					vertex v;
+					Vertex v;
 					file >> v.x >> v.y >> v.z;
-					vertexes.push_back(v);
+					lo.addVertex(v);
 				}
 				if( !t.compare("vt") ){
-					texture_coord vt;
-					file >> vt.x >> vt.y >> vt.z;
-					texcoords.push_back(vt);
+					TextureCoordinate vt;
+					file >> vt.u >> vt.v >> vt.w;
+					lo.addTextureCoord(vt);
 				}
 				if( !t.compare("vn")){
-					normal vn;
-
+					Normal vn;
 					file >> vn.x >> vn.y >> vn.z;
-					normals.push_back(vn);
+					lo.addNormal(vn);
 				}
 
 				if( !t.compare("f") ){
-
-					vector<face> faces;
-
+					vector<Face> faces;
 					string s;
 					file >> s;
 					while( (s.compare("f") && s.compare("s")) ){
 
-						cout << s << endl;
-
-						face f;
+						Face f;
 
 						vector<string> x = split(s, '/');
 						for( uint32_t i = 0; i < x.size(); ++i ){
@@ -109,6 +81,9 @@ OBJLoader::OBJLoader( const char* filename ) {
 						file >> s;
 					}
 
+					lo.addFace(faces);
+
+					cout << "object loaded" << endl;
 				}
 
 				if( !t.compare("o") ){
