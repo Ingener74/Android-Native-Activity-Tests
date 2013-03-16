@@ -94,6 +94,8 @@ OBJLoader::OBJLoader( const char* filename ) {
 				}
 			}
 
+			cout << "file loaded" << endl;
+
 		}else{
 			cerr << "file not opened" << endl;
 		}
