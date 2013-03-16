@@ -50,7 +50,9 @@ void OpenGLES20EventHandler::onTermWindow(){
 }
 
 void OpenGLES20EventHandler::onGainedFocus(){
+	_isAnimate = true;
 }
 
 void OpenGLES20EventHandler::onLostFocus(){
+	_isAnimate = false;
 }

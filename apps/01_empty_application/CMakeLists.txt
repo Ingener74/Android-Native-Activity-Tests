@@ -15,6 +15,7 @@ include_directories(
     ${ANDROID_NATIVE_APP_GLUE_DIR}
     ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
     ${REPO_HOME}/modules/libtools/include
+    ${REPO_HOME}/modules/libglestool/include
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib

@@ -18,6 +18,7 @@ include_directories(
     ${ANDROID_OPENCV_DIR}/jni/include
     
     ${REPO_HOME}/modules/libtools/include
+    ${REPO_HOME}/modules/libglestool/include
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
@@ -57,6 +58,6 @@ set(SOURCES
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools)
+target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${REPO_HOME}/android_build/${PROJECT_NAME}/libs/armeabi-v7a)

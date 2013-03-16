@@ -10,6 +10,8 @@
 #include <RGBTexture.h>
 #include <GLTriangle.h>
 
+#include <GLMatrix4x4.h>
+
 const char vertexSource[] =
 		"uniform   mat4 uortho;"
 		"attribute vec2 vpos;"
@@ -73,18 +75,21 @@ const GLfloat
 		ty = -(top + bottom) / (top - bottom),
 		tz = -(far + near)   / (far - near);
 
-const GLfloat uOrhto[] = {
-		2.f / r_l,    0.f,       0.f,       0.f,
-		0.f,          2.f / t_b, 0.f,       0.f,
-		0.f,          0.f,       2.f / f_n, 0.f,
-		0.f,          0.f,       0.f,       1.f
-};
+//const GLfloat uOrhto[] = {
+//		2.f / r_l,    0.f,       0.f,       0.f,
+//		0.f,          2.f / t_b, 0.f,       0.f,
+//		0.f,          0.f,       2.f / f_n, 0.f,
+//		0.f,          0.f,       0.f,       1.f
+//};
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
 
 OpenGLES20GraphicService::~OpenGLES20GraphicService() {
 }
+
+GLfloat mod[16];
+GLfloat mod1[16];
 
 OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 		android_app* application ){
@@ -153,6 +158,9 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	_tex1 = new RGBTexture(im);
 	_tr1  = new GLTriangle(_tex1, (GLfloat*)vertexScr, texScr, (GLfloat*)colorScr, (GLushort*)indices, 6);
 
+	GLMatrix4x4::matrixIdentity(mod);
+	GLMatrix4x4::matrixIdentity(mod1);
+
 	_isInit = true;
 	return STATUS_OK;
 }
@@ -179,8 +187,10 @@ void OpenGLES20GraphicService::deinit(){
 	_surface = EGL_NO_SURFACE;
 }
 
+
+
 void OpenGLES20GraphicService::draw(){
-	glClearColor(0.5f, 0.3f, 0.1f, 1.f); Tools::glCheck("glClearColor");
+	glClearColor(0.f, 0.6f, 0.1f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
 	glUseProgram(_program); Tools::glCheck("glUseProgram");
@@ -197,9 +207,30 @@ void OpenGLES20GraphicService::draw(){
 	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr); Tools::glCheck("glVertexAttribPointer");
 	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr); Tools::glCheck("glVertexAttribPointer");
 
-	glUniformMatrix4fv(_uortho, 1, false, uOrhto);
+	GLfloat mr[16];
+	GLMatrix4x4::matrixPosition(mod, 0, 0, -400);
+
+	static GLfloat angle = 0.f;
+	angle += 0.03f;
+	GLfloat tr[16]; GLMatrix4x4::matrixIdentity(tr); GLMatrix4x4::matrixRotationZ(tr, angle);
+	GLfloat tr1[16]; GLMatrix4x4::matrixIdentity(tr1);
+	GLMatrix4x4::matrixMultyply(tr, mod1, tr1);
+
+	GLMatrix4x4::matrixMultyply(mod, tr1, mr);
+
+	GLfloat aR = _width / GLfloat(_height);
+
+	GLfloat orhto[16];
+	GLMatrix4x4::matrixProjection(orhto, 0.1, 10000, 54 * 3.1415 / 180, aR);
+
+	GLfloat res[16];
+	GLMatrix4x4::matrixMultyply(orhto, mr, res);
+
+	glUniformMatrix4fv(_uortho, 1, false, res);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+
 
 	glDisableVertexAttribArray(_vpos);
 	glDisableVertexAttribArray(_atex);
