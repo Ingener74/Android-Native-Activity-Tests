@@ -25,6 +25,8 @@ set(SOURCES
     src/RGBTexture.cpp
     src/GLMatrix4x4.cpp
     src/OBJLoader.cpp
+    src/Mesh.cpp
+    src/IShaderProgram.cpp
 	)
 set(OPENCV_LIBS
     opencv_highgui

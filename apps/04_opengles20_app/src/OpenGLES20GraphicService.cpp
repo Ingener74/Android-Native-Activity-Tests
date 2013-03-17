@@ -12,6 +12,8 @@
 
 #include <GLMatrix4x4.h>
 
+#include <Mesh.h>
+
 const char vertexSource[] =
 		"uniform   mat4 uortho;"
 		"attribute vec2 vpos;"
@@ -61,19 +63,19 @@ const int32_t texSize = 1024;
 
 const GLfloat dim = side;
 
-const GLfloat
-		right_ = dim, left_ = -dim,
-		top = -dim, bottom = dim,
-		near = dim, far = -dim;
-
-const GLfloat
-		r_l = right_ - left_,
-		t_b = top - bottom,
-		f_n = far - near,
-
-		tx = -(right_ + left_) / (right_ - left_),
-		ty = -(top + bottom) / (top - bottom),
-		tz = -(far + near)   / (far - near);
+//const GLfloat
+//		right_ = dim, left_ = -dim,
+//		top = -dim, bottom = dim,
+//		near = dim, far = -dim;
+//
+//const GLfloat
+//		r_l = right_ - left_,
+//		t_b = top - bottom,
+//		f_n = far - near,
+//
+//		tx = -(right_ + left_) / (right_ - left_),
+//		ty = -(top + bottom) / (top - bottom),
+//		tz = -(far + near)   / (far - near);
 
 //const GLfloat uOrhto[] = {
 //		2.f / r_l,    0.f,       0.f,       0.f,
@@ -81,6 +83,15 @@ const GLfloat
 //		0.f,          0.f,       2.f / f_n, 0.f,
 //		0.f,          0.f,       0.f,       1.f
 //};
+
+const MeshVertex trim[] = {
+		{  0,   0, 0,  0, 0, 1,  0, 0},
+		{100,   0, 0,  0, 0, 1,  0, 0},
+		{100, 100, 0,  0, 0, 1,  0, 0},
+};
+const GLuint trimver[] = {
+		0, 1, 2
+};
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
@@ -157,6 +168,7 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 
 	_tex1 = new RGBTexture(im);
 	_tr1  = new GLTriangle(_tex1, (GLfloat*)vertexScr, texScr, (GLfloat*)colorScr, (GLushort*)indices, 6);
+//	_tr1  = new Mesh(trim, 3, trimver, 3);
 
 	GLMatrix4x4::matrixIdentity(mod);
 	GLMatrix4x4::matrixIdentity(mod1);
@@ -193,19 +205,17 @@ void OpenGLES20GraphicService::draw(){
 	glClearColor(0.f, 0.6f, 0.1f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
-	glUseProgram(_program); Tools::glCheck("glUseProgram");
+//	glUseProgram(_program); Tools::glCheck("glUseProgram");
+//
+//	glActiveTexture(GL_TEXTURE0);
+//	_tex1->bind();
+//	glUniform1i(_stex, 0);
 
-	glActiveTexture(GL_TEXTURE0);
+//	glEnableVertexAttribArray(_vpos); Tools::glCheck("glEnableVertexAttribArray 1");
+//	glEnableVertexAttribArray(_atex); Tools::glCheck("glEnableVertexAttribArray 2");
 
-	_tex1->bind();
-
-	glUniform1i(_stex, 0);
-
-	glEnableVertexAttribArray(_vpos); Tools::glCheck("glEnableVertexAttribArray 1");
-	glEnableVertexAttribArray(_atex); Tools::glCheck("glEnableVertexAttribArray 2");
-
-	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr); Tools::glCheck("glVertexAttribPointer");
-	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr); Tools::glCheck("glVertexAttribPointer");
+//	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr); Tools::glCheck("glVertexAttribPointer");
+//	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr); Tools::glCheck("glVertexAttribPointer");
 
 	GLfloat mr[16];
 	GLMatrix4x4::matrixPosition(mod, 0, 0, -400);
@@ -228,12 +238,12 @@ void OpenGLES20GraphicService::draw(){
 
 	glUniformMatrix4fv(_uortho, 1, false, res);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+	if(_tr1)
+		_tr1->draw();
 
-
-
-	glDisableVertexAttribArray(_vpos);
-	glDisableVertexAttribArray(_atex);
+//	glDisableVertexAttribArray(_vpos);
+//	glDisableVertexAttribArray(_atex);
 
 	eglSwapBuffers(_display, _surface); Tools::glCheck("eglSwapBuffers");
 
