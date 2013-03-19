@@ -27,8 +27,8 @@ public:
 		return glGetAttribLocation(_program, attr);
 	}
 
-	static GLuint loadShader( GLenum shaderType, const char* source );
-	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );
+	GLuint loadShader( GLenum shaderType, const char* source );
+	GLuint createProgram( const char* vertexShader, const char* fragmentShader );
 
 private:
 	GLuint _vs;
