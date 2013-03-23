@@ -13,9 +13,13 @@
 
 #include <vector>
 
-#include "GLTriangle.h"
+//#include "GLTriangle.h"
 
-//#include <GLES2/gl2.h>
+#ifdef BUILD_ANDROID
+	#include <GLES2/gl2.h>
+#else
+	#include <GL/gl.h>
+#endif
 
 using namespace std;
 
@@ -44,6 +48,7 @@ struct Face{
 	};
 };
 
+
 class LoadedObject{
 public:
 	LoadedObject(){
@@ -62,6 +67,9 @@ public:
 		_faces.push_back(f);
 	}
 
+	const vector<Vertex>& getVertexes() const { return _vertexes; }
+	const vector<vector<Face> >& getFaces() const { return _faces; }
+
 private:
 	vector<Vertex>             _vertexes;
 	vector<TextureCoordinate>  _texcoords;
@@ -69,10 +77,47 @@ private:
 	vector<vector<Face> >      _faces;
 };
 
+struct MeshV{
+	MeshV( const LoadedObject& lo ){
+
+		const vector<Vertex>& vertexes = lo.getVertexes();
+		const vector<vector<Face> >& faces = lo.getFaces();
+
+		_vertexes = new GLfloat[ vertexes.size() * 3 ];
+		if(_vertexes){
+			for( uint32_t i = 0; i < vertexes.size(); ++i ){
+				_vertexes[3*i + 0] = vertexes[i].x;
+				_vertexes[3*i + 1] = vertexes[i].y;
+				_vertexes[3*i + 2] = vertexes[i].z;
+			}
+
+			_indexes = new GLushort[ faces.size() * 3 ];
+			if( _indexes ){
+
+//				for( uint32_t i = 0; i )
+			}
+		}
+	}
+
+	GLfloat* getVertexes() { return _vertexes; }
+	GLushort* getIndexes() { return _indexes;  }
+
+	virtual ~MeshV(){
+		delete [] _vertexes;
+		delete [] _indexes;
+	}
+private:
+	GLfloat*  _vertexes;
+	GLushort* _indexes;
+};
+
 class OBJLoader {
 public:
 	OBJLoader( const char* filename = NULL );
 	virtual ~OBJLoader();
+
+	uint32_t getNumOfLoadedObjects(){ return _objects.size(); }
+	const LoadedObject& getObject( uint32_t i ){ return _objects[i]; }
 private:
 	vector<LoadedObject> _objects;
 };

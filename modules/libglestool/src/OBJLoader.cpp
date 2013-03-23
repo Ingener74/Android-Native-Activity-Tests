@@ -94,6 +94,8 @@ OBJLoader::OBJLoader( const char* filename ) {
 				}
 			}
 
+			_objects.push_back(lo);
+
 			cout << "file loaded" << endl;
 
 		}else{
@@ -106,4 +108,21 @@ OBJLoader::OBJLoader( const char* filename ) {
 
 OBJLoader::~OBJLoader() {
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

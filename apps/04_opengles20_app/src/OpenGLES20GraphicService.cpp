@@ -14,6 +14,8 @@
 
 #include <Mesh.h>
 
+#include <OBJLoader.h>
+
 const char vertexSource[] =
 		"uniform   mat4 uortho;"
 		"attribute vec2 vpos;"
@@ -166,12 +168,14 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
 	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
 
-	_tex1 = new RGBTexture(im);
-	_tr1  = new GLTriangle(_tex1, (GLfloat*)vertexScr, texScr, (GLfloat*)colorScr, (GLushort*)indices, 6);
-//	_tr1  = new Mesh(trim, 3, trimver, 3);
-
 	GLMatrix4x4::matrixIdentity(mod);
 	GLMatrix4x4::matrixIdentity(mod1);
+
+	OBJLoader objl("/sdcard/repo/data/my_mesh.obj");
+
+	glGenBuffers(1, &_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, _vertex);
+	glBufferData()
 
 	_isInit = true;
 	return STATUS_OK;
@@ -181,8 +185,6 @@ bool OpenGLES20GraphicService::isInit(){
 }
 
 void OpenGLES20GraphicService::deinit(){
-	delete _tex1;
-	delete _tr1;
 
 	if(_display != EGL_NO_DISPLAY){
 		eglMakeCurrent(_display, _surface, _surface, _context);
@@ -205,17 +207,12 @@ void OpenGLES20GraphicService::draw(){
 	glClearColor(0.f, 0.6f, 0.1f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
-//	glUseProgram(_program); Tools::glCheck("glUseProgram");
+	glUseProgram(_program); Tools::glCheck("glUseProgram");
 //
 //	glActiveTexture(GL_TEXTURE0);
 //	_tex1->bind();
 //	glUniform1i(_stex, 0);
 
-//	glEnableVertexAttribArray(_vpos); Tools::glCheck("glEnableVertexAttribArray 1");
-//	glEnableVertexAttribArray(_atex); Tools::glCheck("glEnableVertexAttribArray 2");
-
-//	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr); Tools::glCheck("glVertexAttribPointer");
-//	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr); Tools::glCheck("glVertexAttribPointer");
 
 	GLfloat mr[16];
 	GLMatrix4x4::matrixPosition(mod, 0, 0, -400);
@@ -238,12 +235,16 @@ void OpenGLES20GraphicService::draw(){
 
 	glUniformMatrix4fv(_uortho, 1, false, res);
 
-//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
-	if(_tr1)
-		_tr1->draw();
+	glEnableVertexAttribArray(_vpos);
+	glEnableVertexAttribArray(_atex);
 
-//	glDisableVertexAttribArray(_vpos);
-//	glDisableVertexAttribArray(_atex);
+	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr);
+	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	glDisableVertexAttribArray(_vpos);
+	glDisableVertexAttribArray(_atex);
 
 	eglSwapBuffers(_display, _surface); Tools::glCheck("eglSwapBuffers");
 

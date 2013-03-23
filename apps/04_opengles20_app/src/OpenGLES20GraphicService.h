@@ -53,8 +53,8 @@ private:
 	GLint        _stex;
 	GLuint       _uortho;
 
-	ITexture*    _tex1;
-	IObject*     _tr1;
+	GLuint _vertex;
+	GLuint _indexes;
 
 	static GLuint loadShader( GLenum shaderType, const char* source );
 	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );
