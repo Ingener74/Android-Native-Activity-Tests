@@ -51,9 +51,9 @@ OBJLoader::OBJLoader( const char* filename ) {
 					lo.addVertex(v);
 				}
 				if( !t.compare("vt") ){
-					TextureCoordinate vt;
-					file >> vt.u >> vt.v >> vt.w;
-					lo.addTextureCoord(vt);
+//					TextureCoordinate vt;
+//					file >> vt.u >> vt.v >> vt.w;
+//					lo.addTextureCoord(vt);
 				}
 				if( !t.compare("vn")){
 					Normal vn;
@@ -109,8 +109,36 @@ OBJLoader::OBJLoader( const char* filename ) {
 OBJLoader::~OBJLoader() {
 }
 
+bool MeshV::createMesh( const LoadedObject& lo ){
+	const vector<Vertex>&         vertexes  = lo.getVertexes();
+	const vector<vector<Face> >&  faces     = lo.getFaces();
 
+	_numOfVertexes = vertexes.size();
+	_numOfIndexes  = faces.size() * 3;
 
+	_vertexes = new GLfloat[vertexes.size() * 3];
+	if(_vertexes){
+		for( uint32_t i = 0; i < vertexes.size(); ++i ){
+			_vertexes[3*i + 0] = vertexes[i].x;
+			_vertexes[3*i + 1] = vertexes[i].y;
+			_vertexes[3*i + 2] = vertexes[i].z;
+		}
+
+		_indexes = new GLushort[faces.size() * 3];
+		if( _indexes ){
+			for( uint32_t i = 0; i < faces.size(); ++i ){
+				_indexes[3*i + 0] = faces[i][0].v;
+				_indexes[3*i + 1] = faces[i][1].v;
+				_indexes[3*i + 2] = faces[i][2].v;
+			}
+			return true;
+		}else{
+			return false;
+		}
+	}else{
+		return false;
+	}
+}
 
 
 

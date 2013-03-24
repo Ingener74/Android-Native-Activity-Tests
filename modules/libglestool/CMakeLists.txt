@@ -27,6 +27,7 @@ set(SOURCES
     src/OBJLoader.cpp
     src/Mesh.cpp
     src/IShaderProgram.cpp
+    src/ErrorHandler.cpp
 	)
 set(OPENCV_LIBS
     opencv_highgui

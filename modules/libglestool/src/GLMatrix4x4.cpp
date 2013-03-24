@@ -110,8 +110,46 @@ void GLMatrix4x4::matrixProjection( GLfloat* m, GLfloat near, GLfloat far,
 	m[12] = 0.f; m[13] = 0.f; m[14] = -(2 * far * near)/(far - near); m[15] = 0.f;
 }
 
+/*
+ * model view matrix
+ */
+ModelViewMatrix::ModelViewMatrix(){
+	_m[0]  = 1.0; _m[1]  = 0.0; _m[2]  = 0.0; _m[3]  = 0.0;
+	_m[4]  = 0.0; _m[5]  = 1.0; _m[6]  = 0.0; _m[7]  = 0.0;
+	_m[8]  = 0.0; _m[9]  = 0.0; _m[10] = 1.0; _m[11] = 0.0;
+	_m[12] = 0.0; _m[13] = 0.0; _m[14] = 0.0; _m[15] = 1.0;
+}
+void ModelViewMatrix::position(GLfloat x, GLfloat y, GLfloat z){
+	_m[12] = x; _m[13] = y; _m[14] = z;
+}
+void ModelViewMatrix::move(GLfloat dx, GLfloat dy, GLfloat dz){
+	_m[12] += dx; _m[13] += dy; _m[14] += dz;
+}
+void ModelViewMatrix::scale(GLfloat x, GLfloat y, GLfloat z){
+	_m[0]  = x;
+	_m[5]  = y;
+	_m[10] = z;
+}
+void ModelViewMatrix::resize(GLfloat dx, GLfloat dy, GLfloat dz){
+	_m[0]  *= dx;
+	_m[5]  *= dy;
+	_m[10] *= dz;
+}
+void ModelViewMatrix::rotateX(GLfloat rad){
+	_m[5] = cosf(rad); _m[6] = -sinf(rad);
+	_m[9] = -_m[6];    _m[10] = _m[5];
+}
+void ModelViewMatrix::rotateY(GLfloat rad){
+	_m[0] = cosf(rad); _m[2] = sinf(rad);
+	_m[8] = -_m[2];    _m[10] = _m[0];
+}
+void ModelViewMatrix::rotateZ(GLfloat rad){
+	_m[0] = cosf(rad);  _m[1] = sinf(rad);
+	_m[4] = -_m[1];     _m[5] = _m[0];
+}
 
-
+void ModelViewMatrix::operator*( const GLfloat* m ){
+}
 
 
 

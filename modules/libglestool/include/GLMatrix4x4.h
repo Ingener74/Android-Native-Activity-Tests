@@ -37,4 +37,27 @@ public:
 			GLfloat angleOfView, GLfloat aspectRatio );
 };
 
+class ModelViewMatrix{
+public:
+	ModelViewMatrix();
+	virtual ~ModelViewMatrix(){}
+
+	void position(GLfloat x, GLfloat y, GLfloat z);
+	void move(GLfloat dx, GLfloat dy, GLfloat dz);
+
+	void scale(GLfloat x, GLfloat y, GLfloat z);
+	void resize(GLfloat dx, GLfloat dy, GLfloat dz);
+
+	void rotateX(GLfloat rad);
+	void rotateY(GLfloat rad);
+	void rotateZ(GLfloat rad);
+
+	void operator*( const GLfloat* m1 );
+
+	GLfloat* getMatrix(){ return _m; }
+
+private:
+	GLfloat _m[16];
+};
+
 #endif /* GLMATRIX4X4_H_ */

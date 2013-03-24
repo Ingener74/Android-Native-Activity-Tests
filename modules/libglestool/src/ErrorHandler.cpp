@@ -26,6 +26,6 @@ const char* ErrorHandler::errorString(){
 }
 
 void ErrorHandler::setError(const char* errorString, bool isError ){
-	_errorString = errorString;
+	_errorString = (char*)errorString;
 	_isError = isError;
 }

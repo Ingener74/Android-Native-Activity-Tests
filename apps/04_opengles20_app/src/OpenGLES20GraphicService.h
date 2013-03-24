@@ -53,8 +53,11 @@ private:
 	GLint        _stex;
 	GLuint       _uortho;
 
-	GLuint _vertex;
-	GLuint _indexes;
+	IObject*     _obj001;
+	IObject*     _obj002;
+
+//	GLuint _vertex;
+//	GLuint _indexes; uint32_t _numOfIndexes;
 
 	static GLuint loadShader( GLenum shaderType, const char* source );
 	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );

@@ -7,26 +7,21 @@
 
 #include "Mesh.h"
 
-Mesh::Mesh( const MeshVertex* vertices,
-		GLuint numOfVertex,
-		const char* vertexAttr,
-		const GLuint* faces,
-		GLuint numOfFaces,
-		IShaderProgram* shaderProgram ):
+Mesh::Mesh( const MeshV& mv, GLuint shaderVertexAttribute ):
+	_shaderVertexAttribute(shaderVertexAttribute),
+	_vertexVBO(0),
+	_indexVBO(0),
+	_numOfFaces(0){
 
-		_vertex(0), _faces(0), _shaderProgram(shaderProgram){
+	glGenBuffers(1, &_vertexVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, _vertexVBO);
+	glBufferData(GL_ARRAY_BUFFER, mv.getNumOfVertexes() * 3 * sizeof(GLfloat), (GLvoid*)mv.getVertexes(), GL_STATIC_DRAW);
 
-	glGenBuffers(1, &_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, _vertex);
-	glBufferData(GL_ARRAY_BUFFER, numOfVertex * sizeof(MeshVertex),
-			(GLvoid*)vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, &_indexVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mv.getNumOfIndexes() * sizeof(GLfloat), (GLvoid*)mv.getIndexes(), GL_STATIC_DRAW);
 
-	glGenBuffers(1, &_faces);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faces);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)* numOfFaces,
-			(GLvoid*)faces, GL_STATIC_DRAW);
-
-	_vertAttr = _shaderProgram->getAttribute(vertexAttr);
+	_numOfFaces = mv.getNumOfIndexes();
 }
 
 Mesh::~Mesh() {
@@ -34,17 +29,13 @@ Mesh::~Mesh() {
 
 void Mesh::draw(){
 
-	_shaderProgram->useProgram();
+	glBindBuffer(GL_ARRAY_BUFFER, _vertexVBO);
+	glVertexAttribPointer(_shaderVertexAttribute, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(_shaderVertexAttribute);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vertex);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
+	glDrawElements(GL_TRIANGLES, _numOfFaces, GL_UNSIGNED_SHORT, (GLvoid*)0);
 
-	glEnableVertexAttribArray(_vertAttr);
+	glDisableVertexAttribArray(_shaderVertexAttribute);
 
-	glVertexAttribPointer(_vertAttr, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (GLvoid*)0);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faces);
-
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (GLvoid*)0);
-
-	glDisableVertexAttribArray(_vertAttr);
 }

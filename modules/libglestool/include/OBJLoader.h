@@ -13,13 +13,9 @@
 
 #include <vector>
 
-//#include "GLTriangle.h"
 
-#ifdef BUILD_ANDROID
-	#include <GLES2/gl2.h>
-#else
-	#include <GL/gl.h>
-#endif
+#include <GLES2/gl2.h>
+//#include <GL/gl.h>
 
 using namespace std;
 
@@ -78,37 +74,26 @@ private:
 };
 
 struct MeshV{
-	MeshV( const LoadedObject& lo ){
-
-		const vector<Vertex>& vertexes = lo.getVertexes();
-		const vector<vector<Face> >& faces = lo.getFaces();
-
-		_vertexes = new GLfloat[ vertexes.size() * 3 ];
-		if(_vertexes){
-			for( uint32_t i = 0; i < vertexes.size(); ++i ){
-				_vertexes[3*i + 0] = vertexes[i].x;
-				_vertexes[3*i + 1] = vertexes[i].y;
-				_vertexes[3*i + 2] = vertexes[i].z;
-			}
-
-			_indexes = new GLushort[ faces.size() * 3 ];
-			if( _indexes ){
-
-//				for( uint32_t i = 0; i )
-			}
-		}
+	MeshV():
+		_vertexes(NULL), _numOfVertexes(0),
+		_indexes(NULL), _numOfIndexes(0){
 	}
-
-	GLfloat* getVertexes() { return _vertexes; }
-	GLushort* getIndexes() { return _indexes;  }
-
 	virtual ~MeshV(){
 		delete [] _vertexes;
 		delete [] _indexes;
 	}
+
+	bool createMesh( const LoadedObject& lo );
+
+	const GLfloat*  getVertexes() const { return _vertexes; }
+	const GLushort* getIndexes()  const { return _indexes;  }
+
+	GLuint    getNumOfVertexes() const { return _numOfVertexes; }
+	GLuint    getNumOfIndexes()  const { return _numOfIndexes;  }
+
 private:
-	GLfloat*  _vertexes;
-	GLushort* _indexes;
+	GLfloat*  _vertexes; GLuint _numOfVertexes;
+	GLushort* _indexes;  GLuint _numOfIndexes;
 };
 
 class OBJLoader {

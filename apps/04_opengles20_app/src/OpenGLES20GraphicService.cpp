@@ -26,12 +26,21 @@ const char vertexSource[] =
 		"    vtex = atex;"
 		"}"
 		;
+//const char fragmentSource[] =
+//		"precision mediump float;"
+//		"varying vec2      vtex;"
+//		"uniform sampler2D stex;"
+//		"void main(){"
+//		"    gl_FragColor = texture2D(stex, vtex);"
+//		"}"
+//		;
+
 const char fragmentSource[] =
 		"precision mediump float;"
 		"varying vec2      vtex;"
 		"uniform sampler2D stex;"
 		"void main(){"
-		"    gl_FragColor = texture2D(stex, vtex);"
+		"    gl_FragColor = vec4(0.8, 0.8, 0.7, 0.7);"
 		"}"
 		;
 
@@ -64,27 +73,6 @@ const GLushort indices[] = {
 const int32_t texSize = 1024;
 
 const GLfloat dim = side;
-
-//const GLfloat
-//		right_ = dim, left_ = -dim,
-//		top = -dim, bottom = dim,
-//		near = dim, far = -dim;
-//
-//const GLfloat
-//		r_l = right_ - left_,
-//		t_b = top - bottom,
-//		f_n = far - near,
-//
-//		tx = -(right_ + left_) / (right_ - left_),
-//		ty = -(top + bottom) / (top - bottom),
-//		tz = -(far + near)   / (far - near);
-
-//const GLfloat uOrhto[] = {
-//		2.f / r_l,    0.f,       0.f,       0.f,
-//		0.f,          2.f / t_b, 0.f,       0.f,
-//		0.f,          0.f,       2.f / f_n, 0.f,
-//		0.f,          0.f,       0.f,       1.f
-//};
 
 //const MeshVertex trim[] = {
 //		{  0,   0, 0,  0, 0, 1,  0, 0},
@@ -171,11 +159,20 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	GLMatrix4x4::matrixIdentity(mod);
 	GLMatrix4x4::matrixIdentity(mod1);
 
-	OBJLoader objl("/sdcard/repo/data/my_mesh.obj");
+	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
+	MeshV mv001;
+	if(load_obj001.getNumOfLoadedObjects()){
+		mv001.createMesh(load_obj001.getObject(0));
+	}
+	_obj001 = new Mesh(mv001, _vpos);
 
-	glGenBuffers(1, &_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, _vertex);
-	glBufferData()
+
+	OBJLoader obj002("/sdcard/repo/data/mesh001.obj");
+	MeshV mv002;
+	if(obj002.getNumOfLoadedObjects()){
+		mv002.createMesh(obj002.getObject(0));
+	}
+	_obj002 = new Mesh(mv002, _vpos);
 
 	_isInit = true;
 	return STATUS_OK;
@@ -215,7 +212,7 @@ void OpenGLES20GraphicService::draw(){
 
 
 	GLfloat mr[16];
-	GLMatrix4x4::matrixPosition(mod, 0, 0, -400);
+	GLMatrix4x4::matrixPosition(mod, 0, 0, -10);
 
 	static GLfloat angle = 0.f;
 	angle += 0.03f;
@@ -235,18 +232,25 @@ void OpenGLES20GraphicService::draw(){
 
 	glUniformMatrix4fv(_uortho, 1, false, res);
 
-	glEnableVertexAttribArray(_vpos);
-	glEnableVertexAttribArray(_atex);
 
-	glVertexAttribPointer(_vpos, 2, GL_FLOAT, GL_FALSE, 0, vertexScr);
-	glVertexAttribPointer(_atex, 2, GL_FLOAT, GL_FALSE, 0, texScr);
+//	if(_obj001)
+//		_obj001->draw();
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
-	glDisableVertexAttribArray(_vpos);
-	glDisableVertexAttribArray(_atex);
+	GLfloat mv002[16];
+	GLMatrix4x4::matrixIdentity(mv002);
+	GLMatrix4x4::matrixPosition(mv002, 2, 0, -20);
 
-	eglSwapBuffers(_display, _surface); Tools::glCheck("eglSwapBuffers");
+	GLfloat res002[16];
+	GLMatrix4x4::matrixMultyply(orhto, mv002, res002);
+
+	glUniformMatrix4fv(_uortho, 1, false, res002);
+
+	if(_obj002)
+		_obj002->draw();
+
+
+	eglSwapBuffers(_display, _surface);
 
 }
 

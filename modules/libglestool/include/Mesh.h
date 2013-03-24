@@ -12,34 +12,25 @@
 #include <GLES2/gl2.h>
 
 #include <IObject.h>
-#include "IShaderProgram.h"
-
-struct MeshVertex{
-	GLfloat x, y, z;
-//	GLfloat nx, ny, nz;
-//	GLfloat s, t;
-};
+#include "OBJLoader.h"
 
 class Mesh: public IObject {
 public:
-	Mesh( const MeshVertex* vertices,
-			GLuint numOfVertex,
-			const char* vertexAttr,
-			const GLuint* faces,
-			GLuint numOfFaces,
-			IShaderProgram* shaderProgram );
+	Mesh( const MeshV& mv, GLuint shaderVertexAttribute );
 
 	virtual ~Mesh();
 
 	virtual void draw();
 
 private:
-	GLuint _vertex;
-	GLuint _faces;
 
-	GLuint _vertAttr;
+	GLuint _shaderVertexAttribute;
 
-	IShaderProgram* _shaderProgram;
+	GLuint _vertexVBO;
+	GLuint _indexVBO;
+
+	uint32_t _numOfFaces;
+
 };
 
 #endif /* MESH_H_ */
