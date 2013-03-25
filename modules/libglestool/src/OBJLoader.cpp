@@ -127,9 +127,9 @@ bool MeshV::createMesh( const LoadedObject& lo ){
 		_indexes = new GLushort[faces.size() * 3];
 		if( _indexes ){
 			for( uint32_t i = 0; i < faces.size(); ++i ){
-				_indexes[3*i + 0] = faces[i][0].v;
-				_indexes[3*i + 1] = faces[i][1].v;
-				_indexes[3*i + 2] = faces[i][2].v;
+				_indexes[3*i + 0] = faces[i][0].v - 1;
+				_indexes[3*i + 1] = faces[i][1].v - 1;
+				_indexes[3*i + 2] = faces[i][2].v - 1;
 			}
 			return true;
 		}else{

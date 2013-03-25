@@ -8,7 +8,7 @@
 #ifndef NULLCAPTURE_H_
 #define NULLCAPTURE_H_
 
-#include <ctime>
+#include <unistd.h>
 
 #include "ICaptureService.h"
 

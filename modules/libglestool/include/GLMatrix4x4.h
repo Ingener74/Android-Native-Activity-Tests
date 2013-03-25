@@ -11,53 +11,39 @@
 #include <GLES2/gl2.h>
 #include <math.h>
 
-class GLMatrix4x4 {
+class GLMatrix4x4{
 public:
+
 	GLMatrix4x4();
-	virtual ~GLMatrix4x4();
+	GLMatrix4x4(
+			GLfloat left, GLfloat right,
+			GLfloat top,  GLfloat bottom,
+			GLfloat near, GLfloat far);
 
-	static void matrixIdentity( GLfloat* matrix );
+	GLMatrix4x4(
+			GLfloat near,        GLfloat far,
+			GLfloat angleOfView, GLfloat aspectRatio);
 
-	static void matrixPosition( GLfloat* matrix, GLfloat x, GLfloat y, GLfloat z );
-	static void matrixMove( GLfloat* matrix, GLfloat dx, GLfloat dy, GLfloat dz );
+	GLMatrix4x4( const GLfloat* matrix );
 
-	static void matrixScale( GLfloat* matrix, GLfloat x, GLfloat y, GLfloat z);
-	static void matrixResize( GLfloat* matrix, GLfloat x, GLfloat y, GLfloat z);
+	virtual ~GLMatrix4x4(){}
 
-	static void matrixRotationX( GLfloat* matrix, GLfloat angleRad );
-	static void matrixRotationY( GLfloat* matrix, GLfloat angleRad );
-	static void matrixRotationZ( GLfloat* matrix, GLfloat angleRad );
+	GLMatrix4x4& position(GLfloat x, GLfloat y, GLfloat z);
+	GLMatrix4x4& move(GLfloat dx, GLfloat dy, GLfloat dz);
 
-	static void matrixMultyply( GLfloat* matrix1, GLfloat* matrix2, GLfloat* result );
+	GLMatrix4x4& scale(GLfloat x, GLfloat y, GLfloat z);
+	GLMatrix4x4& resize(GLfloat dx, GLfloat dy, GLfloat dz);
 
-	static void matrixOrtho( GLfloat* matrix, GLfloat left, GLfloat right,
-			GLfloat top, GLfloat bottom, GLfloat near, GLfloat far );
+	GLMatrix4x4& rotateX(GLfloat rad);
+	GLMatrix4x4& rotateY(GLfloat rad);
+	GLMatrix4x4& rotateZ(GLfloat rad);
 
-	static void matrixProjection( GLfloat* matrix, GLfloat near, GLfloat far,
-			GLfloat angleOfView, GLfloat aspectRatio );
-};
-
-class ModelViewMatrix{
-public:
-	ModelViewMatrix();
-	virtual ~ModelViewMatrix(){}
-
-	void position(GLfloat x, GLfloat y, GLfloat z);
-	void move(GLfloat dx, GLfloat dy, GLfloat dz);
-
-	void scale(GLfloat x, GLfloat y, GLfloat z);
-	void resize(GLfloat dx, GLfloat dy, GLfloat dz);
-
-	void rotateX(GLfloat rad);
-	void rotateY(GLfloat rad);
-	void rotateZ(GLfloat rad);
-
-	void operator*( const GLfloat* m1 );
-
-	GLfloat* getMatrix(){ return _m; }
+	const GLfloat* getMatrix() const { return _m; }
 
 private:
 	GLfloat _m[16];
 };
+
+GLMatrix4x4 operator*( const GLMatrix4x4& m1, const GLMatrix4x4& m2 );
 
 #endif /* GLMATRIX4X4_H_ */

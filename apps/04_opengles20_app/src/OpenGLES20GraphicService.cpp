@@ -17,15 +17,26 @@
 #include <OBJLoader.h>
 
 const char vertexSource[] =
-		"uniform   mat4 uortho;"
-		"attribute vec2 vpos;"
-		"attribute vec2 atex;"
-		"varying   vec2 vtex;"
+		"uniform   mat4  uortho;"
+		"attribute vec4  vpos;"
+//		"attribute vec2  atex;"
+//		"varying   vec2  vtex;"
+		"varying   vec4  vcolor;"
 		"void main(){"
-		"    gl_Position = uortho * vec4(vpos, 0.0, 1.0);"
-		"    vtex = atex;"
+		"    gl_Position = uortho * vpos;"
+//		"    vtex = atex;"
+		"    vcolor = vpos / vec4(5.0, 5.0, 5.0, 1.0);"
 		"}"
 		;
+
+//const char vertexSource[] =
+//		"uniform   mat4  uortho;"
+//		"attribute vec4  vpos;"
+//		"void main(){"
+//		"    gl_Position = uortho * vpos;"
+//		"}"
+//		;
+
 //const char fragmentSource[] =
 //		"precision mediump float;"
 //		"varying vec2      vtex;"
@@ -37,60 +48,22 @@ const char vertexSource[] =
 
 const char fragmentSource[] =
 		"precision mediump float;"
-		"varying vec2      vtex;"
-		"uniform sampler2D stex;"
+		"varying vec4 vcolor;"
 		"void main(){"
-		"    gl_FragColor = vec4(0.8, 0.8, 0.7, 0.7);"
+//		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);"
+		"    gl_FragColor = vcolor;"
 		"}"
 		;
 
-const GLfloat side = 50.f;
-const GLfloat vertexScr[] = {
-		-side, -side,
-		 side, -side,
-		 side,  side,
-		-side,  side
-};
-GLfloat texScr[] = {
-		0.f, 0.f,
-		1.f, 0.f,
-		1.f, 1.f,
-		0.f, 1.f,
-};
-
-const GLfloat colorScr[] = {
-		1.f, 1.f, 1.f, 1.f,
-		1.f, 1.f, 1.f, 1.f,
-		1.f, 1.f, 1.f, 1.f,
-		1.f, 1.f, 1.f, 1.f,
-};
-
-const GLushort indices[] = {
-		1, 0, 2,
-		3, 2, 0
-};
-
 const int32_t texSize = 1024;
 
-const GLfloat dim = side;
-
-//const MeshVertex trim[] = {
-//		{  0,   0, 0,  0, 0, 1,  0, 0},
-//		{100,   0, 0,  0, 0, 1,  0, 0},
-//		{100, 100, 0,  0, 0, 1,  0, 0},
-//};
-const GLuint trimver[] = {
-		0, 1, 2
-};
+GLMatrix4x4 projective;
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
 
 OpenGLES20GraphicService::~OpenGLES20GraphicService() {
 }
-
-GLfloat mod[16];
-GLfloat mod1[16];
 
 OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 		android_app* application ){
@@ -148,26 +121,26 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	}else{
 		LOGI_OGLES20GS("vpos handle getting");
 		_vpos = glGetAttribLocation(_program, "vpos");  Tools::glCheck("glGetAttribLocation");
-		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
-		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
+//		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
+//		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
 		_uortho = glGetUniformLocation(_program, "uortho"); Tools::glCheck("glGetUniformLocation");
 	}
 
 	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
 	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
 
-	GLMatrix4x4::matrixIdentity(mod);
-	GLMatrix4x4::matrixIdentity(mod1);
+	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
 
-	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
-	MeshV mv001;
-	if(load_obj001.getNumOfLoadedObjects()){
-		mv001.createMesh(load_obj001.getObject(0));
-	}
-	_obj001 = new Mesh(mv001, _vpos);
+//	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
+//	MeshV mv001;
+//	if(load_obj001.getNumOfLoadedObjects()){
+//		mv001.createMesh(load_obj001.getObject(0));
+//	}
+//	_obj001 = new Mesh(mv001, _vpos);
 
-
-	OBJLoader obj002("/sdcard/repo/data/mesh001.obj");
+//	"/sdcard/repo/data/my_mesh.obj"
+//	"/sdcard/repo/data/mesh002_cube.obj"
+	OBJLoader obj002("/sdcard/repo/data/mesh002_cube.obj");
 	MeshV mv002;
 	if(obj002.getNumOfLoadedObjects()){
 		mv002.createMesh(obj002.getObject(0));
@@ -201,7 +174,7 @@ void OpenGLES20GraphicService::deinit(){
 
 
 void OpenGLES20GraphicService::draw(){
-	glClearColor(0.f, 0.6f, 0.1f, 1.f); Tools::glCheck("glClearColor");
+	glClearColor(0.5f, 0.9f, 0.5f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
 	glUseProgram(_program); Tools::glCheck("glUseProgram");
@@ -210,41 +183,14 @@ void OpenGLES20GraphicService::draw(){
 //	_tex1->bind();
 //	glUniform1i(_stex, 0);
 
-
-	GLfloat mr[16];
-	GLMatrix4x4::matrixPosition(mod, 0, 0, -10);
-
-	static GLfloat angle = 0.f;
-	angle += 0.03f;
-	GLfloat tr[16]; GLMatrix4x4::matrixIdentity(tr); GLMatrix4x4::matrixRotationZ(tr, angle);
-	GLfloat tr1[16]; GLMatrix4x4::matrixIdentity(tr1);
-	GLMatrix4x4::matrixMultyply(tr, mod1, tr1);
-
-	GLMatrix4x4::matrixMultyply(mod, tr1, mr);
-
-	GLfloat aR = _width / GLfloat(_height);
-
-	GLfloat orhto[16];
-	GLMatrix4x4::matrixProjection(orhto, 0.1, 10000, 54 * 3.1415 / 180, aR);
-
-	GLfloat res[16];
-	GLMatrix4x4::matrixMultyply(orhto, mr, res);
-
-	glUniformMatrix4fv(_uortho, 1, false, res);
-
-
 //	if(_obj001)
 //		_obj001->draw();
 
+	static GLfloat ax = 0.0f, az = 0.0f;
+	az += 0.05;
+	ax += 0.01;
 
-	GLfloat mv002[16];
-	GLMatrix4x4::matrixIdentity(mv002);
-	GLMatrix4x4::matrixPosition(mv002, 2, 0, -20);
-
-	GLfloat res002[16];
-	GLMatrix4x4::matrixMultyply(orhto, mv002, res002);
-
-	glUniformMatrix4fv(_uortho, 1, false, res002);
+	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateX(ax).position(0,0,-10)).getMatrix() );
 
 	if(_obj002)
 		_obj002->draw();
