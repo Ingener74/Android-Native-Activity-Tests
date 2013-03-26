@@ -25,7 +25,7 @@ const char vertexSource[] =
 		"void main(){"
 		"    gl_Position = uortho * vpos;"
 //		"    vtex = atex;"
-		"    vcolor = vpos / vec4(30.0, 30.0, 30.0, 1.0);"
+		"    vcolor = vpos / vec4(5.0, 5.0, 5.0, 1.0);"
 		"}"
 		;
 
@@ -59,7 +59,23 @@ const int32_t texSize = 1024;
 
 GLMatrix4x4 projective;
 
-OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
+OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false),
+		_display(EGL_NO_DISPLAY),
+		_context(EGL_NO_CONTEXT),
+		_surface(EGL_NO_SURFACE),
+
+		_width(0),
+		_height(0),
+		_program(0),
+		_vpos(0),
+		_atex(0),
+		_stex(0),
+		_uortho(0),
+
+		_obj001(NULL),
+		_obj002(NULL),
+		_mt(NULL)
+{
 }
 
 OpenGLES20GraphicService::~OpenGLES20GraphicService() {
@@ -129,6 +145,12 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
 	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
 
+	if( EGLDispatcher::init() ){
+		_mt = new FastEGLTexture(im.data, im.rows, im.cols,
+				FastEGLTexture::IMAGE_FORMAT_RGB888, _application, _display,
+				FastEGLTexture::FEGL_TEXTURE_FORMAT_RGBA8888);
+	}
+
 	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
 
 //	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
@@ -140,9 +162,7 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 
 //	"/sdcard/repo/data/my_mesh.obj"
 //	"/sdcard/repo/data/mesh002_cube.obj"
-//	"/sdcard/repo/data/mesh003.obj"
-
-	OBJLoader obj002("/sdcard/repo/data/mesh003.obj");
+	OBJLoader obj002("/sdcard/repo/data/my_mesh.obj");
 	MeshV mv002;
 	if(obj002.getNumOfLoadedObjects()){
 		mv002.createMesh(obj002.getObject(0));
@@ -192,7 +212,7 @@ void OpenGLES20GraphicService::draw(){
 	az += 0.05;
 	ax += 0.01;
 
-	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateX(ax).position(0,0,-200)).getMatrix() );
+	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateX(ax).position(0,0,-12)).getMatrix() );
 
 	if(_obj002)
 		_obj002->draw();

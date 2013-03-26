@@ -110,7 +110,8 @@ OpenCVCaptureGraphicsService::STATUS OpenCVCaptureGraphicsService::init( android
 
 	glEnable(GL_DEPTH_TEST);
 
-
+//	_camPar.readFromXMLFile("/sdcard/repo/data/camera.yml");
+//	_camPar.resize(Size(640, 480));
 
 	_isInit = true;
 
@@ -169,6 +170,13 @@ void OpenCVCaptureGraphicsService::draw(){
 }
 
 void OpenCVCaptureGraphicsService::setImage( Mat image ){
+
+//	_marDet.detect(image, _markers, _camPar.CameraMatrix, Mat(), 1);
+//	stringstream ss;
+//	ss << _markers.size();
+//	string mn;
+//	ss >> mn;
+//	putText(image, mn, Point(20, 40), FONT_HERSHEY_PLAIN, 1, Scalar(255,255,255));
 
 	if(_fast && _ft){
 		_ft->updatePart(image.data, image.rows, image.cols,

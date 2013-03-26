@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME 03_opencv_capture_app)
+set(PROJECT_NAME 04_opengles20_app)
 project(${PROJECT_NAME})
 
 set(ANDROID_NATIVE_APP_GLUE_DIR
@@ -19,7 +19,6 @@ include_directories(
     
     ${REPO_HOME}/modules/libtools/include
     ${REPO_HOME}/modules/libglestool/include
-    ${REPO_HOME}/modules/libaruco/include
     )
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
@@ -40,14 +39,9 @@ set(ANDROID_LIBS
     )
 set(OPENCV_LIBS 
     opencv_highgui
-    opencv_imgproc
     opencv_androidcamera
-    opencv_core    
-    opencv_features2d
-    opencv_calib3d
-    opencv_flann
-    opencv_legacy
-    
+    opencv_imgproc
+    opencv_core
     tbb
     libpng
     libjpeg
@@ -59,11 +53,11 @@ set(OPENCV_LIBS
 set(SOURCES
     ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
     src/main.cpp
-    src/OpenCVCaptureEventHandler.cpp
-    src/OpenCVCaptureGraphicsService.cpp
+    src/OpenGLES20EventHandler.cpp
+    src/OpenGLES20GraphicService.cpp
     )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools aruco)
+target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${REPO_HOME}/android_build/${PROJECT_NAME}/libs/armeabi-v7a)

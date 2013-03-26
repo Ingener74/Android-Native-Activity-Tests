@@ -21,6 +21,8 @@
 #include <GLTriangle.h>
 #include <tools.h>
 
+//#include <aruco.h>
+
 #define LOGI_OCVCGS(...){ LOGI("OpenCVCaptureEventHandler", __VA_ARGS__); }
 #define LOGE_OCVCGS(...){ LOGE("OpenCVCaptureEventHandler", __VA_ARGS__); }
 #define LOGW_OCVCGS(...){ LOGW("OpenCVCaptureEventHandler", __VA_ARGS__); }
@@ -58,6 +60,11 @@ private:
 
 	IObject*    _screen;
 	bool        _isInit;
+
+//	aruco::CameraParameters _camPar;
+//	aruco::MarkerDetector   _marDet;
+//	vector<aruco::Marker>   _markers;
+//	bool                    _arInit;
 };
 
 #endif /* OPENCVCAPTUREGRAPHICSSERVICE_H_ */

@@ -11,14 +11,10 @@ include_directories(
 	${REPO_HOME}/modules/libtools/include
 	)
 	
-#include_directories(/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include)
-#include_directories(/home/ingener/android_dev/android-ndk-r8d/platforms/android-14/arch-arm/usr/include)
-#include_directories(/home/ingener/android_dev/android-ndk-r8d/sources/android/native_app_glue)
-#include_directories(/home/ingener/android_dev/android-ndk-r8d/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/lib/gcc/arm-linux-androideabi/4.7/include)
-#link_directories(/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/3rdparty/libs/armeabi-v7a)
-#link_directories(/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a)
-#link_directories(/home/ingener/android_dev/android-ndk-r8d/platforms/android-14/arch-arm/usr/lib)
-
+link_directories(
+    ${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a
+    )
+	
 set(SOURCES 
   src/arucofidmarkers.cpp
   src/board.cpp
@@ -35,7 +31,12 @@ set(LIBS
 set(OPENCV_LIBS 
   opencv_core
   opencv_highgui
+  opencv_androidcamera
   opencv_imgproc
+  opencv_features2d
+  opencv_calib3d
+  opencv_flann
+  opencv_legacy
   
   IlmImf
   libjasper
