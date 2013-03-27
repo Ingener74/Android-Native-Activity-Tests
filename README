@@ -6,7 +6,7 @@ Requirements for build:
 
 Instruction for install Android CMake view on my blog http://ingener74.blogspot.ru/ - the message about it not ready but i am write it in the close time
 
-3rdparty contained: 
+3rdparty contained:
 1. OpenCV 2.4.4-beta for Android
 
 build programs: for example i show on "opengles_test"
@@ -14,7 +14,7 @@ in ${REPO_HOME} in console type next
 1. > cd opengles_test
 2. > mkdir build
 3. > cd build
-4. > android-cmake .. 
+4. > android-cmake ..
 5. > make
 
 then program maked

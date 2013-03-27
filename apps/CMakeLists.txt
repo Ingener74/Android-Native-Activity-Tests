@@ -5,3 +5,5 @@ add_subdirectory(01_empty_application)
 add_subdirectory(02_opengles10_app)
 add_subdirectory(03_opencv_capture_app)
 add_subdirectory(04_opengles20_app)
+
+add_dependencies(01_empty_application tools)

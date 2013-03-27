@@ -4,30 +4,18 @@ set(PROJECT_NAME tools)
 project(${PROJECT_NAME})
 
 include_directories(
-	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
-	${ANDROID_NDK}/sources/android/native_app_glue
-	${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
-	${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include
-	${REPO_HOME}/modules/libtools/include
+	${ANAT_INCLUDE}
+	include
 	)
+	
+link_directories(${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a)
 
-set(SOURCES 
-    src/AssetFileResource.cpp
-    src/CircleProcessor.cpp
-    src/CopyProcessor.cpp
-    src/FPSCalculator.cpp
-    src/ICaptureService.cpp
-    src/IEventEngine.cpp
-    src/IGraphicsService.cpp
-    src/IProcessor.cpp
-    src/IService.cpp
-    src/NullCapture.cpp
-    src/OpenCVCapture.cpp
-    )
-set(OPENCV_LIBS
-    opencv_highgui
-    opencv_androidcamera
-    opencv_imgproc
+file(GLOB SOURCES src/*.cpp)
+
+set(OPENCV_LIBS   
+    opencv_highgui   
+    opencv_androidcamera   
+    opencv_imgproc   
     opencv_core
     tbb
     libpng

@@ -1,42 +1,29 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME 01_empty_application)
+project(${PROJECT_NAME})
 
-set(ANDROID_NATIVE_APP_GLUE_DIR
-    ${ANDROID_NDK}/sources/android/native_app_glue
-    )
-    
-set(ANDROID_OPENCV_DIR
-    ${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
-    )
+include(../../anat_tools.cmake)
 
 include_directories(
-    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
-    ${ANDROID_NATIVE_APP_GLUE_DIR}
-    ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
-    ${REPO_HOME}/modules/libtools/include
-    ${REPO_HOME}/modules/libglestool/include
+    ${ANAT_INCLUDE}
+    ../../modules/libtools/include
     )
 link_directories(
-    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
-    ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a
-    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a
+    ${ANAT_LINK}
     ${REPO_HOME}/libs/armeabi-v7a
     )
-set(ANDROID_LIBS 
-    log 
+set(ANDROID_LIBS
+    log
     android
-    
+
     opencv_core
     opencv_highgui
     opencv_imgproc
     )
 
-set(SOURCES
-    ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
-    src/main.cpp
-    src/EmptyAppEventHandler.cpp
-    )
+file(GLOB SRC src/*.cpp)
+set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} tools)
