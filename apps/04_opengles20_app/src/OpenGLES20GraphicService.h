@@ -59,10 +59,7 @@ private:
 	GLint        _stex;
 	GLuint       _uortho;
 
-	IObject*     _obj001;
-	IObject*     _obj002;
 
-	RGBTexture*  _tex1;
 
 	static GLuint loadShader( GLenum shaderType, const char* source );
 	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );

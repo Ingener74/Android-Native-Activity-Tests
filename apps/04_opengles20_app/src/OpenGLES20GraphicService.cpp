@@ -12,8 +12,6 @@
 #include "OpenGLES20GraphicService.h"
 
 #include <RGBTexture.h>
-//#include <GLTriangle.h>
-//#include <GLMatrix4x4.h>
 
 #include <Mesh.h>
 #include <extOBJLoader.h>
@@ -38,11 +36,10 @@ const char fragmentSource[] =
 		"}"
 		;
 
-const int32_t texSize = 1024;
+glm::mat4     proj;
 
-//GLMatrix4x4 projective;
-
-glm::mat4 proj;
+IObject*     _obj001  = NULL;
+ITexture*    _tex1    = NULL;
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
@@ -111,15 +108,11 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 		_uortho = glGetUniformLocation(_program, "uortho"); Tools::glCheck("glGetUniformLocation");
 	}
 
-	_tex1 = NULL;
-	_tex1 = new RGBTexture(imread("/sdcard/repo/data/mesh003_1.png"));
-
-//	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
-
 	proj = glm::perspective(45.0f, _width / float(_height), 0.1f, 10000.0f);
 
 	extOBJLoader lm("/sdcard/repo/data/mesh003.obj");
 
+	_tex1 = new RGBTexture(imread("/sdcard/repo/data/mesh003_1.png"));
 	_obj001 = new Mesh(&lm, _vpos, _tex1, _atex);
 
 	_isInit = true;
@@ -146,18 +139,11 @@ void OpenGLES20GraphicService::deinit(){
 	_surface = EGL_NO_SURFACE;
 }
 
-
-
 void OpenGLES20GraphicService::draw(){
 	glClearColor(0.5f, 0.9f, 0.5f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
 	glUseProgram(_program); Tools::glCheck("glUseProgram");
-
-	glActiveTexture(GL_TEXTURE0);
-	_tex1->bind();
-	glUniform1i(_stex, 0);
-
 
 	static GLfloat ax = 0.0f, az = 0.0f;
 	az += 0.05;
@@ -172,11 +158,7 @@ void OpenGLES20GraphicService::draw(){
 	if(_obj001)
 		_obj001->draw();
 
-//	if(_obj002)
-//		_obj002->draw();
-
 	eglSwapBuffers(_display, _surface);
-
 }
 
 void OpenGLES20GraphicService::setImage( Mat image ){

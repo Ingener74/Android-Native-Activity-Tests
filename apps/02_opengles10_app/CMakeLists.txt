@@ -18,6 +18,7 @@ set(ANDROID_LIBS
     
     EGL
     GLESv1_CM
+    GLESv2
     
     opencv_core
     opencv_highgui

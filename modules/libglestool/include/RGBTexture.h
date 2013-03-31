@@ -8,33 +8,26 @@
 #ifndef RGBTEXTURE_H_
 #define RGBTEXTURE_H_
 
-#include <GLES/gl.h>
-#include <GLES/glext.h>
-#include <GLES/glplatform.h>
+#include <GLES2/gl2.h>
 
 #include <opencv2/core/core.hpp>
 
-#include "ITexture.h"
+#include "IImageTexture.h"
 #include "tools.h"
 
 using namespace cv;
 
-class RGBTexture: public ITexture {
+class RGBTexture: public IImageTexture{
 public:
 	virtual ~RGBTexture();
-	RGBTexture( const Mat& image );
+	RGBTexture( Mat image, GLuint _shaderTextureSampleID = -1 );
 
-	void updateAll( const Mat& im );
-	void updatePart( const Mat& im );
-	void updateAllLikePart( const Mat& im );
-
+	void updatePart( Mat image );
 	void bind();
-
-	bool isOtherSize();
-	void resizeTexture();
 
 private:
 	GLuint _id;
+	GLuint _shaderUniformID;
 
 	GLuint upperPowerOfTwo( GLuint v );
 };
