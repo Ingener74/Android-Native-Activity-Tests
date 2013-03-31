@@ -162,12 +162,12 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 
 //	"/sdcard/repo/data/my_mesh.obj"
 //	"/sdcard/repo/data/mesh002_cube.obj"
-	OBJLoader obj002("/sdcard/repo/data/my_mesh.obj");
-	MeshV mv002;
-	if(obj002.getNumOfLoadedObjects()){
-		mv002.createMesh(obj002.getObject(0));
-	}
-	_obj002 = new Mesh(mv002, _vpos);
+//	OBJLoader obj002("/sdcard/repo/data/my_mesh.obj");
+//	MeshV mv002;
+//	if(obj002.getNumOfLoadedObjects()){
+//		mv002.createMesh(obj002.getObject(0));
+//	}
+//	_obj002 = new Mesh(mv002, _vpos);
 
 	_isInit = true;
 	return STATUS_OK;

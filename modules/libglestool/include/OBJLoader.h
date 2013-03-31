@@ -13,9 +13,11 @@
 
 #include <vector>
 
-
-#include <GLES2/gl2.h>
-//#include <GL/gl.h>
+#ifdef ANDROID
+	#include <GLES2/gl2.h>
+#else
+	#include <GL/gl.h>
+#endif
 
 using namespace std;
 

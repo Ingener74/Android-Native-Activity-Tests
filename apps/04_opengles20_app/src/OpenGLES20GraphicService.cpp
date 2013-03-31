@@ -13,45 +13,25 @@
 #include <GLMatrix4x4.h>
 
 #include <Mesh.h>
-
-#include <OBJLoader.h>
+#include <extOBJLoader.h>
 
 const char vertexSource[] =
 		"uniform   mat4  uortho;"
 		"attribute vec4  vpos;"
-//		"attribute vec2  atex;"
-//		"varying   vec2  vtex;"
-		"varying   vec4  vcolor;"
+		"attribute vec2  atex;"
+		"varying   vec2  vtex;"
 		"void main(){"
 		"    gl_Position = uortho * vpos;"
-//		"    vtex = atex;"
-		"    vcolor = vpos / vec4(30.0, 30.0, 30.0, 1.0);"
+		"    vtex = atex;"
 		"}"
 		;
 
-//const char vertexSource[] =
-//		"uniform   mat4  uortho;"
-//		"attribute vec4  vpos;"
-//		"void main(){"
-//		"    gl_Position = uortho * vpos;"
-//		"}"
-//		;
-
-//const char fragmentSource[] =
-//		"precision mediump float;"
-//		"varying vec2      vtex;"
-//		"uniform sampler2D stex;"
-//		"void main(){"
-//		"    gl_FragColor = texture2D(stex, vtex);"
-//		"}"
-//		;
-
 const char fragmentSource[] =
 		"precision mediump float;"
-		"varying vec4 vcolor;"
+		"varying vec2      vtex;"
+		"uniform sampler2D stex;"
 		"void main(){"
-//		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);"
-		"    gl_FragColor = vcolor;"
+		"    gl_FragColor = texture2D(stex, vtex);"
 		"}"
 		;
 
@@ -121,33 +101,19 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	}else{
 		LOGI_OGLES20GS("vpos handle getting");
 		_vpos = glGetAttribLocation(_program, "vpos");  Tools::glCheck("glGetAttribLocation");
-//		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
-//		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
+		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
+		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
 		_uortho = glGetUniformLocation(_program, "uortho"); Tools::glCheck("glGetUniformLocation");
 	}
 
-	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
-	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
+	_tex1 = NULL;
+	_tex1 = new RGBTexture(imread("/sdcard/repo/data/mesh003_1.png"));
 
 	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
 
-//	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
-//	MeshV mv001;
-//	if(load_obj001.getNumOfLoadedObjects()){
-//		mv001.createMesh(load_obj001.getObject(0));
-//	}
-//	_obj001 = new Mesh(mv001, _vpos);
+	extOBJLoader lm("/sdcard/repo/data/mesh003.obj");
 
-//	"/sdcard/repo/data/my_mesh.obj"
-//	"/sdcard/repo/data/mesh002_cube.obj"
-//	"/sdcard/repo/data/mesh003.obj"
-
-	OBJLoader obj002("/sdcard/repo/data/mesh003.obj");
-	MeshV mv002;
-	if(obj002.getNumOfLoadedObjects()){
-		mv002.createMesh(obj002.getObject(0));
-	}
-	_obj002 = new Mesh(mv002, _vpos);
+	_obj001 = new Mesh(&lm, _vpos, _tex1, _atex);
 
 	_isInit = true;
 	return STATUS_OK;
@@ -180,23 +146,23 @@ void OpenGLES20GraphicService::draw(){
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
 	glUseProgram(_program); Tools::glCheck("glUseProgram");
-//
-//	glActiveTexture(GL_TEXTURE0);
-//	_tex1->bind();
-//	glUniform1i(_stex, 0);
 
-//	if(_obj001)
-//		_obj001->draw();
+	glActiveTexture(GL_TEXTURE0);
+	_tex1->bind();
+	glUniform1i(_stex, 0);
+
 
 	static GLfloat ax = 0.0f, az = 0.0f;
 	az += 0.05;
 	ax += 0.01;
 
-	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateX(ax).position(0,0,-200)).getMatrix() );
+	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateY(ax).position(0,0,-200)).getMatrix() );
 
-	if(_obj002)
-		_obj002->draw();
+	if(_obj001)
+		_obj001->draw();
 
+//	if(_obj002)
+//		_obj002->draw();
 
 	eglSwapBuffers(_display, _surface);
 

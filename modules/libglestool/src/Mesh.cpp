@@ -7,35 +7,70 @@
 
 #include "Mesh.h"
 
-Mesh::Mesh( const MeshV& mv, GLuint shaderVertexAttribute ):
-	_shaderVertexAttribute(shaderVertexAttribute),
-	_vertexVBO(0),
-	_indexVBO(0),
-	_numOfFaces(0){
+Mesh::Mesh( IMeshExporter* me, GLuint shaderVertexAttribute, ITexture* tex,
+		GLuint shaderUVAttribute, GLuint shaderNormalAttribute):
+		_tex(tex),
+		_shaderVertexAttribute(shaderVertexAttribute),
+		_shaderUVAttribute(shaderUVAttribute),
+		_shaderNormalAttribute(shaderNormalAttribute),
 
-	glGenBuffers(1, &_vertexVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexVBO);
-	glBufferData(GL_ARRAY_BUFFER, mv.getNumOfVertexes() * 3 * sizeof(GLfloat), (GLvoid*)mv.getVertexes(), GL_STATIC_DRAW);
+		_vVBO(0),
+		_vtVBO(0),
+		_vnVBO(0)
+	{
 
-	glGenBuffers(1, &_indexVBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mv.getNumOfIndexes() * sizeof(GLfloat), (GLvoid*)mv.getIndexes(), GL_STATIC_DRAW);
+	glGenBuffers(1, &_vVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, _vVBO);
+	glBufferData(GL_ARRAY_BUFFER, me->getNumOfVertexes() * 3 * sizeof(GLfloat), (GLvoid*)me->getVertexes(), GL_STATIC_DRAW);
 
-	_numOfFaces = mv.getNumOfIndexes();
+	_n = me->getNumOfVertexes();
+
+	if(shaderUVAttribute != -1){
+		glGenBuffers(1, &_vtVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, _vtVBO);
+		glBufferData(GL_ARRAY_BUFFER, me->getNumOfUVs() * 2 * sizeof(GLfloat), (GLvoid*)me->getUVs(), GL_STATIC_DRAW);
+	}
+	if(shaderNormalAttribute != -1){
+		glGenBuffers(1, &_vnVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, _vnVBO);
+		glBufferData(GL_ARRAY_BUFFER, me->getNumOfNormals() * 3 * sizeof(GLfloat), (GLvoid*)me->getNormals(), GL_STATIC_DRAW);
+	}
 }
 
 Mesh::~Mesh() {
+	glDeleteBuffers(1, &_vVBO);
+	glDeleteBuffers(1, &_vtVBO);
+	glDeleteBuffers(1, &_vnVBO);
 }
 
 void Mesh::draw(){
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexVBO);
+	if(_tex){
+		_tex->bind();
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vVBO);
 	glVertexAttribPointer(_shaderVertexAttribute, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(_shaderVertexAttribute);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
-	glDrawElements(GL_TRIANGLES, _numOfFaces, GL_UNSIGNED_SHORT, (GLvoid*)0);
+	if(_shaderUVAttribute != -1){
+		glBindBuffer(GL_ARRAY_BUFFER, _vtVBO);
+		glVertexAttribPointer(_shaderUVAttribute, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(_shaderUVAttribute);
+	}
+
+	if(_shaderNormalAttribute != -1){
+		glBindBuffer(GL_ARRAY_BUFFER, _vtVBO);
+		glVertexAttribPointer(_shaderNormalAttribute, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(_shaderNormalAttribute);
+	}
+
+	glDrawArrays(GL_TRIANGLES, 0, _n );
 
 	glDisableVertexAttribArray(_shaderVertexAttribute);
+	if(_shaderUVAttribute != -1)
+		glDisableVertexAttribArray(_shaderUVAttribute);
+	if(_shaderNormalAttribute != -1)
+		glDisableVertexAttribArray(_shaderNormalAttribute);
 
 }

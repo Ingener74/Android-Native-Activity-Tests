@@ -2,36 +2,39 @@
 <cdtprojectproperties>
 <section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
 <language name="C++ Source File">
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/glm-0.9.4/glm</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/platforms/android-14/arch-arm/usr/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/sources/android/native_app_glue</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.7/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
 
 </language>
 <language name="C Source File">
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/glm-0.9.4/glm</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/platforms/android-14/arch-arm/usr/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/sources/android/native_app_glue</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.7/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
 
 </language>
 <language name="Object File">
 
 </language>
 <language name="Assembly Source File">
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/android_build/3rdparty/glm-0.9.4/glm</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
+<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/platforms/android-14/arch-arm/usr/include</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/sources/android/native_app_glue</includepath>
 <includepath>/home/ingener/android_dev/android-ndk-r8e/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.7/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libtools/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libaruco/include</includepath>
-<includepath>/home/ingener/prj/Android-Native-Activity-Tests/modules/libglestool/include</includepath>
 
 </language>
 </section>

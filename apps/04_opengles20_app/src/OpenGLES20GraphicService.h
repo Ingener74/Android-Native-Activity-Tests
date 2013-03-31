@@ -16,10 +16,16 @@
 
 #include <ITexture.h>
 #include <IObject.h>
+#include <RGBTexture.h>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #define LOGI_OGLES20GS(...){ LOGI("OpenGLES20GraphicService", __VA_ARGS__); }
 #define LOGE_OGLES20GS(...){ LOGE("OpenGLES20GraphicService", __VA_ARGS__); }
 #define LOGW_OGLES20GS(...){ LOGW("OpenGLES20GraphicService", __VA_ARGS__); }
+
+using namespace cv;
 
 class OpenGLES20GraphicService: public IGraphicsService{
 public:
@@ -56,8 +62,7 @@ private:
 	IObject*     _obj001;
 	IObject*     _obj002;
 
-//	GLuint _vertex;
-//	GLuint _indexes; uint32_t _numOfIndexes;
+	RGBTexture*  _tex1;
 
 	static GLuint loadShader( GLenum shaderType, const char* source );
 	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );

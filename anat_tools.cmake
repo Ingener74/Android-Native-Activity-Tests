@@ -20,6 +20,10 @@ set(ANAT_INSTALL_APPS     ${ANAT_INSTALL}/apps)
 set(ANDROID_OPENCV_DIR
     ${ANAT_INSTALL_3RDPARTY}/OpenCV-2.4.4-android-sdk/sdk/native
     )
+    
+set(GLM_DIR
+    ${ANAT_INSTALL_3RDPARTY}/glm-0.9.4
+    )
 
 # Android native app glue source file
 set(ANDROID_NATIVE_APP_GLUE_DIR
@@ -32,6 +36,7 @@ set(ANAT_INCLUDE
 	${ANDROID_NDK}/sources/android/native_app_glue
 	${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
 	${ANDROID_OPENCV_DIR}/jni/include
+	${GLM_DIR}
 	)
 
 # Android link directories
