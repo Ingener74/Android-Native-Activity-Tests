@@ -5,12 +5,15 @@
  *      Author: pavel
  */
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "OpenGLES20GraphicService.h"
 
 #include <RGBTexture.h>
-#include <GLTriangle.h>
-
-#include <GLMatrix4x4.h>
+//#include <GLTriangle.h>
+//#include <GLMatrix4x4.h>
 
 #include <Mesh.h>
 #include <extOBJLoader.h>
@@ -37,7 +40,9 @@ const char fragmentSource[] =
 
 const int32_t texSize = 1024;
 
-GLMatrix4x4 projective;
+//GLMatrix4x4 projective;
+
+glm::mat4 proj;
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false) {
 }
@@ -109,7 +114,9 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	_tex1 = NULL;
 	_tex1 = new RGBTexture(imread("/sdcard/repo/data/mesh003_1.png"));
 
-	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
+//	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
+
+	proj = glm::perspective(45.0f, _width / float(_height), 0.1f, 10000.0f);
 
 	extOBJLoader lm("/sdcard/repo/data/mesh003.obj");
 
@@ -154,9 +161,13 @@ void OpenGLES20GraphicService::draw(){
 
 	static GLfloat ax = 0.0f, az = 0.0f;
 	az += 0.05;
-	ax += 0.01;
+	ax += 1;
 
-	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateY(ax).position(0,0,-200)).getMatrix() );
+	glm::mat4 model = glm::translate(glm::mat4(), glm::vec3(0.f, 0.f, -300.f));
+	model = glm::rotate(model, ax, glm::vec3(1.f, 0.f, 0.f));
+	glm::mat4 mvp = proj * model;
+
+	glUniformMatrix4fv(_uortho, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	if(_obj001)
 		_obj001->draw();
