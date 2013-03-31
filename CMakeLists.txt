@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 include(anat_tools.cmake)
 
-message("android ndk directory = ${ANDROID_NDK}")
+print_information()
 
 # 3rdparty
 add_subdirectory(3rdparty)
