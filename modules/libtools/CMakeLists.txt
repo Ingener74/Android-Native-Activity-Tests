@@ -7,15 +7,15 @@ include_directories(
 	${ANAT_INCLUDE}
 	include
 	)
-	
-link_directories(${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a)
+
+link_directories(${ANAT_LINK})
 
 file(GLOB SOURCES src/*.cpp)
 
-set(OPENCV_LIBS   
-    opencv_highgui   
-    opencv_androidcamera   
-    opencv_imgproc   
+set(OPENCV_LIBS
+    opencv_highgui
+    opencv_androidcamera
+    opencv_imgproc
     opencv_core
     tbb
     libpng

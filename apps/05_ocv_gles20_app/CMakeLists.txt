@@ -1,32 +1,16 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME 04_opengles20_app)
+set(PROJECT_NAME 05_ocv_gles20_app)
 project(${PROJECT_NAME})
 
-set(ANDROID_NATIVE_APP_GLUE_DIR
-    ${ANDROID_NDK}/sources/android/native_app_glue
-    )
-    
-set(ANDROID_OPENCV_DIR
-    ${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
-    )
-    
 include_directories(
-    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
-    ${ANDROID_NATIVE_APP_GLUE_DIR}
-    ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
-    ${ANDROID_OPENCV_DIR}/jni/include
-    
-    ${REPO_HOME}/modules/libtools/include
-    ${REPO_HOME}/modules/libglestool/include
+    ${ANAT_INCLUDE}
+    ../../modules/libtools/include
+    ../../modules/libglestool/include
+    ../../modules/libaruco/include
     )
-link_directories(
-    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
-    ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a
-    ${ANDROID_OPENCV_DIR}/3rdparty/libs/armeabi-v7a
-    
-    ${REPO_HOME}/libs/armeabi-v7a
-    )
+link_directories( ${ANAT_LINK} )
+
 set(ANDROID_LIBS 
     log 
     android 
@@ -50,14 +34,10 @@ set(OPENCV_LIBS
     IlmImf
     )
     
-set(SOURCES
-    ${ANDROID_NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
-    src/main.cpp
-    src/OpenGLES20EventHandler.cpp
-    src/OpenGLES20GraphicService.cpp
-    )
+file(GLOB SRC src/*.cpp)
+set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools)
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${REPO_HOME}/android_build/${PROJECT_NAME}/libs/armeabi-v7a)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${ANAT_INSTALL}/${PROJECT_NAME}/libs/armeabi-v7a)

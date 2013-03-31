@@ -12,8 +12,3 @@ add_subdirectory(modules)
 
 # apps
 add_subdirectory(apps)
-
-# dependencies
-add_dependencies(tools     build_3rdparty)
-add_dependencies(glestools build_3rdparty)
-add_dependencies(aruco     build_3rdparty)

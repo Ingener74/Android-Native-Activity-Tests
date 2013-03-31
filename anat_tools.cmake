@@ -3,24 +3,38 @@ set(REPO_HOME ${CMAKE_CURRENT_LIST_DIR})
 
 set(ANAT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
-set(ANAT_INSTALL ${REPO_HOME}/${CMAKE_SYSTEM_NAME}-build)
+# Android native-activity test install directory
+IF(${ANDROID})
+    SET(ANAT_INSTALL ${REPO_HOME}/android_build)
+ELSE(${ANDROID})
+    SET(ANAT_INSTALL ${REPO_HOME}/${CMAKE_SYSTEM_NAME}_build)
+ENDIF(${ANDROID})
+
+# Android native-activity test install 3rdparty directory
 set(ANAT_INSTALL_3RDPARTY ${ANAT_INSTALL}/3rdparty)
 
+# Android native-activity test install application directory
+set(ANAT_INSTALL_APPS     ${ANAT_INSTALL}/apps)
+
+# Android OpenCV directory
 set(ANDROID_OPENCV_DIR
-    ${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native
+    ${ANAT_INSTALL_3RDPARTY}/OpenCV-2.4.4-android-sdk/sdk/native
     )
 
+# Android native app glue source file
 set(ANDROID_NATIVE_APP_GLUE_DIR
 	${ANDROID_NDK}/sources/android/native_app_glue
     )
 
+# Android include directories
 set(ANAT_INCLUDE
 	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
 	${ANDROID_NDK}/sources/android/native_app_glue
 	${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/include
-	${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/jni/include
+	${ANDROID_OPENCV_DIR}/jni/include
 	)
 
+# Android link directories
 set(ANAT_LINK
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
     ${ANDROID_OPENCV_DIR}/libs/armeabi-v7a

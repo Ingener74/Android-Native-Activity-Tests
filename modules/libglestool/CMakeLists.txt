@@ -9,7 +9,9 @@ include_directories(
     ../libtools/include
 	)
 	
-link_directories(${REPO_HOME}/3rdparty/OpenCV-2.4.4-android-sdk/sdk/native/libs/armeabi-v7a)
+link_directories(
+    ${ANAT_LINK}
+    )
 
 file(GLOB SOURCES src/*.cpp)
 	

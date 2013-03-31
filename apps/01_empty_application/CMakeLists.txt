@@ -11,8 +11,11 @@ include_directories(
     )
 link_directories(
     ${ANAT_LINK}
-    ${REPO_HOME}/libs/armeabi-v7a
     )
+
+file(GLOB SRC src/*.cpp)
+set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
+
 set(ANDROID_LIBS
     log
     android
@@ -22,10 +25,7 @@ set(ANDROID_LIBS
     opencv_imgproc
     )
 
-file(GLOB SRC src/*.cpp)
-set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
-
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} tools)
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${REPO_HOME}/android_build/${PROJECT_NAME}/libs/armeabi-v7a)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${ANAT_INSTALL}/${PROJECT_NAME}/libs/armeabi-v7a)

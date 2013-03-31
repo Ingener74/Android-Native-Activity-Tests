@@ -4,4 +4,8 @@ add_subdirectory(libtools)
 add_subdirectory(libglestool)
 add_subdirectory(libaruco)
 
-add_dependencies(glestools tools)
+# build all_modules
+add_custom_target(all_modules)
+add_dependencies(all_modules  tools)
+add_dependencies(all_modules  glestools)
+add_dependencies(all_modules  aruco)
