@@ -7,7 +7,7 @@
 
 #include "OpenCVCapture.h"
 
-OpenCVCapture::OpenCVCapture( int32_t cam, int32_t rows, int32_t cols ){
+OpenCVCapture::OpenCVCapture( int32_t cam, int32_t rows, int32_t cols ): _isError(false){
 	LOGI_OCV("OpenCVCapture constructor begin");
 
 	_cv = VideoCapture(CV_CAP_ANDROID + cam);
@@ -16,6 +16,7 @@ OpenCVCapture::OpenCVCapture( int32_t cam, int32_t rows, int32_t cols ){
 		_cv.set(CV_CAP_PROP_FRAME_HEIGHT, rows);
 		_cv.set(CV_CAP_PROP_FRAME_WIDTH,  cols);
 	}else{
+		_isError = true;
 		LOGI_OCV("OpenCVCapture can't create");
 	}
 
@@ -32,6 +33,8 @@ void OpenCVCapture::grab(){
 	if(_cv.isOpened()){
 		_cv >> _im;
 		cvtColor(_im, _im, CV_RGB2BGR);
+	}else{
+		_isError = true;
 	}
 }
 

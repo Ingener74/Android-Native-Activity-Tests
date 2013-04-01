@@ -9,23 +9,23 @@
 #define ISHADERPROGRAM_H_
 
 #include <GLES2/gl2.h>
-#include "ErrorHandler.h"
 
 #include <tools.h>
 
-class IShaderProgram: public ErrorHandler {
+#include "ErrorHandler.h"
+
+#include "IShaderLoader.h"
+
+class ShaderProgram: public ErrorHandler {
 public:
-	IShaderProgram(
-			const char* vertexShaderSource,
-			const char* fragmentShaderSource );
-	virtual ~IShaderProgram();
+	ShaderProgram( IShaderLoader* shaderLoader );
+	virtual ~ShaderProgram();
 
 	virtual void   useProgram(){ glUseProgram(_program); }
 	virtual GLuint getProgram(){ return _program; }
 
-	virtual GLuint getAttribute( const char* attr ){
-		return glGetAttribLocation(_program, attr);
-	}
+	GLuint getAttribute( const char* attr );
+	GLuint getUniform( const char* uniform );
 
 	GLuint loadShader( GLenum shaderType, const char* source );
 	GLuint createProgram( const char* vertexShader, const char* fragmentShader );

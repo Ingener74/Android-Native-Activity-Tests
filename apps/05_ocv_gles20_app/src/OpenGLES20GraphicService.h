@@ -47,19 +47,6 @@ private:
 
 	EGLint       _width;
 	EGLint       _height;
-
-	GLuint       _program;
-	GLuint       _vpos;
-	GLuint       _atex;
-	GLint        _stex;
-	GLuint       _uortho;
-
-	IObject*         _obj001;
-	IObject*         _obj002;
-	FastEGLTexture*  _mt;
-
-	static GLuint loadShader( GLenum shaderType, const char* source );
-	static GLuint createProgram( const char* vertexShader, const char* fragmentShader );
 };
 
 #endif /* OPENGLES20GRAPHICSERVICE_H_ */

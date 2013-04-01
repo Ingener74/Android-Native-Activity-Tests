@@ -12,7 +12,7 @@
 
 #include "IShaderProgram.h"
 
-class SimpleShaderProgram: public IShaderProgram {
+class SimpleShaderProgram: public ShaderProgram {
 public:
 	SimpleShaderProgram(
 			const char* vertexShaderSource,

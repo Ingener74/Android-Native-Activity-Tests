@@ -8,12 +8,12 @@
 #ifndef MESH_H_
 #define MESH_H_
 
-#ifdef ANDROID
+//#ifdef ANDROID
 #include <GLES/gl.h>
 #include <GLES2/gl2.h>
-#else
-#include <GL/gl.h>
-#endif
+//#else
+//#include <GL/gl.h>
+//#endif
 
 #include <IObject.h>
 #include <IMeshExporter.h>

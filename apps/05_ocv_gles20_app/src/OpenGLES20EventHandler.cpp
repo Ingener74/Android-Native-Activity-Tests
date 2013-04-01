@@ -43,8 +43,11 @@ void OpenGLES20EventHandler::run(){
 
 void OpenGLES20EventHandler::onInitWindow(){
 	if(_gs){
-		_gs->init(_application);
-		_isAnimate = true;
+		if( _gs->init(_application) == IGraphicsService::STATUS_OK ){
+			_isAnimate = true;
+		}else{
+			LOGE_OGLES20EH("graphics service status error");
+		}
 	}
 }
 

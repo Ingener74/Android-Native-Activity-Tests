@@ -5,59 +5,64 @@
  *      Author: pavel
  */
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "OpenGLES20GraphicService.h"
 
 #include <RGBTexture.h>
-#include <GLTriangle.h>
-
-#include <GLMatrix4x4.h>
-
 #include <Mesh.h>
-
+#include <GLTriangle.h>
 #include <OBJLoader.h>
+#include <ShaderProgram.h>
+#include <FileShaderLoader.h>
+#include <RAWMeshExporter.h>
 
-const char vertexSource[] =
-		"uniform   mat4  uortho;"
-		"attribute vec4  vpos;"
-//		"attribute vec2  atex;"
-//		"varying   vec2  vtex;"
-		"varying   vec4  vcolor;"
-		"void main(){"
-		"    gl_Position = uortho * vpos;"
-//		"    vtex = atex;"
-		"    vcolor = vpos / vec4(5.0, 5.0, 5.0, 1.0);"
-		"}"
-		;
+/*
+ * Screen data
+ */
+ShaderProgram* screenProg = NULL;
 
-//const char vertexSource[] =
-//		"uniform   mat4  uortho;"
-//		"attribute vec4  vpos;"
-//		"void main(){"
-//		"    gl_Position = uortho * vpos;"
-//		"}"
-//		;
+RAWMeshExporter* rawMeshExporter = NULL;
+IObject*         screenMesh      = NULL;
+IImageTexture*   screenTex       = NULL;
 
-//const char fragmentSource[] =
-//		"precision mediump float;"
-//		"varying vec2      vtex;"
-//		"uniform sampler2D stex;"
-//		"void main(){"
-//		"    gl_FragColor = texture2D(stex, vtex);"
-//		"}"
-//		;
+GLfloat  screenVert[] = {
+	   -50.f, -50.f,  0.f,
+		50.f, -50.f,  0.f,
+		50.f,  50.f,  0.f,
 
-const char fragmentSource[] =
-		"precision mediump float;"
-		"varying vec4 vcolor;"
-		"void main(){"
-//		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);"
-		"    gl_FragColor = vcolor;"
-		"}"
-		;
+	   -50.f, -50.f,  0.f,
+	    50.f,  50.f,  0.f,
+	   -50.f,  50.f,  0.f
+};
 
-const int32_t texSize = 1024;
+GLfloat  screenUVs[] = {
+		0.f, 0.f,
+		1.f, 0.f,
+		1.f, 1.f,
 
-GLMatrix4x4 projective;
+		0.f, 0.f,
+		1.f, 1.f,
+		0.f, 1.f,
+};
+
+GLuint _MVP;
+GLuint _aVert;
+GLuint _aUVs;
+
+FileShaderLoader* fsl;
+
+/*
+ * Object data
+ */
+
+/*
+ * Data for both
+ */
+
+glm::mat4 projection;
 
 OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false),
 		_display(EGL_NO_DISPLAY),
@@ -65,16 +70,7 @@ OpenGLES20GraphicService::OpenGLES20GraphicService(): _isInit(false),
 		_surface(EGL_NO_SURFACE),
 
 		_width(0),
-		_height(0),
-		_program(0),
-		_vpos(0),
-		_atex(0),
-		_stex(0),
-		_uortho(0),
-
-		_obj001(NULL),
-		_obj002(NULL),
-		_mt(NULL)
+		_height(0)
 {
 }
 
@@ -123,51 +119,56 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	eglQuerySurface(_display, _surface, EGL_WIDTH, &_width);
 	eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height);
 
-	const double dim = 200.0;
-	const double aspect = _height / double(_width);
 	glViewport(0, 0, _width, _height);
-	LOGI_OGLES20GS("h = %d, w = %d", _height, _width);
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
-	_program = createProgram(vertexSource, fragmentSource);
-	if(!_program){
-		LOGE_OGLES20GS("Creating program is failed!!!");
+	projection = glm::perspective(56.f, _width / float(_height), 0.1f, 10000.f);
+
+/*
+ *  Prepare screen
+ */
+	fsl = new FileShaderLoader(
+			"/sdcard/repo/data/screen.vert",
+			"/sdcard/repo/data/screen.frag");
+
+	if(fsl->isError()){
+		LOGE_OGLES20GS("file shader loader>>> %s", fsl->errorString());
+		return STATUS_ERROR;
 	}else{
-		LOGI_OGLES20GS("vpos handle getting");
-		_vpos = glGetAttribLocation(_program, "vpos");  Tools::glCheck("glGetAttribLocation");
-//		_atex = glGetAttribLocation(_program, "atex");  Tools::glCheck("glGetAttribLocation");
-//		_stex = glGetUniformLocation(_program, "stex"); Tools::glCheck("glGetUniformLocation");
-		_uortho = glGetUniformLocation(_program, "uortho"); Tools::glCheck("glGetUniformLocation");
+		LOGI_OGLES20GS("file shader loader success");
 	}
 
-	Mat im(texSize, texSize, CV_8UC3, Scalar(0, 100, 70));
-	circle(im, Point(100, 100), 60, Scalar(170, 0,0), 7);
-
-	if( EGLDispatcher::init() ){
-		_mt = new FastEGLTexture(im.data, im.rows, im.cols,
-				FastEGLTexture::IMAGE_FORMAT_RGB888, _application, _display,
-				FastEGLTexture::FEGL_TEXTURE_FORMAT_RGBA8888);
+	screenProg = new ShaderProgram(fsl);
+	if(!screenProg->isError()){
+		LOGE_OGLES20GS("shader program>>> %s", screenProg->errorString());
+	}else{
+		LOGI_OGLES20GS("shader program success");
 	}
 
-	projective = GLMatrix4x4(0.1, 10000, 54 * 3.1415926 / 180, _width / GLfloat(_height) );
+	_MVP   = screenProg->getUniform("MVP");
+	_aVert = screenProg->getAttribute("aVert");
+	_aUVs  = screenProg->getAttribute("aUVs");
 
-//	OBJLoader load_obj001("/sdcard/repo/data/my_mesh.obj");
-//	MeshV mv001;
-//	if(load_obj001.getNumOfLoadedObjects()){
-//		mv001.createMesh(load_obj001.getObject(0));
-//	}
-//	_obj001 = new Mesh(mv001, _vpos);
+	Mat screenIm(1024, 1024, CV_8UC3, Scalar(0, 100, 200));
+	screenTex = new RGBTexture(screenIm, screenProg->getUniform("uTex"));
+	if(!screenTex){
+		LOGE_OGLES20GS("RGB texture is null");
+		return STATUS_ERROR;
+	}
 
-//	"/sdcard/repo/data/my_mesh.obj"
-//	"/sdcard/repo/data/mesh002_cube.obj"
-//	OBJLoader obj002("/sdcard/repo/data/my_mesh.obj");
-//	MeshV mv002;
-//	if(obj002.getNumOfLoadedObjects()){
-//		mv002.createMesh(obj002.getObject(0));
-//	}
-//	_obj002 = new Mesh(mv002, _vpos);
+	rawMeshExporter = new RAWMeshExporter(screenVert, screenUVs, NULL);
+
+	screenMesh = new Mesh(rawMeshExporter, _aVert, screenTex, _aUVs);
+	if(!screenMesh){
+		LOGE_OGLES20GS("screen mesh is null");
+		return STATUS_ERROR;
+	}
+
+/*
+ *  Prepare object
+ */
 
 	_isInit = true;
 	return STATUS_OK;
@@ -196,93 +197,31 @@ void OpenGLES20GraphicService::deinit(){
 
 
 void OpenGLES20GraphicService::draw(){
+
+	LOGI_OGLES20GS("draw");
+
 	glClearColor(0.5f, 0.9f, 0.5f, 1.f); Tools::glCheck("glClearColor");
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); Tools::glCheck("glClear");
 
-	glUseProgram(_program); Tools::glCheck("glUseProgram");
-//
-//	glActiveTexture(GL_TEXTURE0);
-//	_tex1->bind();
-//	glUniform1i(_stex, 0);
+	screenProg->useProgram();
 
-//	if(_obj001)
-//		_obj001->draw();
+	glm::mat4 model = glm::translate(glm::mat4(), glm::vec3(0.f, 0.f, -200.f));
+	glm::mat4 mvp   = projection * model;
 
-	static GLfloat ax = 0.0f, az = 0.0f;
-	az += 0.05;
-	ax += 0.01;
+	glUniformMatrix4fv(_MVP, 1, GL_FALSE, glm::value_ptr(mvp));
 
-	glUniformMatrix4fv(_uortho, 1, false, (projective * GLMatrix4x4().rotateX(ax).position(0,0,-12)).getMatrix() );
-
-	if(_obj002)
-		_obj002->draw();
-
+	screenMesh->draw();
 
 	eglSwapBuffers(_display, _surface);
 
 }
 
 void OpenGLES20GraphicService::setImage( Mat image ){
+	screenTex->updatePart(image);
 }
 
-GLuint OpenGLES20GraphicService::loadShader( GLenum shaderType, const char* source ){
-	GLuint shader = glCreateShader(shaderType);
-	if(shader){
-		glShaderSource(shader, 1, &source, 0);
-		glCompileShader(shader);
 
-		GLint compiled = 0;
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-		if(!compiled){
-			GLint infoLen = 0;
-			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-			if(infoLen){
-				char* buf = new char[infoLen];
-				if(buf){
-					glGetShaderInfoLog(shader, infoLen, 0, buf);
-					LOGE("loadShader", "Could not compile shader: %d,\n%s", shaderType, buf);
-					delete buf;
-				}
-				glDeleteShader(shader);
-				shader = 0;
-			}
-		}
-	}
-	return shader;
-}
 
-GLuint OpenGLES20GraphicService::createProgram( const char* vertexShader, const char* fragmentShader ){
-	GLuint vs = loadShader(GL_VERTEX_SHADER, vertexShader);
-	if(!vs){
-		return 0;
-	}
-	GLuint fs = loadShader(GL_FRAGMENT_SHADER, fragmentShader);
-	if(!fs){
-		return 0;
-	}
 
-	GLuint program = glCreateProgram();
-	if(program){
-		glAttachShader(program, vs); GLERR;
-		glAttachShader(program, fs); GLERR;
 
-		glLinkProgram(program);
-		GLint linkStatus = GL_FALSE;
-		glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-		if(linkStatus != GL_TRUE){
-			GLint bufLen = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLen);
-			if(bufLen){
-				char* buf = (char*)new char[bufLen];
-				if(buf){
-					glGetProgramInfoLog(program, bufLen, NULL, buf);
-					LOGE_OGLES20GS("Could not link program");
-					delete [] buf;
-				}
-			}
-			glDeleteProgram(program);
-			program = 0;
-		}
-	}
-	return program;
-}
+

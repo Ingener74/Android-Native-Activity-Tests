@@ -8,6 +8,7 @@
 #ifndef OPENCVCAPTURE_H_
 #define OPENCVCAPTURE_H_
 
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -31,7 +32,7 @@ public:
 	void stop();
 
 	bool isError(){
-		return false;
+		return _isError;
 	}
 
 	bool dataReady();
@@ -40,6 +41,8 @@ public:
 protected:
 	VideoCapture  _cv;
 	Mat           _im;
+
+	bool          _isError;
 };
 
 #endif /* OPENCVCAPTURE_H_ */

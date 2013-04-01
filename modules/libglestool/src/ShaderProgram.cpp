@@ -5,21 +5,34 @@
  *      Author: pavel
  */
 
-#include "IShaderProgram.h"
+#include "ShaderProgram.h"
 
-IShaderProgram::IShaderProgram(
-		const char* vertexShaderSource,
-		const char* fragmentShaderSource ){
+ShaderProgram::ShaderProgram( IShaderLoader* sl ){
 
-	_program = createProgram(vertexShaderSource, fragmentShaderSource);
-
+	_program = createProgram(sl->getVertexSource(), sl->getFragmentSource());
+	if(!_program){
+		setError("error: could not create program");
+	}
 }
 
-IShaderProgram::~IShaderProgram() {
+GLuint ShaderProgram::getAttribute( const char* attr ){
+	return glGetAttribLocation(_program, attr);
+}
+
+GLuint ShaderProgram::getUniform( const char* uniform ){
+	return glGetUniformLocation(_program, uniform);
+}
+
+ShaderProgram::~ShaderProgram() {
 	glDeleteProgram(_program);
+	glDeleteShader(_vs);
+	glDeleteShader(_fs);
 }
 
-GLuint IShaderProgram::loadShader( GLenum shaderType, const char* source ){
+GLuint ShaderProgram::loadShader( GLenum shaderType, const char* source ){
+
+	LOGI("Shader program", "Create shader");
+
 	GLuint shader = glCreateShader(shaderType);
 	if(shader){
 		glShaderSource(shader, 1, &source, 0);
@@ -45,7 +58,10 @@ GLuint IShaderProgram::loadShader( GLenum shaderType, const char* source ){
 	return shader;
 }
 
-GLuint IShaderProgram::createProgram( const char* vertexShader, const char* fragmentShader ){
+GLuint ShaderProgram::createProgram( const char* vertexShader, const char* fragmentShader ){
+
+	LOGI("Shader program", "Create program");
+
 	_vs = loadShader(GL_VERTEX_SHADER, vertexShader);
 	if(!_vs){
 		return 0;
@@ -70,13 +86,18 @@ GLuint IShaderProgram::createProgram( const char* vertexShader, const char* frag
 				char* buf = (char*)new char[bufLen];
 				if(buf){
 					glGetProgramInfoLog(program, bufLen, NULL, buf);
-					setError("could not link program");
+					setError("error: could not link program");
+					LOGE("Shader program error", "%s", buf);
 					delete [] buf;
 				}
 			}
 			glDeleteProgram(program);
 			program = 0;
+		}else{
+			setError("link status is false");
 		}
+	}else{
+		setError("error: program could not created");
 	}
 	return program;
 }

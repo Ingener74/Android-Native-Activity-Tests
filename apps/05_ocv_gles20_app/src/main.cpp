@@ -15,10 +15,14 @@ void android_main( android_app* app ){
 
 	LOGI("android main", caption);
 
-	OpenCVCapture ocv_cam;
+	ICaptureService* cs = new OpenCVCapture();
+//	if(cs->isError()){
+//		LOGE("android main", "could not create capture service");
+//		exit(EXIT_FAILURE);
+//	}
 
-	OpenGLES20GraphicService gs = OpenGLES20GraphicService();
+	IGraphicsService* gs = new OpenGLES20GraphicService();
 
-	OpenGLES20EventHandler eh(app, &gs, &ocv_cam);
+	OpenGLES20EventHandler eh(app, gs, cs);
 	eh.run();
 }
