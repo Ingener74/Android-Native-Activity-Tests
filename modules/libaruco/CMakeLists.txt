@@ -11,22 +11,25 @@ file(GLOB SOURCES src/*.cpp)
 set(ANDROID_LIBS z)
 
 set(OPENCV_LIBS
-  opencv_core
-  opencv_highgui
-  opencv_androidcamera
-  opencv_imgproc
-  opencv_features2d
-  opencv_calib3d
-  opencv_flann
-  opencv_legacy
-
-  IlmImf
-  libjasper
-  libjpeg
-  libpng
-  libtiff
-  tbb
-  )
+    opencv_highgui
+    opencv_androidcamera
+    opencv_imgproc
+    opencv_core
+    
+    opencv_calib3d
+    opencv_objdetect
+    opencv_features2d
+    opencv_flann
+    
+    opencv_java
+    
+    IlmImf
+    libjasper
+    libjpeg
+    libpng
+    libtiff
+    tbb
+    )
 
 add_library(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS})

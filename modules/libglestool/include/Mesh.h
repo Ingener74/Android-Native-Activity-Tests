@@ -18,6 +18,7 @@
 #include <IObject.h>
 #include <IMeshExporter.h>
 #include <ITexture.h>
+#include <tools.h>
 
 class Mesh: public IObject {
 public:

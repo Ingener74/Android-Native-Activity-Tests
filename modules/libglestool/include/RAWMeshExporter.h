@@ -12,7 +12,7 @@
 
 class RAWMeshExporter: public IMeshExporter {
 public:
-	RAWMeshExporter( GLfloat* vertexs, GLfloat* uvs = NULL, GLfloat* normals = NULL );
+	RAWMeshExporter( uint32_t n, GLfloat* vertexs, GLfloat* uvs = NULL, GLfloat* normals = NULL );
 	virtual ~RAWMeshExporter();
 
 	uint32_t getNumOfVertexes();
@@ -25,11 +25,11 @@ public:
 	GLfloat* getNormals();
 
 public:
+	uint32_t _n;
+
 	GLfloat* _vertexs;
 	GLfloat* _uvs;
 	GLfloat* _normals;
-
-	uint32_t _n;
 };
 
 #endif /* RAWMESHEXPORTER_H_ */

@@ -26,6 +26,14 @@ set(OPENCV_LIBS
     opencv_androidcamera
     opencv_imgproc
     opencv_core
+    
+    opencv_calib3d
+    opencv_objdetect
+    opencv_features2d
+    opencv_flann
+    
+    opencv_java
+
     tbb
     libpng
     libjpeg
@@ -38,6 +46,6 @@ file(GLOB SRC src/*.cpp)
 set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools)
+target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools aruco)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${ANAT_INSTALL_APPS}/${PROJECT_NAME}/libs/armeabi-v7a)

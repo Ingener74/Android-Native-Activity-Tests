@@ -17,6 +17,13 @@ set(OPENCV_LIBS
     opencv_androidcamera
     opencv_imgproc
     opencv_core
+    
+    opencv_calib3d
+    opencv_objdetect
+    opencv_features2d
+    opencv_flann
+    opencv_java
+    
     tbb
     libpng
     libjpeg

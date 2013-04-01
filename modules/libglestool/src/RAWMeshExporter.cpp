@@ -7,8 +7,8 @@
 
 #include "RAWMeshExporter.h"
 
-RAWMeshExporter::RAWMeshExporter( GLfloat* vertexs, GLfloat* uvs,
-		GLfloat* normals): _vertexs(vertexs), _uvs(uvs),
+RAWMeshExporter::RAWMeshExporter( uint32_t n, GLfloat* vertexs, GLfloat* uvs,
+		GLfloat* normals): _n(n), _vertexs(vertexs), _uvs(uvs),
 		_normals(normals) {
 }
 

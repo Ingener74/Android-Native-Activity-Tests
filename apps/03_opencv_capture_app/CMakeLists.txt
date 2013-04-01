@@ -42,6 +42,6 @@ file(GLOB SRC src/*.cpp)
 set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools aruco)
+target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${ANAT_INSTALL_APPS}/${PROJECT_NAME}/libs/armeabi-v7a)
