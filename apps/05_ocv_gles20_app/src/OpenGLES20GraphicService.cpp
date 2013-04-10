@@ -81,6 +81,58 @@ IImageTexture* obj001_texture = NULL;
 extOBJLoader*  obj001_loader  = 0;
 IObject*       obj001         = NULL;
 
+/*
+ * Dirty car # 2
+ */
+extOBJLoader*  dirtyCarL   = NULL;
+IObject*       dirtyCarObj = NULL;
+IImageTexture* dirtyCarTex = NULL;
+
+/*
+ * Excavator # 6
+ */
+extOBJLoader*   excL       = NULL;
+IObject*        excObj     = NULL;
+IImageTexture*  excTex     = NULL;
+
+/*
+ * Exage # 8
+ */
+extOBJLoader*   exageL       = NULL;
+IObject*        exageObj     = NULL;
+IImageTexture*  exageTex     = NULL;
+
+/*
+ * OfficeChair # 18
+ */
+
+extOBJLoader*   chairL   = NULL;
+IObject*        chairObj = NULL;
+IImageTexture*  chairTex = NULL;
+
+/*
+ * Office Chair # 20
+ */
+extOBJLoader*   chairL2 = NULL;
+IObject*        chairObj2 = NULL;
+IImageTexture*  chairTex2 = NULL;
+
+/*
+ * Moto
+ */
+
+extOBJLoader*   motoL = NULL;
+IObject*        motoObj = NULL;
+IImageTexture*  motoTex = NULL;
+
+
+/*
+ * Plane
+ */
+extOBJLoader*   planeL = NULL;
+IObject*        planeObj = NULL;
+IImageTexture*  planeTex = NULL;
+
 
 /*
  * Data for both
@@ -224,6 +276,90 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 		return STATUS_ERROR;
 	}
 
+	/*
+	 * Load Dirty Car
+	 */
+	Mat dirtyCarIm;
+	cvtColor(imread("/sdcard/repo/data/dirtycar/car_white.png"), dirtyCarIm, CV_RGB2BGR);
+	dirtyCarTex = new RGBTexture(dirtyCarIm);
+	if(!dirtyCarTex) return STATUS_ERROR;
+
+	dirtyCarL = new extOBJLoader("/sdcard/repo/data/dirtycar/dirty_car.obj");
+	if(!dirtyCarL && dirtyCarL->isError()) return STATUS_ERROR;
+	dirtyCarObj = new Mesh(dirtyCarL, _aVert, dirtyCarTex, _aUVs);
+
+	/*
+	 * load exc
+	 */
+	Mat excIm;
+	cvtColor(imread("/sdcard/repo/data/exc/exc.png"), excIm, CV_RGB2BGR);
+	excTex = new RGBTexture(excIm);
+	if(!excTex) return STATUS_ERROR;
+
+	excL = new extOBJLoader("/sdcard/repo/data/exc/exc.obj");
+	if(!excL && excL->isError()) return STATUS_ERROR;
+	excObj = new Mesh(excL, _aVert, excTex, _aUVs);
+
+	/*
+	 * load exage
+	 */
+	Mat exageIm;
+	cvtColor(imread("/sdcard/repo/data/exage/exage.png"), exageIm, CV_RGB2BGR);
+	exageTex = new RGBTexture(exageIm);
+	if(!exageTex) return STATUS_ERROR;
+
+	exageL = new extOBJLoader("/sdcard/repo/data/exage/exage.obj");
+	if(!exageL && exageL->isError()) return STATUS_ERROR;
+	exageObj = new Mesh(exageL, _aVert, exageTex, _aUVs);
+
+	/*
+	 * load chair
+	 */
+	Mat chairIm;
+	cvtColor(imread("/sdcard/repo/data/off_chair/office_chair_d.png"), chairIm, CV_RGB2BGR);
+	chairTex = new RGBTexture(chairIm);
+	if(!chairTex) return STATUS_ERROR;
+
+	chairL = new extOBJLoader("/sdcard/repo/data/off_chair/office_chair.obj");
+	if(!chairL && chairL->isError()) return STATUS_ERROR;
+	chairObj = new Mesh(chairL, _aVert, chairTex, _aUVs);
+
+	/*
+	 * load chair 2
+	 */
+	Mat chairIm2;
+	cvtColor(imread("/sdcard/repo/data/off_chair2/chair_operations_d.png"), chairIm2, CV_RGB2BGR);
+	chairTex2 = new RGBTexture(chairIm2);
+	if(!chairTex2) return STATUS_ERROR;
+
+	chairL2 = new extOBJLoader("/sdcard/repo/data/off_chair2/chair_operations.obj");
+	if(!chairL2 && chairL2->isError()) return STATUS_ERROR;
+	chairObj2 = new Mesh(chairL2, _aVert, chairTex2, _aUVs);
+
+	/*
+	 * Moto
+	 */
+	Mat motoIm;
+	cvtColor(imread("/sdcard/repo/data/moto/motorcycle_d.png"), motoIm, CV_RGB2BGR);
+	motoTex = new RGBTexture(motoIm);
+	if(!motoTex) return STATUS_ERROR;
+
+	motoL = new extOBJLoader("/sdcard/repo/data/moto/motorcycle.obj");
+	if(!motoL && motoL->isError()) return STATUS_ERROR;
+	motoObj  = new Mesh(motoL, _aVert, motoTex, _aUVs);
+
+	/*
+	 * Plane
+	 */
+	Mat planeIm;
+	cvtColor(imread("/sdcard/repo/data/plane/plane.png"), planeIm, CV_RGB2BGR);
+	planeTex = new RGBTexture(planeIm);
+	if(!planeTex) return STATUS_ERROR;
+
+	planeL = new extOBJLoader("/sdcard/repo/data/plane/plane.obj");
+	if(!planeL && planeL->isError()) return STATUS_ERROR;
+	planeObj  = new Mesh(planeL, _aVert, planeTex, _aUVs);
+
 /*
  * Prepare AR camera parameters
  */
@@ -327,6 +463,103 @@ void OpenGLES20GraphicService::draw(){
 				LOGE_OGLES20GS("mvm is null");
 			}
 
+		}
+		if(markersFound[i].id == 2){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			dirtyCarObj->draw();
+		}
+
+		if(markersFound[i].id == 6 ){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			excObj->draw();
+		}
+
+		if(markersFound[i].id == 8 ){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			exageObj->draw();
+		}
+
+		if(markersFound[i].id == 10 ){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			motoObj->draw();
+		}
+
+		if(markersFound[i].id == 12 ){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			planeObj->draw();
+		}
+
+		if(markersFound[i].id == 18){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			chairObj->draw();
+		}
+
+		if(markersFound[i].id == 20){
+			double mvm[16];
+			markersFound[i].glGetModelViewMatrix(mvm);
+
+			float mvm32[16]; for( uint32_t i = 0; i < 16; ++i )mvm32[i] = mvm[i];
+
+			glm::mat4 mv = glm::make_mat4(mvm32);
+			glm::mat4 mvp2 = projection * mv;
+
+			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
+
+			chairObj2->draw();
 		}
 	}
 
