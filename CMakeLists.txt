@@ -1,14 +1,19 @@
 cmake_minimum_required(VERSION 2.8)
 
-include(anat_tools.cmake)
+# root dir
+set(AR_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
-print_information()
+# install dir
+set(AR_INSTALL ${AR_ROOT}/linux_install CACHE TYPE PATH)
+
+# set cmake install prefix to install dir
+set(CMAKE_INSTALL_PREFIX ${AR_INSTALL})
 
 # 3rdparty
 add_subdirectory(3rdparty)
 
 # modules
-add_subdirectory(modules)
+#add_subdirectory(modules)
 
 # apps
-add_subdirectory(apps)
+#add_subdirectory(apps)
