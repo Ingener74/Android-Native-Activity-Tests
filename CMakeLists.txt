@@ -13,7 +13,7 @@ set(CMAKE_INSTALL_PREFIX ${AR_INSTALL})
 add_subdirectory(3rdparty)
 
 # modules
-#add_subdirectory(modules)
+add_subdirectory(modules)
 
 # apps
 #add_subdirectory(apps)

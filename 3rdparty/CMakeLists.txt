@@ -4,17 +4,20 @@ include(ExternalProject)
 
 ExternalProject_Add(
 	external_glm
-	GIT_REPOSITORY  git://github.com/Groovounet/glm.git
-	GIT_TAG         0.9.3.4
+    URL             ${CMAKE_CURRENT_LIST_DIR}/glm-0.9.3.4.tar.gz
 	CMAKE_ARGS      -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/3rdparty -DGLM_TEST_ENABLE=ON
 	)
 
 if(ANDROID)
+	ExternalProject_Add(
+		external_OpenCV
+        URL            ${CMAKE_CURRENT_LIST_DIR}/opencv-2.4.5.tar.gz
+		CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/3rdparty -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+		)
 else(ANDROID)
 	ExternalProject_Add(
 		external_OpenCV
-		GIT_REPOSITORY git://github.com/Itseez/opencv.git
-		GIT_TAG        2.4.5
+        URL            ${CMAKE_CURRENT_LIST_DIR}/opencv-2.4.5.tar.gz
 		CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/3rdparty
 		)
 

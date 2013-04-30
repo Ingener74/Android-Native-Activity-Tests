@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME aruco)
 project(${PROJECT_NAME})
 
-include_directories(${ANAT_INCLUDE})
-link_directories(${ANAT_LINK})
+include_directories( ${CMAKE_INSTALL_PREFIX}/3rdparty/include )
+link_directories( ${CMAKE_INSTALL_PREFIX}/3rdparty/lib )
 
 file(GLOB SOURCES src/*.cpp)
 
