@@ -16,4 +16,4 @@ add_subdirectory(3rdparty)
 add_subdirectory(modules)
 
 # apps
-#add_subdirectory(apps)
+add_subdirectory(apps)
