@@ -11,4 +11,12 @@ else(ANDROID)
 	add_subdirectory(ogre_test_001)
     add_dependencies(ogre_test_001 external_OGRE)
     add_dependencies(ogre_test_001 external_OIS)
+
+    add_subdirectory(ogre_test_002)
+    add_dependencies(ogre_test_002 external_OGRE)
+    add_dependencies(ogre_test_002 external_OIS)
+
+    add_subdirectory(ogre_test_003)
+    add_dependencies(ogre_test_003 external_OGRE)
+    add_dependencies(ogre_test_003 external_OIS)
 endif(ANDROID)

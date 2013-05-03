@@ -8,18 +8,18 @@ const char* caption =
 		"OGRE Test application"
 		;
 const char* usage =
-		"Usage: ./ogre_test_001 <path-to-resources.cfg>"
+		"Usage: ./ogre_test_001 <path-to-plugin.cfg> <path-to-resources.cfg>"
 		;
 using namespace Ogre;
 
 int main( int argc, char* argv[] ){
 
-	if(argc == 2){
+	if(argc == 3){
 		std::cout << caption << std::endl;
-		Root* root = new Root;
+		Root* root = new Root(argv[1]);
 
 		ConfigFile cf;
-		cf.load(argv[1]);
+		cf.load(argv[2]);
 
 		ConfigFile::SectionIterator seci = cf.getSectionIterator();
 

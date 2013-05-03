@@ -29,7 +29,7 @@ else(ANDROID)
     ExternalProject_Add(
         external_OGRE
         URL ${CMAKE_CURRENT_LIST_DIR}/ogre_src_v1-8-1.tar.bz2
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/3rdparty
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/3rdparty -DOGRE_INSTALL_SAMPLES=YES
         )
 
     set(EXTERNAL_PROJECT_OIS external_OIS)
