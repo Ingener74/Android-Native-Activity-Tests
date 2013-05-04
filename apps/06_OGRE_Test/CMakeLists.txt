@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME ogre_test_003)
+set(PROJECT_NAME 06_OGRETest)
 project(${PROJECT_NAME})
 
 include_directories(

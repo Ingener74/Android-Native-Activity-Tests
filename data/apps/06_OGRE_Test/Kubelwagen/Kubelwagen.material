@@ -1,0 +1,42 @@
+material Glass
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Glass.tga
+			}
+		}
+	}
+}
+
+material Main_Body
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture mainBody.tga
+			}
+		}
+	}
+}
+
+material Main_Body_2
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture mainBody2.tga
+			}
+		}
+	}
+}
+
