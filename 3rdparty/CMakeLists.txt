@@ -36,6 +36,7 @@ else(ANDROID)
     ExternalProject_Add(
         external_OIS
         URL ${CMAKE_CURRENT_LIST_DIR}/ois_v1-3.tar.gz
+	PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_LIST_DIR}/ois.patch
         BINARY_DIR ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}
         CONFIGURE_COMMAND sh ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}/bootstrap && ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}/configure --prefix=${CMAKE_INSTALL_PREFIX}/3rdparty
         )
