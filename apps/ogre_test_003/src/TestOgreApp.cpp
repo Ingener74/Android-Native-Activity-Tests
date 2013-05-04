@@ -82,9 +82,29 @@ bool TestOgreApp::init() {
 			_sceneMgr->getRootSceneNode()->createChildSceneNode();
 	headNode->attachObject(ogreHead);
 
-	Ogre::Entity* robotEn = _sceneMgr->createEntity("Robot", "spine.mesh");
-	Ogre::SceneNode* robotNode = _sceneMgr->getRootSceneNode()->createChildSceneNode();
-	robotNode->attachObject(robotEn);
+//	Ogre::Entity* robotEn = _sceneMgr->createEntity("Robot", "spine.mesh");
+//	Ogre::SceneNode* robotNode = _sceneMgr->getRootSceneNode()->createChildSceneNode();
+//	robotNode->attachObject(robotEn);
+
+	/*
+	 * creating a line
+	 */
+	Ogre::ManualObject* line001 = _sceneMgr->createManualObject("line001");
+
+	const double x1 = 0, x2 = 100;
+	const uint32_t count = 200;
+
+	line001->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_STRIP);
+	for( uint32_t i = 0; i < count; ++i ){
+
+		double x = i / double(count);
+		double sin_x = sin( 2 * M_PI * x );
+
+		line001->position( 200 * x, 100 * sin_x, 0);
+	}
+	line001->end();
+	Ogre::SceneNode* lineNode = _sceneMgr->getRootSceneNode()->createChildSceneNode();
+	lineNode->attachObject(line001);
 
 	// set light
 	_sceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.6f));
@@ -97,11 +117,9 @@ bool TestOgreApp::init() {
 		if( _window->isClosed() ){
 			return false;
 		}
-//		headNode->translate(0.1, 0, 0);
 		headNode->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(0.05));
 
-		robotNode->translate(0.1, 0, 0);
-		_camera->lookAt(robotNode->getPosition());
+//		robotNode->translate(0.1, 0, 0);
 
 		if( !_root->renderOneFrame() ){
 			return false;
