@@ -5,6 +5,8 @@
  *      Author: pavel
  */
 
+#include <stdint.h>
+
 #include "TestOgreApp.h"
 
 namespace ogre_test_003 {
