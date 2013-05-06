@@ -4,14 +4,18 @@ set(PROJECT_NAME glestools)
 project(${PROJECT_NAME})
 
 include_directories(
-	${ANAT_INCLUDE}
 	include
-    ../libtools/include
+	../libtools/include
+	${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/jni/include
+	${CMAKE_INSTALL_PREFIX}/3rdparty/include
+	${ANDROID_NDK}/sources/android/native_app_glue
+	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
 	)
 	
 link_directories(
-    ${ANAT_LINK}
-    )
+	${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/libs/armeabi-v7a
+	${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/3rdparty/libs/armeabi-v7a
+	)
 
 file(GLOB SOURCES src/*.cpp)
 	

@@ -4,7 +4,11 @@ cmake_minimum_required(VERSION 2.8)
 set(AR_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 # install dir
-set(AR_INSTALL ${AR_ROOT}/linux_install CACHE TYPE PATH)
+if(ANDROID)
+	set(AR_INSTALL ${AR_ROOT}/android_install CACHE TYPE PATH)
+else(ANDROID)
+	set(AR_INSTALL ${AR_ROOT}/linux_install CACHE TYPE PATH)
+endif(ANDROID)
 
 # set cmake install prefix to install dir
 set(CMAKE_INSTALL_PREFIX ${AR_INSTALL})

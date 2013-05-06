@@ -5,31 +5,23 @@ project(${PROJECT_NAME})
 
 include_directories( ${CMAKE_INSTALL_PREFIX}/3rdparty/include )
 link_directories( ${CMAKE_INSTALL_PREFIX}/3rdparty/lib )
+if(ANDROID)
+	include_directories( ${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/jni/include)
+endif(ANDROID)
 
 file(GLOB SOURCES src/*.cpp)
 
-set(ANDROID_LIBS z)
+set(OPENCV_LIBS opencv_core opencv_highgui opencv_imgproc opencv_calib3d opencv_objdetect opencv_features2d opencv_flann)
 
-set(OPENCV_LIBS
-    opencv_highgui
-    opencv_androidcamera
-    opencv_imgproc
-    opencv_core
-    
-    opencv_calib3d
-    opencv_objdetect
-    opencv_features2d
-    opencv_flann
-    
-    opencv_java
-    
-    IlmImf
-    libjasper
-    libjpeg
-    libpng
-    libtiff
-    tbb
-    )
+if(ANDROID)
+	set(ANDROID_LIBS z opencv_androidcamera opencv_java IlmImf libjasper libjpeg libpng libtiff tbb)
+else(ANDROID)
+endif(ANDROID)
 
 add_library(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS})
+if(ANDROID)
+	target_link_libraries(${PROJECT_NAME} ${OPENCV_LIBS} ${ANDROID_LIBS})
+else(ANDROID)
+	target_link_libraries(${PROJECT_NAME} ${OPENCV_LIBS})
+endif(ANDROID)
+
