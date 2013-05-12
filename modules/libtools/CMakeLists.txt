@@ -4,11 +4,14 @@ set(PROJECT_NAME tools)
 project(${PROJECT_NAME})
 
 include_directories(
-	${ANAT_INCLUDE}
-	include
-	)
+    include
+    ${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/jni/include
+	${ANDROID_NDK}/sources/android/native_app_glue
+	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
+)
 
-link_directories(${ANAT_LINK})
+link_directories(
+)
 
 file(GLOB SOURCES src/*.cpp)
 

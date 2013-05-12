@@ -7,9 +7,19 @@ link_directories(
 	${INSTALL_3RDPARTY}/lib
 	)
 
-#add_subdirectory(libtools)
-#add_subdirectory(libglestool)
-add_subdirectory(libaruco)
+if(ANDROID)
+	add_subdirectory(libaruco)
+	add_dependencies(aruco external_OpenCV)
 
-add_dependencies(aruco external_OpenCV)
+	add_subdirectory(libglestool)
+	add_dependencies(glestools external_OpenCV)
+
+	add_subdirectory(libtools)
+	add_dependencies(tools external_OpenCV)
+else(ANDROID)
+	add_subdirectory(libaruco)
+	add_dependencies(aruco external_OpenCV)
+endif(ANDROID)
+
+
 
