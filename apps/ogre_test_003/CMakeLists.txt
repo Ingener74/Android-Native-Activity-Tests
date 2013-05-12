@@ -3,13 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME ogre_test_003)
 project(${PROJECT_NAME})
 
-include_directories(
-    ${CMAKE_INSTALL_PREFIX}/3rdparty/include
-    )
-link_directories(
-    ${CMAKE_INSTALL_PREFIX}/3rdparty/lib
-    )
-
 file(GLOB app_src src/*.cpp)
 file(GLOB app_hdr src/*.h)
 

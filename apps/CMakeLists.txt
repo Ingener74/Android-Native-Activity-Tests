@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
+include_directories( 
+	${INSTALL_3RDPARTY}/include 
+	)
+link_directories( 
+	${INSTALL_3RDPARTY}/lib
+	)
+
 # apps
 if(ANDROID)
 	#add_subdirectory(01_empty_application)
