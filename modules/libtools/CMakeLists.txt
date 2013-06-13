@@ -4,14 +4,18 @@ set(PROJECT_NAME tools)
 project(${PROJECT_NAME})
 
 include_directories(
-    include
-    ${CMAKE_INSTALL_PREFIX}/3rdparty/sdk/native/jni/include
-	${ANDROID_NDK}/sources/android/native_app_glue
-	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
-)
-
-link_directories(
-)
+	include
+	${INSTALL_3RDPARTY}/include
+	)
+if(ANDROID)
+        include_directories(
+		${INSTALL_3RDPARTY}/sdk/native/jni/include
+		${ANDROID_NDK}/sources/android/native_app_glue
+	        ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
+		)
+        link_directories(${INSTALL_3RDPARTY}/sdk/native/libs/armeabi-v7a)
+        link_directories(${INSTALL_3RDPARTY}/sdk/native/3rdparty/libs/armeabi-v7a)
+endif(ANDROID)
 
 file(GLOB SOURCES src/*.cpp)
 
@@ -27,7 +31,7 @@ set(OPENCV_LIBS
     opencv_flann
     opencv_java
     
-    tbb
+    #tbb
     libpng
     libjpeg
     libtiff

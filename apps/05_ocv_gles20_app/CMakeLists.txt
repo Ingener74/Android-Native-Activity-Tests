@@ -4,12 +4,21 @@ set(PROJECT_NAME 05_ocv_gles20_app)
 project(${PROJECT_NAME})
 
 include_directories(
-    ${ANAT_INCLUDE}
     ../../modules/libtools/include
     ../../modules/libglestool/include
     ../../modules/libaruco/include
     )
-link_directories( ${ANAT_LINK} )
+include_directories(
+	${INSTALL_3RDPARTY}/sdk/native/jni/include
+        ${INSTALL_3RDPARTY}/include
+	${ANDROID_NDK}/sources/android/native_app_glue
+       	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
+	)
+link_directories(
+       	${INSTALL_3RDPARTY}/sdk/native/libs/armeabi-v7a
+       	${INSTALL_3RDPARTY}/sdk/native/3rdparty/libs/armeabi-v7a
+	${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
+       	)
 
 set(ANDROID_LIBS 
     log 
@@ -34,7 +43,7 @@ set(OPENCV_LIBS
     
     opencv_java
 
-    tbb
+    #tbb
     libpng
     libjpeg
     libtiff
@@ -43,7 +52,7 @@ set(OPENCV_LIBS
     )
     
 file(GLOB SRC src/*.cpp)
-set(SOURCES  ${ANAT_NATIVE_APP_GLUE}  ${SRC})
+set(SOURCES ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c  ${SRC})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ANDROID_LIBS} ${OPENCV_LIBS} tools glestools aruco)

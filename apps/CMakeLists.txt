@@ -13,7 +13,7 @@ if(ANDROID)
 	#add_subdirectory(02_opengles10_app)
 	#add_subdirectory(03_opencv_capture_app)
 	#add_subdirectory(04_opengles20_app)
-	#add_subdirectory(05_ocv_gles20_app)
+	add_subdirectory(05_ocv_gles20_app)
 
 else(ANDROID)
 	add_subdirectory(ogre_test_001)
