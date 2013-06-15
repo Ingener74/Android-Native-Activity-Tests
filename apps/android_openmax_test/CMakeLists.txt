@@ -5,6 +5,9 @@ project(${PROJECT_NAME})
 
 set(SOURCES src/main.cpp)
 
+include_directories(
+    ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/include
+	)
 link_directories(
     ${ANDROID_NDK}/platforms/android-14/arch-arm/usr/lib
     )
