@@ -29,6 +29,7 @@ FileShaderLoader::FileShaderLoader( const char* vertexFile,
 		LOGI("FileShaderLoader", "vs = %s", vertexSource);
 
 		vsFile.close();
+		setError("", false);
 
 	}else{
 		setError("error: could not open vertex source file");
@@ -48,6 +49,7 @@ FileShaderLoader::FileShaderLoader( const char* vertexFile,
 		LOGI("FileShaderLoader", "fs = %s", fragmentSource);
 
 		fsFile.close();
+		setError("", false);
 
 	}else{
 		setError("error: could not open fragment source file");

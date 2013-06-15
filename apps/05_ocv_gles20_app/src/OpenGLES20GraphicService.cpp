@@ -288,9 +288,9 @@ OpenGLES20GraphicService::STATUS OpenGLES20GraphicService::init(
 	if(!dirtyCarL && dirtyCarL->isError()) return STATUS_ERROR;
 	dirtyCarObj = new Mesh(dirtyCarL, _aVert, dirtyCarTex, _aUVs);
 
-	/*
-	 * load exc
-	 */
+//	/*
+//	 * load exc
+//	 */
 	Mat excIm;
 	cvtColor(imread("/sdcard/repo/data/exc/exc.png"), excIm, CV_RGB2BGR);
 	excTex = new RGBTexture(excIm);
@@ -438,6 +438,7 @@ void OpenGLES20GraphicService::draw(){
 	/*
 	 * draw objects
 	 */
+#define call_x(x){ if(x)x->draw(); }
 
 	for( uint32_t i = 0; i < markersFound.size(); ++i ){
 		if(markersFound[i].id == 4){
@@ -475,7 +476,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			dirtyCarObj->draw();
+//			dirtyCarObj->draw();
+			call_x(dirtyCarObj);
 		}
 
 		if(markersFound[i].id == 6 ){
@@ -489,7 +491,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			excObj->draw();
+//			excObj->draw();
+			call_x(excObj);
 		}
 
 		if(markersFound[i].id == 8 ){
@@ -503,7 +506,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			exageObj->draw();
+//			exageObj->draw();
+			call_x(exageObj);
 		}
 
 		if(markersFound[i].id == 10 ){
@@ -517,7 +521,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			motoObj->draw();
+//			motoObj->draw();
+			call_x(motoObj);
 		}
 
 		if(markersFound[i].id == 12 ){
@@ -531,7 +536,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			planeObj->draw();
+//			planeObj->draw();
+			call_x(planeObj);
 		}
 
 		if(markersFound[i].id == 18){
@@ -545,7 +551,8 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			chairObj->draw();
+//			chairObj->draw();
+			call_x(chairObj);
 		}
 
 		if(markersFound[i].id == 20){
@@ -559,12 +566,12 @@ void OpenGLES20GraphicService::draw(){
 
 			glUniformMatrix4fv(_MVP, 1, GL_FALSE, value_ptr(mvp2));
 
-			chairObj2->draw();
+//			chairObj2->draw();
+			call_x(chairObj2);
 		}
 	}
 
 	eglSwapBuffers(_display, _surface);
-
 }
 
 void OpenGLES20GraphicService::setImage( Mat image ){
@@ -587,7 +594,6 @@ void OpenGLES20GraphicService::setImage( Mat image ){
 			markersFound[i].glGetModelViewMatrix(mvm);
 		}
 	}
-
 	screenTex->updatePart(image);
 }
 

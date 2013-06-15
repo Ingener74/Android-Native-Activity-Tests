@@ -15,6 +15,7 @@ OpenCVCapture::OpenCVCapture( int32_t cam, int32_t rows, int32_t cols ): _isErro
 		LOGI_OCV("OpenCVCapture created");
 		_cv.set(CV_CAP_PROP_FRAME_HEIGHT, rows);
 		_cv.set(CV_CAP_PROP_FRAME_WIDTH,  cols);
+
 	}else{
 		_isError = true;
 		LOGI_OCV("OpenCVCapture can't create");

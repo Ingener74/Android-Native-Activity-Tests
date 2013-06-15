@@ -15,6 +15,8 @@ if(ANDROID)
 
 	add_subdirectory(libtools)
 	add_dependencies(tools external_OpenCV)
+	
+	add_subdirectory(libcamera)
 else(ANDROID)
 endif(ANDROID)
 
