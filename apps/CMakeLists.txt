@@ -17,6 +17,8 @@ if(ANDROID)
 	
 	add_subdirectory(android_openmax_test)
 
+	add_subdirectory(camera_test)
+
 else(ANDROID)
 	add_subdirectory(ogre_test_001)
 	add_dependencies(ogre_test_001 external_OGRE)

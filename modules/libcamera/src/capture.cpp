@@ -8,6 +8,8 @@
 #include <errno.h>
 #include <linux/videodev2.h>
 
+extern unsigned int BUFFER_COUNT;
+
 int start_capture(int fd) {
     unsigned int i;
     enum v4l2_buf_type type;
@@ -50,7 +52,7 @@ int read_frame(int fd, buffer* frame_buffers, int width, int height,
     }
 
     assert(buf.index < BUFFER_COUNT);
-    yuyv422_to_argb(frame_buffers[buf.index].start, width, height, rgb_buffer,
+    yuyv422_to_argb((unsigned char*)frame_buffers[buf.index].start, width, height, rgb_buffer,
             y_buffer);
 
     if(-1 == xioctl(fd, VIDIOC_QBUF, &buf)) {

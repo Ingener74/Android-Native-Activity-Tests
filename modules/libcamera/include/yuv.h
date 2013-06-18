@@ -4,8 +4,6 @@
 #include <jni.h>
 #include <stdio.h>
 
-int YUV_TABLE[5][256];
-
 /* Public: Generate and cache the lookup table necessary to convert from YUV to
  * ARGB.
  */

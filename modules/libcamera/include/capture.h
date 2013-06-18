@@ -55,6 +55,6 @@ void process_camera(int fd, buffer* frame_buffers, int width,
         int height, int* rgb_buffer, int* ybuf);
 
 /* Private: Stop capturing, uninitialize the device and free all memory. */
-void stop_camera();
+void stop_camera(int* fd, int* rgb_buffer, int* y_buffer);
 
 #endif // __CAPTURE_H__

@@ -9,6 +9,9 @@
 #include <fcntl.h>
 #include <malloc.h>
 
+unsigned int BUFFER_COUNT;
+buffer* FRAME_BUFFERS;
+
 int open_device(const char* dev_name, int* fd) {
     struct stat st;
     if(-1 == stat(dev_name, &st)) {
@@ -55,7 +58,7 @@ int init_mmap(int fd) {
         return ERROR_LOCAL;
     }
 
-    FRAME_BUFFERS = calloc(req.count, sizeof(*FRAME_BUFFERS));
+    FRAME_BUFFERS = (buffer*)calloc(req.count, sizeof(*FRAME_BUFFERS));
     if(!FRAME_BUFFERS) {
         LOGE("Out of memory");
         return ERROR_LOCAL;

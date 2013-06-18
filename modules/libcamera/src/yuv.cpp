@@ -1,6 +1,8 @@
 #include "yuv.h"
 #include <stdio.h>
 
+int YUV_TABLE[5][256];
+
 void cache_yuv_lookup_table(int table[5][256]) {
 	int i = 0;
     for(i = 0; i < 256; i++) {
