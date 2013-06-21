@@ -15,6 +15,9 @@ int main( int argc, char* argv[] ){
 	int* RGB_BUFFER = NULL;
 	int* Y_BUFFER = NULL;
 
+	extern unsigned int BUFFER_COUNT;
+	extern buffer* FRAME_BUFFERS;
+
 	const char* device = "/dev/video0";
 
 	int result = open_device(device, &DEVICE_DESCRIPTOR);
@@ -51,11 +54,19 @@ int main( int argc, char* argv[] ){
 		}
 	}
 
-	for( int i = 0; i < 100; ++i ){
-		process_camera(DEVICE_DESCRIPTOR, FRAME_BUFFERS, info.width, info.height,
+	for( int i = 0; i < 1; ++i ){
+		process_camera(DEVICE_DESCRIPTOR, FRAME_BUFFERS, width, height,
 					RGB_BUFFER, Y_BUFFER);
+		std::cout << "=== buffer ===" << std::endl;
+		for ( int i = 0; i < 10; ++i ){
+			std::cout << RGB_BUFFER[i] << std::endl;
+		}
 	}
 
+
+	std::cout << "stop camera" << std::endl;
 	stop_camera(&DEVICE_DESCRIPTOR, RGB_BUFFER, Y_BUFFER);
+
+	std::cout << "exit" << std::endl;
 	return 0;
 }

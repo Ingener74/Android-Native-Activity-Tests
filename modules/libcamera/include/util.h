@@ -11,7 +11,7 @@
 //#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 #define LOGI(...){ printf(__VA_ARGS__); }
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+#define LOGE(...){ printf(__VA_ARGS__); }
 
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
 
