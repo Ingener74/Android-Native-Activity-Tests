@@ -19,7 +19,8 @@ void android_main( android_app* app ){
 	LOGI("android main", caption);
 
 //	ICaptureService* cs = new OpenCVCapture(--SmallSettingsFile<int>("/sdcard/repo/data/camera.txt"));
-	ICaptureService* cs = new OpenCVCapture(0, 600, 800);
+	ICaptureService* cs = new OpenCVCapture(0, 480, 640);
+
 
 	IGraphicsService* gs = new OpenGLES20GraphicService();
 

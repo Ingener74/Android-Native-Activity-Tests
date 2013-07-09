@@ -8,10 +8,7 @@ include_directories(
     )
 
 set(SOURCES 
-	src/capture.cpp
-	src/util.cpp
-	src/video_device.cpp
-	src/yuv.cpp
+	src/camera.cpp
 	)
 	
 link_directories(
