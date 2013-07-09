@@ -11,22 +11,22 @@ int main( int argc, char* argv[] ){
 
 	if( camera::Camera::prepareCamera(0) != ERROR_LOCAL ){
 		std::cout << "success" << std::endl;
+
+		camera::Camera::processCamera();
+
+		if( rgb ){
+
+			for( int i = 0; i < 10; ++i ){
+				std::cout << rgb[i] << std::endl;
+			}
+
+		}
+
+		camera::Camera::stopCamera();
+
 	}else{
 		std::cout << "error" << std::endl;
 	}
-
-	camera::Camera::processCamera();
-
-	if( rgb ){
-
-		for( int i = 0; i < 10; ++i ){
-			std::cout << rgb[i] << std::endl;
-		}
-
-	}
-
-	camera::Camera::stopCamera();
 	std::cout << "exit" << std::endl;
-
 	return 0;
 }
