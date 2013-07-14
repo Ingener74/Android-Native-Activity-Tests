@@ -35,4 +35,6 @@ else(ANDROID)
 	add_subdirectory(06_OGRE_Test)
 	add_dependencies(06_OGRETest external_OGRE)
 	add_dependencies(06_OGRETest external_OIS)
+
+	add_subdirectory(application_test)
 endif(ANDROID)

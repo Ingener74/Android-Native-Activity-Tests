@@ -18,7 +18,7 @@ if(ANDROID)
 	
 	add_subdirectory(libcamera)
 else(ANDROID)
-	add_subdirectory(libapplication)
+	add_subdirectory(libapplication_template)
 endif(ANDROID)
 
 

@@ -19,16 +19,21 @@ int main(int argc, char* argv[]) {
 	if (_app) {
 		if( _app->initialization() ){
 			if( !_app->run() ){
-				LOG("application run return with error");
+				LOG("application run return with error\n");
+			}
+			if( !_app->deinitialization() ){
+				LOG("application can't deinitialization\n");
 			}
 		}else{
-			LOG("can't initialize application");
+			LOG("can't initialize application\n");
 			APPLICATION_EXIT_FAILURE;
 		}
 	} else {
-		LOG("can't create application");
+		LOG("can't create application\n");
 		APPLICATION_EXIT_FAILURE;
 	}
+
+	delete _app; _app = 0;
 
 	return 0;
 }

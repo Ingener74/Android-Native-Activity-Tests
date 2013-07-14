@@ -14,8 +14,8 @@ namespace application{
 
 class IApplication {
 public:
-	IApplication();
-	virtual ~IApplication();
+	IApplication(){}
+	virtual ~IApplication(){}
 
 	virtual bool initialization() = 0;
 	virtual bool run() = 0;

@@ -1,7 +1,7 @@
 # Defines plugins to load
 
 # Define plugin folder
-PluginFolder=/home/ingener/prj/Android-Native-Activity-Tests/linux_install/3rdparty/lib/OGRE
+PluginFolder=@CMAKE_BINARY_DIR@/INSTALL_3RDPARTY/lib/OGRE
 
 # Define plugins
 # Plugin=RenderSystem_Direct3D9
