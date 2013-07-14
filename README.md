@@ -8,8 +8,8 @@ Requirements for build:
 How to build
 in repository home type next
 ```sh
-1. > mkdir build
-2. > cd build
-3. > cmake ..
-4. > make
+user@hostname: ~$ mkdir build
+user@hostname: ~$ cd build
+user@hostname: ~$ cmake ..
+user@hostname: ~$ make
 ```
