@@ -27,11 +27,22 @@ else(ANDROID)
         CMAKE_ARGS     -DCMAKE_INSTALL_PREFIX=${INSTALL_3RDPARTY}
         )
 
+    # boost
+    set(EXTERNAL_BOOST external_boost)
+    ExternalProject_Add(
+        ${EXTERNAL_BOOST}
+        URL ${CMAKE_CURRENT_LIST_DIR}/boost_1_54_0.zip
+        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_BOOST}-prefix/src/${EXTERNAL_BOOST} && ./bootstrap.sh
+        CMAKE_COMMAND ""
+        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_BOOST}-prefix/src/${EXTERNAL_BOOST} && ./b2 install --prefix=${INSTALL_3RDPARTY} link=static
+        INSTALL_COMMAND ""
+        )
+        
     # OGRE
     ExternalProject_Add(
         external_OGRE
         URL ${CMAKE_CURRENT_LIST_DIR}/ogre_src_v1-8-1.tar.bz2
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_3RDPARTY} -DOGRE_INSTALL_SAMPLES=YES
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_3RDPARTY} -DOGRE_INSTALL_SAMPLES=YES -DBoost_DIR=${INSTALL_3RDPARTY}/include
         )
 
     # OIS
@@ -43,17 +54,6 @@ else(ANDROID)
         BINARY_DIR ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}
         CONFIGURE_COMMAND sh ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}/bootstrap && 
             ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_PROJECT_OIS}-prefix/src/${EXTERNAL_PROJECT_OIS}/configure --prefix=${INSTALL_3RDPARTY}
-        )
-        
-    # boost
-    set(EXTERNAL_BOOST external_boost)
-    ExternalProject_Add(
-        ${EXTERNAL_BOOST}
-        URL ${CMAKE_CURRENT_LIST_DIR}/boost_1_54_0.zip
-        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_BOOST}-prefix/src/${EXTERNAL_BOOST} && ./bootstrap.sh
-        CMAKE_COMMAND ""
-        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/3rdparty/${EXTERNAL_BOOST}-prefix/src/${EXTERNAL_BOOST} && ./b2 install --prefix=${INSTALL_3RDPARTY} link=static
-        INSTALL_COMMAND ""
         )
 endif(ANDROID)
 
