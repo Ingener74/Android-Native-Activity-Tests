@@ -42,4 +42,11 @@ else(ANDROID)
 	
 	add_subdirectory(ogre_opencv_visualizer)
 	add_dependencies(ogre_test external_OpenCV)
+	add_dependencies(ogre_test external_OGRE)
+	add_dependencies(ogre_test external_OIS)
+	
+	add_subdirectory(ogre_aruco)
+    add_dependencies(ogre_test external_OpenCV)
+    add_dependencies(ogre_test external_OGRE)
+    add_dependencies(ogre_test external_OIS)
 endif(ANDROID)
