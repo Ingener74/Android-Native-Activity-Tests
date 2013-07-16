@@ -163,9 +163,6 @@ int main( int argc, char* argv[] ){
 				vc.set(CV_CAP_PROP_FRAME_HEIGHT, vm["resolution"].as<std::vector<int> >()[0]);
 				vc.set(CV_CAP_PROP_FRAME_WIDTH,  vm["resolution"].as<std::vector<int> >()[1]);
 			}
-			camR = vc.get(CV_CAP_PROP_FRAME_HEIGHT);
-			camC = vc.get(CV_CAP_PROP_FRAME_WIDTH);
-//			std::cout << "camR = " << camR << ", camC = " << camC << std::endl;
 		}else if(vm["source"].as<std::string>() == "file"){
 			if(!vm.count("file")){
 				desc.print(std::cerr);
@@ -177,6 +174,8 @@ int main( int argc, char* argv[] ){
 			desc.print(std::cerr);
 			return 1;
 		}
+		camR = vc.get(CV_CAP_PROP_FRAME_HEIGHT);
+		camC = vc.get(CV_CAP_PROP_FRAME_WIDTH);
 	}else if(vm["mode"].as<std::string>() == "record"){
 	}
 
