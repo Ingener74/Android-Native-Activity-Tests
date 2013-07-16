@@ -18,7 +18,7 @@ namespace ogre_test {
 
 class SimpleMouseListener: public OIS::MouseListener {
 public:
-	SimpleMouseListener( Camera* camera ): _camera(camera){
+	SimpleMouseListener( Camera* camera ): _camera(camera), _radius(10), _rad1(0), _rad2(0){
 	}
 	virtual ~SimpleMouseListener() {
 	}
@@ -28,6 +28,8 @@ public:
 
 private:
 	Camera* _camera;
+
+	double _radius, _rad1, _rad2;
 };
 
 class SimpleKeyListener: public OIS::KeyListener {

@@ -31,7 +31,7 @@ FileSystem=@CMAKE_BINARY_DIR@/INSTALL_3RDPARTY/lib/OGRE/media/RTShaderLib/materi
 #Zip=@CMAKE_BINARY_DIR@/INSTALL_3RDPARTY/lib/OGRE/media/packs/skybox.zip
 
 [General]
-FileSystem=@CMAKE_BINARY_DIR@/data/apps/06_OGRE_Test/Kubelwagen
+FileSystem=@CMAKE_BINARY_DIR@/data/apps/ogre_test/Kubelwagen
 
 # Materials for visual tests
 [Tests]

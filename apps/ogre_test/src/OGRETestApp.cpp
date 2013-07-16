@@ -16,16 +16,27 @@ namespace ogre_test {
  * Mouse Listener
  */
 bool SimpleMouseListener::mouseMoved(const OIS::MouseEvent& arg) {
+	if(arg.state.buttonDown(OIS::MB_Right)){
+		_rad1 += (arg.state.X.rel / 10.) * M_PI / 180.;
+		_rad2 += (arg.state.Y.rel / 10.) * M_PI / 180.;
+	}
+	_radius += arg.state.Z.rel / 100.;
+	_camera->setPosition(
+			_radius * cos(_rad2) * cos(_rad1),
+			_radius * sin(_rad2),
+			_radius * cos(_rad2) * sin(_rad1));
+	_camera->lookAt(0, 0, 0);
+
+	// TODO change look at position
+
 	return true;
 }
 bool SimpleMouseListener::mousePressed(const OIS::MouseEvent& arg,
 		OIS::MouseButtonID id) {
-	std::cout << "mouse pressed" << std::endl;
 	return true;
 }
 bool SimpleMouseListener::mouseReleased(const OIS::MouseEvent& arg,
 		OIS::MouseButtonID id) {
-	std::cout << "mouse released" << std::endl;
 	return true;
 }
 

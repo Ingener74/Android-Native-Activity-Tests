@@ -31,9 +31,41 @@ public:
 	}
 };
 
+class OOV_WindowListener: public Ogre::WindowEventListener {
+public:
+	OOV_WindowListener(): _exit(false){
+	}
+	virtual ~OOV_WindowListener(){}
+
+	virtual void windowMoved(Ogre::RenderWindow* rw){
+	}
+	virtual void windowResized(Ogre::RenderWindow* rw){
+	}
+	virtual bool windowClosing(Ogre::RenderWindow* rw){
+		_exit = true;
+		return false;
+	}
+	virtual void windowClosed(Ogre::RenderWindow* rw){
+	}
+	virtual void windowFocusChange(Ogre::RenderWindow* rw){
+	}
+	bool isExit(){
+		return _exit;
+	}
+private:
+	bool _exit;
+};
+
 class OOV_FrameListener: public Ogre::FrameListener{
 public:
-	OOV_FrameListener( OIS::Keyboard* keyboard ): _keyboard(keyboard){
+	OOV_FrameListener( OIS::Keyboard* keyboard,
+			cv::VideoCapture* vc,
+			Ogre::TexturePtr screenTex,
+			OOV_WindowListener* windowListener ):
+				_keyboard(keyboard),
+				_vc(vc),
+				_screenTex(screenTex),
+				_windowListener(windowListener){
 	}
 	virtual ~OOV_FrameListener(){}
 	bool frameStarted(const Ogre::FrameEvent& event){
@@ -41,6 +73,39 @@ public:
 		if(_keyboard->isKeyDown(OIS::KC_ESCAPE)){
 			return false;
 		}
+
+		if(_windowListener->isExit()){
+			return false;
+		}
+
+		if(_vc){
+			cv::Mat im;
+
+			if(_vc->grab()){
+				if(_vc->retrieve(im)){
+
+					Ogre::HardwarePixelBufferSharedPtr pixelBuffer = _screenTex->getBuffer();
+
+					pixelBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+					const Ogre::PixelBox& pixelBox = pixelBuffer->getCurrentLock();
+
+					uint8_t* dst = static_cast<uint8_t*>(pixelBox.data);
+					uint8_t* src = im.data;
+
+					for( size_t i = 0; i < im.rows; ++i ){
+						for( size_t j = 0; j < im.cols; ++j ){
+							*dst++ = *src++;
+							*dst++ = *src++;
+							*dst++ = *src++;
+							*dst++ = 255;
+						}
+					}
+
+					pixelBuffer->unlock();
+				}
+			}
+		}
+
 		return true;
 	}
 	bool frameEnded(const Ogre::FrameEvent& event){
@@ -48,6 +113,11 @@ public:
 	}
 private:
 	OIS::Keyboard* _keyboard;
+	cv::VideoCapture* _vc;
+
+	Ogre::TexturePtr _screenTex;
+
+	OOV_WindowListener* _windowListener;
 };
 
 int main( int argc, char* argv[] ){
@@ -83,6 +153,8 @@ int main( int argc, char* argv[] ){
 		return 0;
 	}
 
+	size_t camR = 0, camC = 0;
+
 	cv::VideoCapture vc;
 	if(vm["mode"].as<std::string>() == "play"){
 		if(vm["source"].as<std::string>() == "cam"){
@@ -91,6 +163,9 @@ int main( int argc, char* argv[] ){
 				vc.set(CV_CAP_PROP_FRAME_HEIGHT, vm["resolution"].as<std::vector<int> >()[0]);
 				vc.set(CV_CAP_PROP_FRAME_WIDTH,  vm["resolution"].as<std::vector<int> >()[1]);
 			}
+			camR = vc.get(CV_CAP_PROP_FRAME_HEIGHT);
+			camC = vc.get(CV_CAP_PROP_FRAME_WIDTH);
+//			std::cout << "camR = " << camR << ", camC = " << camC << std::endl;
 		}else if(vm["source"].as<std::string>() == "file"){
 			if(!vm.count("file")){
 				desc.print(std::cerr);
@@ -114,6 +189,8 @@ int main( int argc, char* argv[] ){
 	OIS::InputManager*  _inputManager = 0;
 	OIS::Keyboard*      _keyboard = 0;
 	OOV_KeyListener*    _keyboardListener = 0;
+
+	OOV_WindowListener* _windowEventListener = 0;
 
 	OOV_FrameListener*  _frameListener = 0;
 
@@ -161,7 +238,8 @@ int main( int argc, char* argv[] ){
 	_sceneManager = _root->createSceneManager(Ogre::ST_GENERIC);
 
 	_camera = _sceneManager->createCamera("MainCamera");
-	_camera->setPosition(10, 10, -10);
+	_camera->setPosition(20, 20, 20);
+	_camera->setPosition(0, 0, 80);
 	_camera->lookAt(0,0,0);
 	_camera->setNearClipDistance(0.1f);
 	_camera->setFarClipDistance(1000.f);
@@ -177,71 +255,33 @@ int main( int argc, char* argv[] ){
 	 * scene construction
 	 */
 
-	Ogre::MeshPtr mesh = Ogre::MeshManager::getSingleton().createManual("Screen", "General");
-	Ogre::SubMesh* subMesh = mesh->createSubMesh();
+	Ogre::TexturePtr screenTexture = Ogre::TextureManager::getSingleton().
+			createManual(
+					"ScreenTex",
+					Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+					Ogre::TEX_TYPE_2D,
+					camC,
+					camR,
+					0,
+					Ogre::PF_R8G8B8,
+					Ogre::TU_DYNAMIC);
 
-	mesh->sharedVertexData = new Ogre::VertexData;
-	mesh->sharedVertexData->vertexCount = 6;
+	Ogre::MaterialPtr screenMaterial = Ogre::MaterialManager::getSingleton().
+			create("ScreenMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	screenMaterial->getTechnique(0)->getPass(0)->createTextureUnitState("ScreenTex");
 
-	Ogre::VertexDeclaration* decl = mesh->sharedVertexData->vertexDeclaration;
-	size_t offset = 0;
+	Ogre::Rectangle2D* screenRect = new Ogre::Rectangle2D(true);
+	screenRect->setCorners(-1.0, 1.0, 1.0, -1.0);
+	screenRect->setMaterial("ScreenMat");
+	screenRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
 
-	decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
-	offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+	Ogre::AxisAlignedBox aabInf;
+	aabInf.setInfinite();
+	screenRect->setBoundingBox(aabInf);
 
-	decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_DIFFUSE);
-	offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+	Ogre::SceneNode* screenNode = _sceneManager->getRootSceneNode()->createChildSceneNode("Screen");
+	screenNode->attachObject(screenRect);
 
-	Ogre::HardwareVertexBufferSharedPtr vertexBuffer = Ogre::HardwareBufferManager::
-			getSingleton().createVertexBuffer(
-					offset,
-					mesh->sharedVertexData->vertexCount,
-					Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
-
-	float* vertices = static_cast<float*>(vertexBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL));
-
-	vertices[0] = 0; vertices[1] = 0; vertices[2] = 0;
-	vertices[3] = 1; vertices[4] = 0; vertices[5] = 0;
-
-	vertices[6] = 10; vertices[7] = 0; vertices[8] = 0;
-	vertices[9] = 1; vertices[10] = 0; vertices[11] = 0;
-
-	vertices[12] = 0; vertices[13] = 10; vertices[14] = 0;
-	vertices[15] = 1; vertices[16] = 0; vertices[17] = 0;
-
-	vertices[18] = 10; vertices[19] = 10; vertices[20] = 0;
-	vertices[21] = 1; vertices[22] = 0; vertices[23] = 0;
-
-	vertexBuffer->unlock();
-
-	Ogre::HardwareIndexBufferSharedPtr* indexBuffer = Ogre::HardwareBufferManager::getSingleton().
-			createIndexBuffer(Ogre::HardwareIndexBuffer::IT_16BIT, mesh->sharedVertexData->vertexCount, Ogre::HardwareBuffer::HBU_STATIC);
-
-	uint16_t* indices = static_cast<uint16_t*>(indexBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL));
-
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
-
-	indices[3] = 3;
-	indices[4] = 2;
-	indices[5] = 1;
-
-	indexBuffer->unlock();
-
-	mesh->sharedVertexData->vertexBufferBinding->setBinding(0, vertexBuffer);
-	subMesh->useSharedVertices = true;
-	subMesh->indexData->indexBuffer = indexBuffer;
-	subMesh->indexData->indexCount = mesh->sharedVertexData->vertexCount;
-	subMesh->indexData->indexStart = 0;
-
-	mesh->_setBounds(Ogre::AxisAlignedBox(0, 0, 0, 10, 10, 10));
-
-	mesh->load();
-
-	Ogre::Entity* screenEntity = _sceneManager->createEntity("ScreenEntity", "Screen", "General");
-	Ogre::SceneNode* screenNode = _sceneManager->getRootSceneNode()->createChildSceneNode();
-	screenNode->attachObject(screenEntity);
 	/*
 	 * end scene construction
 	 */
@@ -262,13 +302,21 @@ int main( int argc, char* argv[] ){
 
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHandleString.str()));
 
+	pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("false")));
+
 	_inputManager = OIS::InputManager::createInputSystem(pl);
 
 	_keyboard = (OIS::Keyboard*)_inputManager->createInputObject(OIS::OISKeyboard, true);
 	_keyboardListener = new OOV_KeyListener();
 	_keyboard->setEventCallback(_keyboardListener);
 
-	_frameListener = new OOV_FrameListener(_keyboard);
+	_windowEventListener = new OOV_WindowListener();
+	Ogre::WindowEventUtilities::addWindowEventListener(_renderWindow, _windowEventListener);
+
+	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener);
 	_root->addFrameListener(_frameListener);
 	/*
 	 * end set listeners
@@ -276,26 +324,11 @@ int main( int argc, char* argv[] ){
 
 	_root->startRendering();
 
-	delete _root;
 
-//	if(vc.isOpened()){
-//		while(1){
-//
-//			cv::Mat im;
-//			if( vc.grab() ){
-//				if( vc.retrieve(im)){
-//					cv::imshow("Image output window", im);
-//				}
-//			}
-//			char c = cv::waitKey(1000/30);
-//			if(c == 27){
-//				break;
-//			}
-//		}
-//	}else{
-//		std::cerr << "can't open VideoCapture" << std::endl;
-//	}
-//	vc.release();
+//	delete _keyboardListener;
+//	delete _frameListener;
+//	delete screenRect;
+//	delete _root;
 
 	return 0;
 }

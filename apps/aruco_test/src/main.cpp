@@ -65,10 +65,12 @@ int main(int argc, char* argv[]) {
 		}
 		webcamSource = false;
 	} else {
+		std::cerr << "error: wrong source" << std::endl;
 		desc.print(std::cerr);
 		return 1;
 	}
 	if (!vm.count("camfile")) {
+		std::cerr << "error: enter path to camera file" << std::endl;
 		desc.print(std::cerr);
 		return 1;
 	}
