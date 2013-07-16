@@ -67,7 +67,8 @@ public:
 			aruco::MarkerDetector* md,
 			aruco::CameraParameters* cp,
 			std::vector<aruco::Marker>* markers,
-			Ogre::SceneNode* node
+			Ogre::SceneNode* node,
+			Ogre::Camera* camera
 			):
 				_keyboard(keyboard),
 				_vc(vc),
@@ -76,7 +77,8 @@ public:
 				_markerDetector(md),
 				_cameraParameters(cp),
 				_markers(markers),
-				_node(node)
+				_node(node),
+				_camera(camera)
 				{
 	}
 	virtual ~OOV_FrameListener(){}
@@ -111,6 +113,8 @@ public:
 					cv::putText(im, buf, cv::Point(4, 12),
 							cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0));
 
+					_node->setVisible(false);
+
 					for( int i = 0; i < _markers->size(); ++i ){
 						_markers->at(i).draw(im, cv::Scalar(0,255,0), 1, true);
 						if(_markers->at(i).id == 2){
@@ -119,9 +123,8 @@ public:
 
 							_markers->at(i).OgreGetPoseParameters(pos, ori);
 
-//							printf("id: %d, pos: %f %f %f, ori: %f %f %f %f\n", _markers->at(i).id, pos[0], pos[1], pos[2], ori[0], ori[1], ori[2], ori[3]);
-
 							if(_node){
+								_node->setVisible(true);
 								_node->setPosition(pos[0], pos[1], pos[2]);
 								_node->setOrientation(ori[0], ori[1], ori[2], ori[3]);
 							}
@@ -171,6 +174,8 @@ private:
 	std::vector<aruco::Marker>* _markers;
 
 	Ogre::SceneNode* _node;
+
+	Ogre::Camera* _camera;
 };
 
 int main( int argc, char* argv[] ){
@@ -307,6 +312,24 @@ int main( int argc, char* argv[] ){
 	_camera->setNearClipDistance(0.1f);
 	_camera->setFarClipDistance(1000.f);
 
+
+	aruco::CameraParameters cpUnd = cp;
+	cpUnd.Distorsion = cv::Mat::zeros(4, 1, CV_32F);
+
+
+	double dPM[16];
+	cpUnd.OgreGetProjectionMatrix(cpUnd.CamSize, cpUnd.CamSize, dPM, 0.1, 1000.0, false);
+
+	Ogre::Matrix4 PM(
+			 dPM[0],  dPM[1],  dPM[2],  dPM[3],
+			 dPM[4],  dPM[5],  dPM[6],  dPM[7],
+			 dPM[8],  dPM[9], dPM[10], dPM[11],
+			dPM[12], dPM[13], dPM[14], dPM[15]
+			);
+
+	_camera->setCustomProjectionMatrix(true, PM);
+	_camera->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
+
 	Ogre::SceneNode* _cameraNode = _sceneManager->getRootSceneNode()->createChildSceneNode("CameraNode");
 	_cameraNode->attachObject(_camera);
 
@@ -362,6 +385,8 @@ int main( int argc, char* argv[] ){
 	Ogre::SceneNode* carNode =
 			_sceneManager->getRootSceneNode()->createChildSceneNode();
 	carNode->attachObject(car);
+	carNode->setVisible(false);
+//	carNode->showBoundingBox(true);
 
 	/*
 	 * end scene construction
@@ -397,13 +422,16 @@ int main( int argc, char* argv[] ){
 	_windowEventListener = new OOV_WindowListener();
 	Ogre::WindowEventUtilities::addWindowEventListener(_renderWindow, _windowEventListener);
 
-	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, carNode);
+	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, carNode, _camera);
 	_root->addFrameListener(_frameListener);
 	/*
 	 * end set listeners
 	 */
 
 	_root->startRendering();
+
+	_inputManager->destroyInputObject(_keyboard); _keyboard = 0;
+	OIS::InputManager::destroyInputSystem(_inputManager); _inputManager = 0;
 
 	return 0;
 }
