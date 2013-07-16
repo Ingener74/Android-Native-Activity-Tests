@@ -67,8 +67,7 @@ public:
 			aruco::MarkerDetector* md,
 			aruco::CameraParameters* cp,
 			std::vector<aruco::Marker>* markers,
-			Ogre::SceneNode* node,
-			Ogre::Camera* camera
+			Ogre::SceneNode* node
 			):
 				_keyboard(keyboard),
 				_vc(vc),
@@ -77,8 +76,7 @@ public:
 				_markerDetector(md),
 				_cameraParameters(cp),
 				_markers(markers),
-				_node(node),
-				_camera(camera)
+				_node(node)
 				{
 	}
 	virtual ~OOV_FrameListener(){}
@@ -174,8 +172,6 @@ private:
 	std::vector<aruco::Marker>* _markers;
 
 	Ogre::SceneNode* _node;
-
-	Ogre::Camera* _camera;
 };
 
 int main( int argc, char* argv[] ){
@@ -207,8 +203,7 @@ int main( int argc, char* argv[] ){
 		desc.print(std::cout);
 		std::cout <<
 				"Usage: " << std::endl <<
-				"./oov " <<
-				std::endl;
+				"./apps/ogre_aruco/ogre_aruco -C ../data/camera.yml -P data/apps/ogre_test/plugins.cfg -R data/apps/ogre_test/resources.cfg" << std::endl;
 		return 0;
 	}
 
@@ -386,7 +381,6 @@ int main( int argc, char* argv[] ){
 			_sceneManager->getRootSceneNode()->createChildSceneNode();
 	carNode->attachObject(car);
 	carNode->setVisible(false);
-//	carNode->showBoundingBox(true);
 
 	/*
 	 * end scene construction
@@ -422,7 +416,7 @@ int main( int argc, char* argv[] ){
 	_windowEventListener = new OOV_WindowListener();
 	Ogre::WindowEventUtilities::addWindowEventListener(_renderWindow, _windowEventListener);
 
-	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, carNode, _camera);
+	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, carNode);
 	_root->addFrameListener(_frameListener);
 	/*
 	 * end set listeners

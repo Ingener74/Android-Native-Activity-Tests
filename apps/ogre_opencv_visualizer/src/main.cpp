@@ -148,8 +148,8 @@ int main( int argc, char* argv[] ){
 		desc.print(std::cout);
 		std::cout <<
 				"Usage: " << std::endl <<
-				"./oov " <<
-				std::endl;
+				"./apps/ogre_opencv_visualizer/oov -P data/apps/ogre_test/plugins.cfg -R data/apps/ogre_test/resources.cfg" << std::endl <<
+				"./apps/ogre_opencv_visualizer/oov -P data/apps/ogre_test/plugins.cfg -R data/apps/ogre_test/resources.cfg -r 720 960" << std::endl;
 		return 0;
 	}
 
@@ -322,12 +322,6 @@ int main( int argc, char* argv[] ){
 	 */
 
 	_root->startRendering();
-
-
-//	delete _keyboardListener;
-//	delete _frameListener;
-//	delete screenRect;
-//	delete _root;
 
 	return 0;
 }
