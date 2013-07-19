@@ -176,6 +176,8 @@ int main( int argc, char* argv[] ){
 		}
 		camR = vc.get(CV_CAP_PROP_FRAME_HEIGHT);
 		camC = vc.get(CV_CAP_PROP_FRAME_WIDTH);
+
+		printf("cam resolution: %d x %d\n", int(camR), int(camC));
 	}else if(vm["mode"].as<std::string>() == "record"){
 	}
 

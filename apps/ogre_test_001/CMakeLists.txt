@@ -10,4 +10,4 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-target_link_libraries(${PROJECT_NAME} OgreMain)
+target_link_libraries(${PROJECT_NAME} OgreMain boost_system)

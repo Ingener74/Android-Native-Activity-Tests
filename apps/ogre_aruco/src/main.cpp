@@ -181,7 +181,7 @@ int main( int argc, char* argv[] ){
 			("help,h", "Show help")
 			("mode,m", po::value<std::string>()->default_value("play"), "Set working mode")
 			("source,s", po::value<std::string>()->default_value("cam"), "Video source")
-			("cam,c", po::value<uint8_t>()->default_value(0), "Camera number")
+			("cam,c", po::value<uint32_t>()->default_value(0), "Camera number")
 			("cam_file,C", po::value<std::string>(), "Camera file")
 			("file,f", po::value<std::string>(), "Input video file")
 			("resolution,r", po::value<std::vector<int> >()->multitoken(), "Camera resolution")
@@ -212,7 +212,7 @@ int main( int argc, char* argv[] ){
 	cv::VideoCapture vc;
 	if(vm["mode"].as<std::string>() == "play"){
 		if(vm["source"].as<std::string>() == "cam"){
-			vc = cv::VideoCapture(vm["cam"].as<uint8_t>());
+			vc = cv::VideoCapture(vm["cam"].as<uint32_t>());
 			if(vm.count("resolution")){
 				vc.set(CV_CAP_PROP_FRAME_HEIGHT, vm["resolution"].as<std::vector<int> >()[0]);
 				vc.set(CV_CAP_PROP_FRAME_WIDTH,  vm["resolution"].as<std::vector<int> >()[1]);
@@ -230,6 +230,7 @@ int main( int argc, char* argv[] ){
 		}
 		camR = vc.get(CV_CAP_PROP_FRAME_HEIGHT);
 		camC = vc.get(CV_CAP_PROP_FRAME_WIDTH);
+
 	}else if(vm["mode"].as<std::string>() == "record"){
 	}
 
@@ -346,6 +347,8 @@ int main( int argc, char* argv[] ){
 					Ogre::TEX_TYPE_2D,
 					camC,
 					camR,
+//					640,
+//					480,
 					0,
 					Ogre::PF_R8G8B8,
 					Ogre::TU_DYNAMIC);

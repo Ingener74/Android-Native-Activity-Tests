@@ -7,6 +7,6 @@ file(GLOB app_src src/*.cpp)
 file(GLOB app_hdr src/*.h)
 
 add_executable(${PROJECT_NAME} ${app_src} ${app_hdr})
-target_link_libraries(${PROJECT_NAME} OgreMain)
+target_link_libraries(${PROJECT_NAME} OgreMain boost_system)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

@@ -6,6 +6,6 @@ project(${PROJECT_NAME})
 set(SOURCES src/TinyOgre.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} OgreMain)
+target_link_libraries(${PROJECT_NAME} OgreMain boost_system)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
