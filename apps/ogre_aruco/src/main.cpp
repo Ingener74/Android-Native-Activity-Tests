@@ -406,9 +406,19 @@ int main( int argc, char* argv[] ){
 	robotNode->attachObject(robot);
 	robotNode->setVisible(false);
 
+	Ogre::Entity* buick = _sceneManager->createEntity("Buick", "buick.mesh");
+	Ogre::SceneNode* buickNode = _sceneManager->getRootSceneNode()->createChildSceneNode();
+	buickNode->attachObject(buick);
+
+	Ogre::Entity* arachnid = _sceneManager->createEntity("Arachnid", "arachnid.mesh");
+	Ogre::SceneNode* arachnidNode = _sceneManager->getRootSceneNode()->createChildSceneNode();
+	arachnidNode->attachObject(arachnid);
+
 	vector<MarkerNode> markerNodes;
 	markerNodes.push_back(MarkerNode(2, carNode));
 	markerNodes.push_back(MarkerNode(4, robotNode));
+	markerNodes.push_back(MarkerNode(6, buickNode));
+	markerNodes.push_back(MarkerNode(8, arachnidNode));
 
 	/*
 	 * end scene construction
@@ -416,6 +426,7 @@ int main( int argc, char* argv[] ){
 
 	_sceneManager->setAmbientLight(Ogre::ColourValue(1.f, 1.f, 1.f));
 	Ogre::Light* l = _sceneManager->createLight();
+	l->setPowerScale(1000.f);
 	l->setPosition(50, 50, 50);
 
 	/*

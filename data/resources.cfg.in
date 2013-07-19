@@ -34,6 +34,8 @@ FileSystem=@CMAKE_BINARY_DIR@/INSTALL_3RDPARTY/lib/OGRE/media/RTShaderLib/materi
 FileSystem=@CMAKE_BINARY_DIR@/models/Kubelwagen
 #FileSystem=@CMAKE_BINARY_DIR@/models/drone
 FileSystem=@CMAKE_BINARY_DIR@/models/robot
+FileSystem=@CMAKE_BINARY_DIR@/models/buick
+FileSystem=@CMAKE_BINARY_DIR@/models/arachnid
 
 # Materials for visual tests
 [Tests]

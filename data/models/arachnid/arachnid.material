@@ -1,0 +1,370 @@
+material default#1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.296875 0.296875 0.296875
+			diffuse 0.398438 0.398438 0.398438
+			specular 0.398438 0.398438 0.398438 0.590000
+		}
+	}
+}
+
+material BUTT-ARM
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN45.JPG
+			}
+		}
+	}
+}
+
+material BUTT-ARMLEFT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN45.JPG
+			}
+		}
+	}
+}
+
+material ARAK-FOR-LIMB
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.500000 0.000000
+			specular 0.996094 0.500000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material FRONTLEGLEFT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.992188 0.992188 0.992188
+			specular 0.992188 0.992188 0.992188 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-AFT-LIMB
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.851562 0.707031
+			specular 0.996094 0.851562 0.707031 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material BACK-LEGLEFT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.992188 0.992188 0.992188
+			specular 0.992188 0.992188 0.992188 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-FOR_SHOULDE
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-SMALL-ARM
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.851562 0.707031
+			specular 0.996094 0.851562 0.707031 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-ROSTRAL-LIM
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.996094 0.000000
+			specular 0.996094 0.996094 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ROSTRAL-SHOULDER
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.992188 0.992188 0.992188
+			specular 0.992188 0.992188 0.992188 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ROSTRAL-FRONT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.992188 0.992188 0.992188
+			specular 0.992188 0.992188 0.992188 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material LEG-MOUNT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-BODY-BOTOM
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-BODY-SIDES
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.996094 0.500000
+			specular 0.996094 0.996094 0.500000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material ARAK-BACK-TOP
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.500000 0.000000 0.500000
+			specular 0.500000 0.000000 0.500000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material Inside-LOW-JAW
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN45.JPG
+			}
+		}
+	}
+}
+
+material BOTTOM-JAW
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material SIDE-LOW-JAW
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.996094 0.000000
+			specular 0.996094 0.996094 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material Inside-BEAK
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.000000 0.000000
+			specular 0.996094 0.000000 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN45.JPG
+			}
+		}
+	}
+}
+
+material TOP-BEAK
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.265625 0.265625 0.000000
+			specular 0.265625 0.265625 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
+material SIDE-BEAK
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.000000 0.000000 0.000000
+			diffuse 0.996094 0.996094 0.000000
+			specular 0.996094 0.996094 0.000000 1.000000
+			texture_unit
+			{
+				texture SKIN44.JPG
+			}
+		}
+	}
+}
+
