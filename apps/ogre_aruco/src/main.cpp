@@ -19,6 +19,13 @@ namespace po = boost::program_options;
 
 #include <aruco.h>
 
+struct MarkerNode{
+	MarkerNode(uint32_t id, Ogre::SceneNode* node): _id(id), _node(node){
+	}
+	uint32_t         _id;
+	Ogre::SceneNode* _node;
+};
+
 class OOV_KeyListener: public OIS::KeyListener{
 public:
 	OOV_KeyListener(){
@@ -67,7 +74,8 @@ public:
 			aruco::MarkerDetector* md,
 			aruco::CameraParameters* cp,
 			std::vector<aruco::Marker>* markers,
-			Ogre::SceneNode* node
+//			Ogre::SceneNode* node
+			const vector<MarkerNode>& markerNodes
 			):
 				_keyboard(keyboard),
 				_vc(vc),
@@ -76,7 +84,8 @@ public:
 				_markerDetector(md),
 				_cameraParameters(cp),
 				_markers(markers),
-				_node(node)
+//				_node(node)
+				_markerNodes(markerNodes)
 				{
 	}
 	virtual ~OOV_FrameListener(){}
@@ -111,20 +120,26 @@ public:
 					cv::putText(im, buf, cv::Point(4, 12),
 							cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0));
 
-					_node->setVisible(false);
+//					_node->setVisible(false);
+					for( size_t i = 0; i < _markerNodes.size(); ++i ){
+						_markerNodes[i]._node->setVisible(false);
+					}
 
 					for( int i = 0; i < _markers->size(); ++i ){
 						_markers->at(i).draw(im, cv::Scalar(0,255,0), 1, true);
-						if(_markers->at(i).id == 2){
-							double pos[3];
-							double ori[4];
 
-							_markers->at(i).OgreGetPoseParameters(pos, ori);
+						for( size_t j = 0; j < _markerNodes.size(); ++j ){
+							if(_markers->at(i).id == _markerNodes[j]._id ){
+								double pos[3];
+								double ori[4];
 
-							if(_node){
-								_node->setVisible(true);
-								_node->setPosition(pos[0], pos[1], pos[2]);
-								_node->setOrientation(ori[0], ori[1], ori[2], ori[3]);
+								_markers->at(i).OgreGetPoseParameters(pos, ori);
+
+								if(_markerNodes[j]._node){
+									_markerNodes[j]._node->setVisible(true);
+									_markerNodes[j]._node->setPosition(pos[0], pos[1], pos[2]);
+									_markerNodes[j]._node->setOrientation(ori[0], ori[1], ori[2], ori[3]);
+								}
 							}
 						}
 					}
@@ -171,7 +186,8 @@ private:
 	aruco::CameraParameters* _cameraParameters;
 	std::vector<aruco::Marker>* _markers;
 
-	Ogre::SceneNode* _node;
+//	Ogre::SceneNode* _node;
+	std::vector<MarkerNode> _markerNodes;
 };
 
 int main( int argc, char* argv[] ){
@@ -385,6 +401,15 @@ int main( int argc, char* argv[] ){
 	carNode->attachObject(car);
 	carNode->setVisible(false);
 
+	Ogre::Entity* robot = _sceneManager->createEntity("Robot", "robot.mesh");
+	Ogre::SceneNode* robotNode = _sceneManager->getRootSceneNode()->createChildSceneNode();
+	robotNode->attachObject(robot);
+	robotNode->setVisible(false);
+
+	vector<MarkerNode> markerNodes;
+	markerNodes.push_back(MarkerNode(2, carNode));
+	markerNodes.push_back(MarkerNode(4, robotNode));
+
 	/*
 	 * end scene construction
 	 */
@@ -419,7 +444,7 @@ int main( int argc, char* argv[] ){
 	_windowEventListener = new OOV_WindowListener();
 	Ogre::WindowEventUtilities::addWindowEventListener(_renderWindow, _windowEventListener);
 
-	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, carNode);
+	_frameListener = new OOV_FrameListener(_keyboard, &vc, screenTexture, _windowEventListener, &md, &cp, &markers, markerNodes);
 	_root->addFrameListener(_frameListener);
 	/*
 	 * end set listeners

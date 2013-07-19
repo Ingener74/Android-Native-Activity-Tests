@@ -1,0 +1,13 @@
+material Lambert1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.496094 0.496094 0.496094
+			diffuse 0.496094 0.496094 0.496094
+			specular 0.496094 0.496094 0.496094 -nan
+		}
+	}
+}
+

@@ -1,0 +1,299 @@
+material SILVER_META;
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.125000 0.125000 0.125000
+			diffuse 0.125000 0.125000 0.125000
+			specular 0.125000 0.125000 0.125000 -nan
+		}
+	}
+}
+
+material range_finder
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.164062 0.121094 0.796875
+			diffuse 0.164062 0.121094 0.796875
+			specular 0.164062 0.121094 0.796875 -nan
+		}
+	}
+}
+
+material SILVER_META;.000
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.007812 0.007812 0.007812
+			diffuse 0.007812 0.007812 0.007812
+			specular 0.007812 0.007812 0.007812 -nan
+		}
+	}
+}
+
+material black_ring
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material darker_jet_m
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material sides
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material sphere
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material DARK_METAL.0
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.187500 0.187500 0.187500
+			diffuse 0.187500 0.187500 0.187500
+			specular 0.187500 0.187500 0.187500 -nan
+		}
+	}
+}
+
+material face
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.187500 0.187500 0.187500
+			diffuse 0.187500 0.187500 0.187500
+			specular 0.187500 0.187500 0.187500 -nan
+		}
+	}
+}
+
+material LENS
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material Material.004
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material Material.003
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material main_thrust_
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.222656 0.222656 0.222656
+			diffuse 0.222656 0.222656 0.222656
+			specular 0.222656 0.222656 0.222656 -nan
+		}
+	}
+}
+
+material porceline
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material INNER_FACE
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.433594 0.433594 0.433594
+			diffuse 0.433594 0.433594 0.433594
+			specular 0.433594 0.433594 0.433594 -nan
+		}
+	}
+}
+
+material rang_finder_
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.312500 0.273438
+			diffuse 0.796875 0.312500 0.273438
+			specular 0.796875 0.312500 0.273438 -nan
+		}
+	}
+}
+
+material clear_LENS
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material BACKLIGHT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material white_glass
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material range_finder.000
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material guns
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.187500 0.187500 0.187500
+			diffuse 0.187500 0.187500 0.187500
+			specular 0.187500 0.187500 0.187500 -nan
+		}
+	}
+}
+
+material MAIN_SPHERE_
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796875 0.796875 0.796875
+			diffuse 0.796875 0.796875 0.796875
+			specular 0.796875 0.796875 0.796875 -nan
+		}
+	}
+}
+
+material guns.001
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.187500 0.187500 0.187500
+			diffuse 0.187500 0.187500 0.187500
+			specular 0.187500 0.187500 0.187500 -nan
+		}
+	}
+}
+
