@@ -42,8 +42,9 @@ else(ANDROID)
     ExternalProject_Add(
         external_OGRE
         URL ${CMAKE_CURRENT_LIST_DIR}/ogre_src_v1-8-1.tar.bz2
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_3RDPARTY} -DOGRE_INSTALL_SAMPLES=YES -DBoost_DIR=${INSTALL_3RDPARTY}/include
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${INSTALL_3RDPARTY} -DOGRE_INSTALL_SAMPLES=YES -DBoost_DIR=${INSTALL_3RDPARTY}#/include
         )
+	add_dependencies(external_OGRE ${EXTERNAL_BOOST})
 
     # OIS
     set(EXTERNAL_PROJECT_OIS external_OIS)
