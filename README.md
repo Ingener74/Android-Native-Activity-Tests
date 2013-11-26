@@ -2,7 +2,9 @@ Augmented Reality Engine
 ================================================================================
 
 Requirements for build:
+
 1. Android NDK
+
 2. Android CMake - i recommend this: https://github.com/taka-no-me/android-cmake
 
 How to build
